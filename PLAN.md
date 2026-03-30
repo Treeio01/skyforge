@@ -420,12 +420,32 @@ Shared data: `auth.user` (id, username, avatar_url, balance, trade_url, steam_id
 - `php artisan storage:link` (уже сделан)
 - image_path в БД: `skins/{filename}.webp`
 
-### Шаг 3.4: Тесты
+### Шаг 3.4: Создать `skins:dump` — SQL дамп из импортированных данных
+После успешного импорта — сгенерировать SQL дамп для переносимости:
+
+```bash
+php artisan skins:dump
+# Генерирует: database/dumps/skins.sql (INSERT INTO skins ...)
+```
+
+**Что делает:**
+- Экспортирует все записи из таблицы `skins` в SQL файл
+- Батчевые INSERT по 500 записей (MySQL max_allowed_packet safe)
+- Файл коммитится в репо — любой разработчик может поднять БД без JSON и WebP
+- Альтернатива: `php artisan skins:dump --format=seeder` → генерирует `SkinSeeder.php`
+
+**Зачем:**
+- Не зависим от `/upgrade/parser/skins_index.json` (другая папка, может пропасть)
+- CI/CD может поднять тестовую БД без 31K картинок
+- Новый разработчик делает `mysql skyforge < database/dumps/skins.sql` и работает
+
+### Шаг 3.5: Тесты
 - Unit test: парсинг market_hash_name
 - Feature test: импорт из тестового JSON (5-10 скинов)
+- Feature test: dump генерирует валидный SQL
 
-### Шаг 3.5: Коммит
-`feat: skins import command — parse and import 31K skins from JSON`
+### Шаг 3.6: Коммит
+`feat: skins import + dump commands`
 
 ---
 
