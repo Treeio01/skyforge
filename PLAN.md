@@ -371,19 +371,29 @@ Route::post('/auth/logout', [SteamAuthController::class, 'logout'])->name('logou
 ### Шаг 2.6: Настроить HandleInertiaRequests middleware
 Shared data: `auth.user` (id, username, avatar_url, balance, trade_url, steam_id)
 
-### Шаг 2.7: Steam API resilience
+### Шаг 2.7: Создать UserController + профиль
+- `GET /profile` → UserController@show → Inertia page (avatar, username, steam_id, trade_url, balance, stats)
+- `PUT /profile/trade-url` → UserController@updateTradeUrl → UpdateTradeUrlRequest
+  - Валидация: regex для Steam trade URL (`https://steamcommunity.com/tradeoffer/new/?partner=...&token=...`)
+- `GET /profile/history` → UserController@history → пагинированный список транзакций + апгрейдов
+  - Фильтры: тип (all/deposits/withdrawals/upgrades), дата
+- Routes в web.php, middleware `auth`
+
+### Шаг 2.8: Steam API resilience (автоматически сдвинуто)
 - Обернуть Socialite callback в try/catch — при ошибке Steam показать "Steam временно недоступен"
 - Сессия 120 минут — юзер не перелогинивается при каждом действии
 - Retry middleware для Steam API calls (exponential backoff)
 
-### Шаг 2.8: Тесты
+### Шаг 2.9: Тесты
 - Feature test: callback с mock Socialite создаёт пользователя
 - Feature test: повторный вход обновляет avatar/username
 - Feature test: logout разлогинивает
 - Feature test: Steam API down — graceful error, не 500
+- Feature test: обновление trade_url — валидный URL принимается, невалидный — rejected
+- Feature test: история транзакций — пагинация, фильтры
 
-### Шаг 2.9: Коммит
-`feat: Steam OpenID authentication`
+### Шаг 2.10: Коммит
+`feat: Steam OpenID authentication + user profile`
 
 ---
 
@@ -512,11 +522,27 @@ interface PaymentProviderInterface {
 - При смене status на 'completed': fire DepositCompleted event
 - Баланс зачисляется через CompleteDepositAction, не через Observer (контроль транзакции)
 
-### Шаг 5.9: Промокоды
+### Шаг 5.9: Подготовка к реальному платёжному провайдеру
+- Создать `PaymentDTO` (amount, method, redirect_url, provider_id)
+- Создать `WebhookDTO` (provider_id, status, amount, signature_valid, raw_data)
+- Документировать интерфейс: какие методы должен реализовать реальный провайдер
+- В `config/skyforge.php` уже есть `payment.provider` — bind через AppServiceProvider
+- Реальный провайдер подключается заменой одного класса:
+  ```php
+  // AppServiceProvider
+  $this->app->bind(PaymentProviderInterface::class, match(config('skyforge.payment.provider')) {
+      'stub' => StubPaymentProvider::class,
+      'freekassa' => FreeKassaProvider::class,  // пример
+      default => StubPaymentProvider::class,
+  });
+  ```
+- UI страница депозита: выбор метода (СБП/крипта/скины), ввод суммы, редирект на платёжку
+
+### Шаг 5.10: Промокоды
 - PromoCodeController, ApplyPromoCodeRequest
 - Валидация: активен, не истёк, не использован этим юзером, лимит не превышен
 
-### Шаг 5.10: Тесты (TDD)
+### Шаг 5.11: Тесты (TDD)
 - Unit: CreditBalanceAction — корректный баланс, транзакция создана
 - Unit: DebitBalanceAction — успех, InsufficientBalanceException
 - Unit: Concurrent debit — pessimistic lock предотвращает race condition
@@ -525,7 +551,7 @@ interface PaymentProviderInterface {
 - **Feature: Max pending deposits — 6-й pending deposit rejected**
 - Feature: Промокод — применение, повторное использование rejected
 
-### Шаг 5.11: Коммит
+### Шаг 5.12: Коммит
 `feat: balance system, deposits, promo codes`
 
 ---
@@ -625,13 +651,20 @@ interface PaymentProviderInterface {
 - Implements ShouldBroadcast (queued)
 - Private user channel
 
-### Шаг 7.5: Redis feed cache
+### Шаг 7.5: Redis feed cache + LiveFeedController
 - `feed:recent` — Redis LIST, LPUSH новый апгрейд, LTRIM до 50
-- Используется для initial load live feed при открытии страницы
+- **LiveFeedController**:
+  - `GET /api/live-feed` → последние 50 апгрейдов из Redis (JSON, без auth)
+  - `GET /api/live-feed/history` → пагинированная история из БД (необязательно)
+- **UpgradeFeedResource** — формат для feed: `{ id, username, avatar_url, target_skin_name, target_skin_image, chance, result, created_at }`
+- **Listener `PushToLiveFeed`** — при UpgradeCompleted: LPUSH в Redis + LTRIM 50
+- На фронте: initial load из `/api/live-feed`, потом real-time через Echo
 
 ### Шаг 7.6: Тесты
 - Feature: UpgradeCompleted event broadcast при апгрейде
 - Feature: BalanceUpdated event при изменении баланса
+- Feature: LiveFeedController возвращает последние апгрейды
+- Feature: Redis feed обновляется при новом апгрейде
 
 ### Шаг 7.7: Коммит
 `feat: real-time events — live feed, balance updates via Reverb`
@@ -723,8 +756,9 @@ interface TradeProviderInterface {
 
 ### Шаг 9.7: Остальные страницы
 - Login — кнопка "Войти через Steam"
-- Profile — avatar, username, trade_url, history
-- Deposit — выбор метода, сумма
+- Profile — avatar, username, Steam ID, trade_url (editable), balance, статистика (всего депозитов/выводов/апгрейдов/выиграно), инвентарь скинов
+- Profile/History — табы: все транзакции / депозиты / выводы / апгрейды, пагинация, фильтр по дате
+- Deposit — выбор метода (СБП/крипта/скины), ввод суммы, промокод, redirect на платёжку, статус pending
 - Withdrawal — выбор скина из инвентаря (user_skins) для вывода через trade offer
 - ProvablyFair — верификация, смена client seed
 - Rules, Privacy — статические страницы
