@@ -6,6 +6,7 @@ namespace App\Actions\Auth;
 
 use App\Actions\ProvablyFair\GenerateSeedPairAction;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Laravel\Socialite\Contracts\User as SocialiteUser;
 
 class AuthenticateViaSteamAction
@@ -34,15 +35,17 @@ class AuthenticateViaSteamAction
             return $user;
         }
 
-        $user = User::create([
-            'steam_id' => $steamId,
-            'username' => $steamUser->getNickname(),
-            'avatar_url' => $steamUser->getAvatar(),
-            'last_active_at' => now(),
-        ]);
+        return DB::transaction(function () use ($steamId, $steamUser) {
+            $user = User::create([
+                'steam_id' => $steamId,
+                'username' => $steamUser->getNickname(),
+                'avatar_url' => $steamUser->getAvatar(),
+                'last_active_at' => now(),
+            ]);
 
-        $this->generateSeedPair->execute($user);
+            $this->generateSeedPair->execute($user);
 
-        return $user;
+            return $user;
+        });
     }
 }
