@@ -32,5 +32,3 @@ _ide_helper_models.php
 mysql_data/
 redis_data/
 
-# Skins storage (large binary files)
-/storage/app/public/skins/
