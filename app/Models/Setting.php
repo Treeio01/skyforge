@@ -1,0 +1,67 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
+
+class Setting extends Model
+{
+    use LogsActivity;
+
+    public $timestamps = false;
+
+    protected $guarded = ['id'];
+
+    protected function casts(): array
+    {
+        return [
+            'updated_at' => 'datetime',
+        ];
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['key', 'value'])
+            ->logOnlyDirty();
+    }
+
+    public static function get(string $key, mixed $default = null): mixed
+    {
+        return Cache::remember("settings.{$key}", 60, function () use ($key, $default) {
+            $setting = static::where('key', $key)->first();
+
+            if (! $setting) {
+                return $default;
+            }
+
+            return self::castValue($setting->value, $setting->type);
+        });
+    }
+
+    public static function set(string $key, mixed $value): void
+    {
+        static::updateOrCreate(
+            ['key' => $key],
+            ['value' => (string) $value, 'updated_at' => now()],
+        );
+
+        Cache::forget("settings.{$key}");
+    }
+
+    private static function castValue(string $value, string $type): mixed
+    {
+        return match ($type) {
+            'integer' => (int) $value,
+            'float' => (float) $value,
+            'boolean' => filter_var($value, FILTER_VALIDATE_BOOLEAN),
+            'json' => json_decode($value, true),
+            default => $value,
+        };
+    }
+}

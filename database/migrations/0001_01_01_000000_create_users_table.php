@@ -15,18 +15,24 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('steam_id', 20)->unique();
+            $table->string('username');
+            $table->string('avatar_url', 512)->nullable();
+            $table->string('trade_url', 512)->nullable();
+            $table->unsignedBigInteger('balance')->default(0);
+            $table->unsignedBigInteger('total_deposited')->default(0);
+            $table->unsignedBigInteger('total_withdrawn')->default(0);
+            $table->unsignedBigInteger('total_upgraded')->default(0);
+            $table->unsignedBigInteger('total_won')->default(0);
+            $table->boolean('is_banned')->default(false);
+            $table->string('ban_reason', 512)->nullable();
+            $table->boolean('is_admin')->default(false);
+            $table->decimal('house_edge_override', 5, 2)->nullable();
+            $table->decimal('chance_modifier', 5, 3)->default(1.000);
+            $table->timestamp('last_active_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
-        });
-
-        Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
+            $table->softDeletes();
         });
 
         Schema::create('sessions', function (Blueprint $table) {
@@ -45,7 +51,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }
 };

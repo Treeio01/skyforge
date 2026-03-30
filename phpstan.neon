@@ -8,8 +8,8 @@ parameters:
     level: 6
 
     ignoreErrors:
+        - identifier: missingType.generics
 
     excludePaths:
         - app/MoonShine/
 
-    checkMissingIterableValueType: false
