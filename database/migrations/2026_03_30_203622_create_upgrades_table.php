@@ -12,7 +12,7 @@ return new class extends Migration
     {
         Schema::create('upgrades', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->constrained()->restrictOnDelete();
             $table->foreignId('target_skin_id')->constrained('skins');
             $table->unsignedBigInteger('bet_amount');
             $table->unsignedBigInteger('balance_amount')->default(0);
@@ -25,7 +25,7 @@ return new class extends Migration
             $table->double('roll_value');
             $table->string('roll_hex', 16);
             $table->string('client_seed', 64);
-            $table->string('server_seed', 128);
+            $table->string('server_seed_hash', 128);
             $table->string('server_seed_raw', 128);
             $table->unsignedBigInteger('nonce');
             $table->boolean('is_revealed')->default(false);

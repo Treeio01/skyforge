@@ -12,7 +12,7 @@ return new class extends Migration
     {
         Schema::create('provably_fair_seeds', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->constrained()->restrictOnDelete();
             $table->string('client_seed', 64);
             $table->string('server_seed', 128);
             $table->string('server_seed_hash', 128);

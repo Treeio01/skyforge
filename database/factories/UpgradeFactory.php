@@ -36,7 +36,7 @@ class UpgradeFactory extends Factory
             'roll_value' => fake()->randomFloat(10, 0, 1),
             'roll_hex' => fake()->regexify('[a-f0-9]{16}'),
             'client_seed' => fake()->sha1(),
-            'server_seed' => hash('sha256', fake()->sha1()),
+            'server_seed_hash' => hash('sha256', fake()->sha1()),
             'server_seed_raw' => fake()->sha1(),
             'nonce' => fake()->numberBetween(1, 1000),
             'is_revealed' => false,

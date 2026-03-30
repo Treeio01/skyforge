@@ -12,7 +12,7 @@ return new class extends Migration
     {
         Schema::create('user_skins', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->constrained()->restrictOnDelete();
             $table->foreignId('skin_id')->constrained();
             $table->unsignedBigInteger('price_at_acquisition');
             $table->string('source', 32);

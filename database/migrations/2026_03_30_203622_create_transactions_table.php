@@ -12,7 +12,7 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->constrained()->restrictOnDelete();
             $table->string('type', 32);
             $table->bigInteger('amount');
             $table->unsignedBigInteger('balance_before');

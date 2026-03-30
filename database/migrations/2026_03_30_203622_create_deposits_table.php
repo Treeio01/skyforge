@@ -12,7 +12,7 @@ return new class extends Migration
     {
         Schema::create('deposits', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->constrained()->restrictOnDelete();
             $table->string('method', 32);
             $table->unsignedBigInteger('amount');
             $table->string('status', 32)->default('pending');

@@ -13,6 +13,10 @@ class Upgrade extends Model
 {
     public $timestamps = false;
 
+    protected $hidden = [
+        'server_seed_raw',
+    ];
+
     protected $fillable = [
         'user_id',
         'target_skin_id',
@@ -27,7 +31,7 @@ class Upgrade extends Model
         'roll_value',
         'roll_hex',
         'client_seed',
-        'server_seed',
+        'server_seed_hash',
         'server_seed_raw',
         'nonce',
         'is_revealed',

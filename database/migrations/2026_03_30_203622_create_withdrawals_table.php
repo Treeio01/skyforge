@@ -12,7 +12,7 @@ return new class extends Migration
     {
         Schema::create('withdrawals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->constrained()->restrictOnDelete();
             $table->foreignId('user_skin_id')->constrained();
             $table->foreignId('skin_id')->constrained();
             $table->unsignedBigInteger('amount');

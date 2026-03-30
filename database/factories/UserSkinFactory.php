@@ -23,10 +23,19 @@ class UserSkinFactory extends Factory
         return [
             'user_id' => User::factory(),
             'skin_id' => Skin::factory(),
-            'price_at_acquisition' => fake()->numberBetween(100, 5_000_000),
             'source' => UserSkinSource::Deposit,
             'status' => UserSkinStatus::Available,
         ];
+    }
+
+    public function configure(): static
+    {
+        return $this->afterMaking(function (UserSkin $userSkin) {
+            if (! $userSkin->price_at_acquisition) {
+                $skin = Skin::find($userSkin->skin_id);
+                $userSkin->price_at_acquisition = $skin?->price ?? fake()->numberBetween(100, 5_000_000);
+            }
+        });
     }
 
     public function fromUpgrade(): static
