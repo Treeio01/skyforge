@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Enums\TransactionType;
 use App\Http\Requests\UpdateTradeUrlRequest;
 use App\Http\Resources\UserProfileResource;
 use Illuminate\Http\RedirectResponse;
@@ -33,6 +34,12 @@ class UserController extends Controller
     {
         $user = $request->user();
         $type = $request->input('type', 'all');
+
+        $validTypes = array_column(TransactionType::cases(), 'value');
+
+        if ($type !== 'all' && ! in_array($type, $validTypes, true)) {
+            $type = 'all';
+        }
 
         $transactions = $user->transactions()
             ->when($type !== 'all', fn ($q) => $q->where('type', $type))
