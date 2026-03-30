@@ -45,13 +45,13 @@ class AuthenticateViaSteamAction
 
     private function generateSeedPair(User $user): void
     {
-        $serverSeed = Str::random(64);
+        $serverSeedRaw = Str::random(64);
 
         ProvablyFairSeed::create([
             'user_id' => $user->id,
             'client_seed' => Str::random(32),
-            'server_seed' => hash('sha256', $serverSeed),
-            'server_seed_hash' => hash('sha256', $serverSeed),
+            'server_seed' => $serverSeedRaw,
+            'server_seed_hash' => hash('sha256', $serverSeedRaw),
             'nonce' => 0,
             'is_active' => true,
         ]);

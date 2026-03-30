@@ -56,7 +56,8 @@ it('generates provably fair seed for new user', function () {
         ->not->toBeNull()
         ->nonce->toBe(0)
         ->client_seed->not->toBeEmpty()
-        ->server_seed->not->toBeEmpty();
+        ->server_seed->not->toBeEmpty()
+        ->server_seed_hash->toBe(hash('sha256', $seed->server_seed));
 });
 
 it('updates avatar and username on repeat login', function () {

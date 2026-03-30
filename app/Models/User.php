@@ -24,7 +24,13 @@ class User extends Authenticatable
     use Notifiable;
     use SoftDeletes;
 
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'steam_id',
+        'username',
+        'avatar_url',
+        'trade_url',
+        'last_active_at',
+    ];
 
     protected $hidden = [
         'remember_token',
