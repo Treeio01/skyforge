@@ -13,7 +13,25 @@ class Upgrade extends Model
 {
     public $timestamps = false;
 
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'user_id',
+        'target_skin_id',
+        'bet_amount',
+        'balance_amount',
+        'target_price',
+        'chance',
+        'multiplier',
+        'house_edge',
+        'chance_modifier',
+        'result',
+        'roll_value',
+        'roll_hex',
+        'client_seed',
+        'server_seed',
+        'server_seed_raw',
+        'nonce',
+        'is_revealed',
+    ];
 
     protected function casts(): array
     {

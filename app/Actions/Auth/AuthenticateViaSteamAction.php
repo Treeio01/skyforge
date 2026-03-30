@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace App\Actions\Auth;
 
-use App\Models\ProvablyFairSeed;
+use App\Actions\ProvablyFair\GenerateSeedPairAction;
 use App\Models\User;
-use Illuminate\Support\Str;
 use Laravel\Socialite\Contracts\User as SocialiteUser;
 
 class AuthenticateViaSteamAction
 {
+    public function __construct(
+        private GenerateSeedPairAction $generateSeedPair,
+    ) {}
+
     public function execute(SocialiteUser $steamUser): User
     {
         $steamId = $steamUser->getId();
@@ -38,22 +41,8 @@ class AuthenticateViaSteamAction
             'last_active_at' => now(),
         ]);
 
-        $this->generateSeedPair($user);
+        $this->generateSeedPair->execute($user);
 
         return $user;
-    }
-
-    private function generateSeedPair(User $user): void
-    {
-        $serverSeedRaw = Str::random(64);
-
-        ProvablyFairSeed::create([
-            'user_id' => $user->id,
-            'client_seed' => Str::random(32),
-            'server_seed' => $serverSeedRaw,
-            'server_seed_hash' => hash('sha256', $serverSeedRaw),
-            'nonce' => 0,
-            'is_active' => true,
-        ]);
     }
 }

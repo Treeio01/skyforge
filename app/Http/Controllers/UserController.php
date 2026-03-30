@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateTradeUrlRequest;
+use App\Http\Resources\UserProfileResource;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -17,19 +18,7 @@ class UserController extends Controller
         $user = $request->user();
 
         return Inertia::render('Profile/Show', [
-            'profile' => [
-                'id' => $user->id,
-                'username' => $user->username,
-                'avatar_url' => $user->avatar_url,
-                'steam_id' => $user->steam_id,
-                'trade_url' => $user->trade_url,
-                'balance' => $user->balance,
-                'total_deposited' => $user->total_deposited,
-                'total_withdrawn' => $user->total_withdrawn,
-                'total_upgraded' => $user->total_upgraded,
-                'total_won' => $user->total_won,
-                'created_at' => $user->created_at->toISOString(),
-            ],
+            'profile' => new UserProfileResource($user),
         ]);
     }
 

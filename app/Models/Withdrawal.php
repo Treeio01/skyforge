@@ -13,7 +13,17 @@ class Withdrawal extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'user_id',
+        'user_skin_id',
+        'skin_id',
+        'amount',
+        'status',
+        'trade_offer_id',
+        'trade_offer_status',
+        'failure_reason',
+        'completed_at',
+    ];
 
     protected function casts(): array
     {

@@ -15,6 +15,13 @@ class SkinsImportCommand extends Command
 
     protected $description = 'Import skins from skins_index.json into the database';
 
+    private const BATCH_SIZE = 500;
+
+    private const UPSERT_COLUMNS = [
+        'weapon_type', 'skin_name', 'exterior', 'category',
+        'image_path', 'price', 'updated_at',
+    ];
+
     public function handle(): int
     {
         $path = $this->argument('path');
@@ -38,7 +45,6 @@ class SkinsImportCommand extends Command
         $bar = $this->output->createProgressBar(count($skins));
 
         $batch = [];
-        $count = 0;
 
         foreach ($skins as $marketHashName => $data) {
             $parsed = SkinNameParser::parse($marketHashName);
@@ -59,30 +65,28 @@ class SkinsImportCommand extends Command
                 'updated_at' => now(),
             ];
 
-            if (count($batch) >= 500) {
-                Skin::upsert($batch, ['market_hash_name'], [
-                    'weapon_type', 'skin_name', 'exterior', 'category',
-                    'image_path', 'price', 'updated_at',
-                ]);
-                $count += count($batch);
+            if (count($batch) >= self::BATCH_SIZE) {
+                $this->flushBatch($batch);
+                $bar->advance(count($batch));
                 $batch = [];
-                $bar->advance(500);
             }
         }
 
         if (count($batch) > 0) {
-            Skin::upsert($batch, ['market_hash_name'], [
-                'weapon_type', 'skin_name', 'exterior', 'category',
-                'image_path', 'price', 'updated_at',
-            ]);
-            $count += count($batch);
+            $this->flushBatch($batch);
             $bar->advance(count($batch));
         }
 
         $bar->finish();
         $this->newLine();
-        $this->info("Imported {$count} skins.");
+        $this->info('Imported '.count($skins).' skins.');
 
         return self::SUCCESS;
+    }
+
+    /** @param array<int, array<string, mixed>> $batch */
+    private function flushBatch(array $batch): void
+    {
+        Skin::upsert($batch, ['market_hash_name'], self::UPSERT_COLUMNS);
     }
 }

@@ -6,6 +6,7 @@ namespace App\Console\Commands;
 
 use App\Models\Skin;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
 class SkinsDumpCommand extends Command
@@ -43,7 +44,9 @@ class SkinsDumpCommand extends Command
 
         $columnList = implode(', ', array_map(fn ($c) => "`{$c}`", $columns));
 
-        Skin::query()->orderBy('id')->chunk(500, function ($skins) use ($handle, $columnList, $columns) {
+        $pdo = DB::connection()->getPdo();
+
+        Skin::query()->orderBy('id')->chunk(500, function ($skins) use ($handle, $columnList, $columns, $pdo) {
             $values = [];
 
             foreach ($skins as $skin) {
@@ -59,9 +62,9 @@ class SkinsDumpCommand extends Command
                     } elseif (is_int($val)) {
                         $row[] = (string) $val;
                     } elseif ($val instanceof \BackedEnum) {
-                        $row[] = "'".addslashes((string) $val->value)."'";
+                        $row[] = $pdo->quote((string) $val->value);
                     } else {
-                        $row[] = "'".addslashes((string) $val)."'";
+                        $row[] = $pdo->quote((string) $val);
                     }
                 }
                 $values[] = '('.implode(', ', $row).')';

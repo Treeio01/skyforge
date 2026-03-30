@@ -13,7 +13,16 @@ class Transaction extends Model
 {
     public $timestamps = false;
 
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'user_id',
+        'type',
+        'amount',
+        'balance_before',
+        'balance_after',
+        'reference_type',
+        'reference_id',
+        'description',
+    ];
 
     protected function casts(): array
     {

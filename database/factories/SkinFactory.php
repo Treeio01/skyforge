@@ -26,7 +26,7 @@ class SkinFactory extends Factory
         $name = fake()->randomElement($names);
 
         return [
-            'market_hash_name' => "{$weapon} | {$name} ({$exterior->label()})",
+            'market_hash_name' => fake()->unique()->numerify("{$weapon} | {$name} ({$exterior->label()}) ###"),
             'weapon_type' => $weapon,
             'skin_name' => $name,
             'exterior' => $exterior,

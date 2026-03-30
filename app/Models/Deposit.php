@@ -14,7 +14,16 @@ class Deposit extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $fillable = [
+        'user_id',
+        'method',
+        'amount',
+        'status',
+        'provider_id',
+        'idempotency_key',
+        'provider_data',
+        'completed_at',
+    ];
 
     protected function casts(): array
     {
