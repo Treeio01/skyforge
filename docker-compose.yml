@@ -1,0 +1,114 @@
+services:
+  app:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    container_name: skyforge-app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/skyforge.ini
+    networks:
+      - skyforge
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:alpine
+    container_name: skyforge-nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - skyforge
+    depends_on:
+      - app
+
+  mysql:
+    image: mysql:8.4
+    container_name: skyforge-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: skyforge
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_USER: skyforge
+      MYSQL_PASSWORD: secret
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - skyforge
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: skyforge-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - skyforge
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+
+  horizon:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    container_name: skyforge-horizon
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+    networks:
+      - skyforge
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: php artisan horizon
+
+  reverb:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    container_name: skyforge-reverb
+    restart: unless-stopped
+    working_dir: /var/www
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/var/www
+    networks:
+      - skyforge
+    depends_on:
+      redis:
+        condition: service_healthy
+    command: php artisan reverb:start --host=0.0.0.0 --port=8080
+
+networks:
+  skyforge:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  redis_data:
