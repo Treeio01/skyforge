@@ -9,6 +9,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property string $server_seed
+ * @property string $client_seed
+ * @property string $server_seed_hash
+ * @property int $nonce
+ */
 class ProvablyFairSeed extends Model
 {
     use HasFactory;
