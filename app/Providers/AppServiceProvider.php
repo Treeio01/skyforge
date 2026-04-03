@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Contracts\PaymentProviderInterface;
+use App\Services\StubPaymentProvider;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
@@ -17,7 +19,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(PaymentProviderInterface::class, match (config('skyforge.payment.provider')) {
+            default => StubPaymentProvider::class,
+        });
     }
 
     /**
