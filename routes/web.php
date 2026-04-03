@@ -8,6 +8,8 @@ use App\Http\Controllers\ProvablyFairController;
 use App\Http\Controllers\SkinController;
 use App\Http\Controllers\UpgradeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WithdrawalController;
+use App\Http\Middleware\EnsureTradeUrlSet;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -37,6 +39,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/deposit', [DepositController::class, 'store'])->name('deposit.store');
 
     Route::post('/upgrade', [UpgradeController::class, 'store'])->name('upgrade.store');
+
+    Route::post('/withdrawal', [WithdrawalController::class, 'store'])
+        ->name('withdrawal.store')
+        ->middleware(EnsureTradeUrlSet::class);
 
     Route::get('/provably-fair', [ProvablyFairController::class, 'index'])->name('provably-fair');
     Route::post('/provably-fair/client-seed', [ProvablyFairController::class, 'updateClientSeed'])->name('provably-fair.client-seed');
