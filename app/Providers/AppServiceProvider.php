@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Contracts\PaymentProviderInterface;
+use App\Events\UpgradeCompleted;
+use App\Listeners\PushToLiveFeed;
 use App\Services\StubPaymentProvider;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Vite;
@@ -32,5 +34,6 @@ class AppServiceProvider extends ServiceProvider
         Vite::prefetch(concurrency: 3);
 
         Event::listen(SocialiteWasCalled::class, SteamExtendSocialite::class);
+        Event::listen(UpgradeCompleted::class, PushToLiveFeed::class);
     }
 }

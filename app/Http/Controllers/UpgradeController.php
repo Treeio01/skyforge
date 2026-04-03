@@ -34,8 +34,8 @@ class UpgradeController extends Controller
             return back()->with('error', 'Недостаточно средств.');
         }
 
-        $win = $result->upgrade->result === UpgradeResult::Win; // @phpstan-ignore identical.alwaysFalse
+        $win = $result->upgrade->result === UpgradeResult::Win;
 
-        return back()->with($win ? 'success' : 'error', $win ? 'Вы выиграли!' : 'Вы проиграли.'); // @phpstan-ignore ternary.alwaysFalse, ternary.alwaysFalse
+        return back()->with($win ? 'success' : 'error', $win ? 'Вы выиграли!' : 'Вы проиграли.');
     }
 }

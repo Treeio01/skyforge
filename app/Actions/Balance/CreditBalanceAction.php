@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Actions\Balance;
 
 use App\Enums\TransactionType;
+use App\Events\BalanceUpdated;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -38,7 +39,7 @@ class CreditBalanceAction
 
             $user->save();
 
-            return $this->createTransaction->execute(
+            $tx = $this->createTransaction->execute(
                 $user,
                 $type,
                 $amount,
@@ -47,6 +48,10 @@ class CreditBalanceAction
                 $reference,
                 $description,
             );
+
+            BalanceUpdated::dispatch($user);
+
+            return $tx;
         });
     }
 }

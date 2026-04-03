@@ -12,6 +12,8 @@ use App\Enums\TransactionType;
 use App\Enums\UpgradeResult;
 use App\Enums\UserSkinSource;
 use App\Enums\UserSkinStatus;
+use App\Events\UpgradeCompleted;
+use App\Models\ProvablyFairSeed;
 use App\Models\Setting;
 use App\Models\Skin;
 use App\Models\Upgrade;
@@ -83,7 +85,7 @@ class UpgradeService
             );
 
             // Generate roll
-            /** @var \App\Models\ProvablyFairSeed $seedPair */
+            /** @var ProvablyFairSeed $seedPair */
             $seedPair = $user->activeSeedPair ?? throw new \DomainException('No active seed pair.');
             $seedPair->increment('nonce');
 
@@ -116,6 +118,7 @@ class UpgradeService
                 'server_seed_raw' => $seedPair->server_seed,
                 'nonce' => $seedPair->nonce,
                 'is_revealed' => false,
+                'created_at' => now(),
             ]);
 
             // Create upgrade items
@@ -139,6 +142,8 @@ class UpgradeService
                     'status' => UserSkinStatus::Available,
                 ]);
             }
+
+            UpgradeCompleted::dispatch($upgrade);
 
             return new UpgradeResultDTO(upgrade: $upgrade);
         });

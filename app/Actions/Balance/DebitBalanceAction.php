@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Actions\Balance;
 
 use App\Enums\TransactionType;
+use App\Events\BalanceUpdated;
 use App\Exceptions\InsufficientBalanceException;
 use App\Models\Transaction;
 use App\Models\User;
@@ -44,7 +45,7 @@ class DebitBalanceAction
 
             $user->save();
 
-            return $this->createTransaction->execute(
+            $tx = $this->createTransaction->execute(
                 $user,
                 $type,
                 -$amount,
@@ -53,6 +54,10 @@ class DebitBalanceAction
                 $reference,
                 $description,
             );
+
+            BalanceUpdated::dispatch($user);
+
+            return $tx;
         });
     }
 }

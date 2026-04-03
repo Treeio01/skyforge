@@ -9,6 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property-read User $user
+ * @property-read Skin $targetSkin
+ * @property UpgradeResult $result
+ * @property \Illuminate\Support\Carbon $created_at
+ */
 class Upgrade extends Model
 {
     public $timestamps = false;
@@ -35,6 +41,7 @@ class Upgrade extends Model
         'server_seed_raw',
         'nonce',
         'is_revealed',
+        'created_at',
     ];
 
     protected function casts(): array

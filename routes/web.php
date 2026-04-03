@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\DepositController;
+use App\Http\Controllers\LiveFeedController;
 use App\Http\Controllers\ProvablyFairController;
 use App\Http\Controllers\SkinController;
 use App\Http\Controllers\UpgradeController;
@@ -25,6 +26,7 @@ Route::get('/', function () {
 
 Route::get('/api/skins', [SkinController::class, 'index'])->name('skins.index');
 Route::get('/api/skins/search', [SkinController::class, 'search'])->name('skins.search');
+Route::get('/api/live-feed', [LiveFeedController::class, 'index'])->name('live-feed');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [UserController::class, 'show'])->name('profile');

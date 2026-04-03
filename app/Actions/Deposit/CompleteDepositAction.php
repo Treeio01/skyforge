@@ -7,7 +7,9 @@ namespace App\Actions\Deposit;
 use App\Actions\Balance\CreditBalanceAction;
 use App\Enums\DepositStatus;
 use App\Enums\TransactionType;
+use App\Events\DepositCompleted;
 use App\Models\Deposit;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class CompleteDepositAction
@@ -18,16 +20,14 @@ class CompleteDepositAction
 
     public function execute(Deposit $deposit): bool
     {
-        if ($deposit->status === DepositStatus::Completed) { // @phpstan-ignore identical.alwaysFalse
-            return false;
+        if ($deposit->status === DepositStatus::Completed) {            return false;
         }
 
         return DB::transaction(function () use ($deposit) {
             /** @var Deposit $deposit */
             $deposit = Deposit::lockForUpdate()->findOrFail($deposit->id);
 
-            if ($deposit->status === DepositStatus::Completed) { // @phpstan-ignore identical.alwaysFalse
-                return false;
+            if ($deposit->status === DepositStatus::Completed) {                return false;
             }
 
             $deposit->update([
@@ -35,7 +35,7 @@ class CompleteDepositAction
                 'completed_at' => now(),
             ]);
 
-            /** @var \App\Models\User $user */
+            /** @var User $user */
             $user = $deposit->user;
 
             $this->creditBalance->execute(
@@ -44,6 +44,8 @@ class CompleteDepositAction
                 TransactionType::Deposit,
                 $deposit,
             );
+
+            DepositCompleted::dispatch($deposit);
 
             return true;
         });
