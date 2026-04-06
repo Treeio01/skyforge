@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/deposit', [DepositController::class, 'create'])->name('deposit.create');
     Route::post('/deposit', [DepositController::class, 'store'])->name('deposit.store');
 
+    Route::get('/upgrade', [UpgradeController::class, 'index'])->name('upgrade');
     Route::post('/upgrade', [UpgradeController::class, 'store'])
         ->name('upgrade.store')
         ->middleware('throttle:upgrade');

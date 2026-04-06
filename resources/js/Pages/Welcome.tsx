@@ -21,7 +21,7 @@ export default function Welcome() {
                 <div className="mt-10">
                     {user ? (
                         <Link
-                            href={route('deposit.create')}
+                            href={route('upgrade')}
                             className="inline-flex items-center rounded-lg bg-accent px-8 py-3 text-base font-bold text-[#0a0a0a] hover:bg-accent-hover transition-colors"
                         >
                             Играть

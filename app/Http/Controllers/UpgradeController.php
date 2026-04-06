@@ -5,13 +5,37 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Enums\UpgradeResult;
+use App\Enums\UserSkinStatus;
 use App\Exceptions\InsufficientBalanceException;
+use App\Http\Resources\SkinBriefResource;
 use App\Services\UpgradeService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class UpgradeController extends Controller
 {
+    public function index(Request $request): Response
+    {
+        $user = $request->user();
+
+        $inventory = $user->userSkins()
+            ->where('status', UserSkinStatus::Available)
+            ->with('skin')
+            ->get()
+            ->map(fn ($us) => [
+                'id' => $us->id,
+                'skin' => new SkinBriefResource($us->skin),
+                'price_at_acquisition' => $us->price_at_acquisition,
+            ]);
+
+        return Inertia::render('Upgrade/Index', [
+            'inventory' => $inventory,
+            'balance' => $user->balance,
+        ]);
+    }
+
     public function store(Request $request, UpgradeService $service): RedirectResponse
     {
         $validated = $request->validate([
