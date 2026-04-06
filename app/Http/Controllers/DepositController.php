@@ -32,7 +32,7 @@ class DepositController extends Controller
         try {
             $deposit = $action->execute(
                 $request->user(),
-                $validated['amount'],
+                (int) $validated['amount'],
                 DepositMethod::from($validated['method']),
             );
         } catch (\DomainException $e) {
