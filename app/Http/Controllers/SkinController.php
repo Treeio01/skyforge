@@ -47,7 +47,7 @@ class SkinController extends Controller
         $skins = Skin::query()
             ->active()
             ->availableForUpgrade()
-            ->whereRaw('MATCH(market_hash_name) AGAINST(? IN BOOLEAN MODE)', [$search.'*'])
+            ->where('market_hash_name', 'like', '%'.str_replace('%', '', $search).'%')
             ->orderByDesc('price')
             ->limit(50)
             ->get();

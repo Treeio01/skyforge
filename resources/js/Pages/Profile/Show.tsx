@@ -1,16 +1,25 @@
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import AppLayout from '@/Layouts/AppLayout';
-import { type PageProps, type User } from '@/types';
+import { type PageProps } from '@/types';
 import { FormEvent } from 'react';
 
-interface ProfilePageProps extends Record<string, unknown> {
-    profileUser: User;
-    stats: {
-        total_deposited: number;
-        total_withdrawn: number;
-        total_upgraded: number;
-        total_won: number;
-    };
+interface Profile {
+    id: number;
+    username: string;
+    avatar_url: string | null;
+    steam_id: string;
+    balance: number;
+    trade_url: string | null;
+    is_admin: boolean;
+    total_deposited: number;
+    total_withdrawn: number;
+    total_upgraded: number;
+    total_won: number;
+    created_at: string;
+}
+
+interface Props extends Record<string, unknown> {
+    profile: Profile;
 }
 
 function formatPrice(kopecks: number): string {
@@ -18,10 +27,10 @@ function formatPrice(kopecks: number): string {
 }
 
 export default function Show() {
-    const { profileUser, stats } = usePage<PageProps<ProfilePageProps>>().props;
+    const { profile } = usePage<PageProps<Props>>().props;
 
     const { data, setData, put, processing, errors } = useForm({
-        trade_url: profileUser.trade_url ?? '',
+        trade_url: profile.trade_url ?? '',
     });
 
     function handleSubmit(e: FormEvent) {
@@ -36,20 +45,20 @@ export default function Show() {
             <div className="max-w-3xl mx-auto px-4 py-10 space-y-8">
                 {/* User Card */}
                 <div className="rounded-xl border border-border bg-card p-6 flex items-center gap-5">
-                    {profileUser.avatar_url ? (
+                    {profile.avatar_url ? (
                         <img
-                            src={profileUser.avatar_url}
-                            alt={profileUser.username}
+                            src={profile.avatar_url}
+                            alt={profile.username}
                             className="w-16 h-16 rounded-full"
                         />
                     ) : (
                         <div className="w-16 h-16 rounded-full bg-border flex items-center justify-center text-2xl font-bold text-[#888888]">
-                            {profileUser.username.charAt(0).toUpperCase()}
+                            {profile.username.charAt(0).toUpperCase()}
                         </div>
                     )}
                     <div>
-                        <h1 className="text-xl font-bold">{profileUser.username}</h1>
-                        <p className="text-sm text-[#888888]">Steam ID: {profileUser.steam_id}</p>
+                        <h1 className="text-xl font-bold">{profile.username}</h1>
+                        <p className="text-sm text-[#888888]">Steam ID: {profile.steam_id}</p>
                     </div>
                     <Link
                         href={route('profile.history')}
@@ -68,7 +77,7 @@ export default function Show() {
                             value={data.trade_url}
                             onChange={(e) => setData('trade_url', e.target.value)}
                             placeholder="https://steamcommunity.com/tradeoffer/new/?partner=..."
-                            className="flex-1 rounded-lg border border-border bg-[#0a0a0a] px-4 py-2.5 text-sm text-[#f5f5f5] placeholder-[#888888] focus:border-accent focus:ring-1 focus:ring-accent focus:outline-none"
+                            className="flex-1 rounded-lg border border-border bg-[#0a0a0a] px-4 py-2.5 text-sm text-[#f5f5f5] placeholder-[#555] focus:border-accent focus:ring-1 focus:ring-accent focus:outline-none"
                         />
                         <button
                             type="submit"
@@ -86,10 +95,10 @@ export default function Show() {
                 {/* Stats Grid */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {[
-                        { label: 'Пополнено', value: stats.total_deposited },
-                        { label: 'Выведено', value: stats.total_withdrawn },
-                        { label: 'Поставлено', value: stats.total_upgraded },
-                        { label: 'Выиграно', value: stats.total_won },
+                        { label: 'Пополнено', value: profile.total_deposited },
+                        { label: 'Выведено', value: profile.total_withdrawn },
+                        { label: 'Поставлено', value: profile.total_upgraded },
+                        { label: 'Выиграно', value: profile.total_won },
                     ].map((stat) => (
                         <div
                             key={stat.label}

@@ -57,6 +57,10 @@ class UpgradeService
             $skinsTotal = $betSkins->sum('price_at_acquisition');
             $betAmount = $skinsTotal + $balanceAmount;
 
+            if ($betAmount <= 0) {
+                throw new \DomainException('Bet amount must be greater than zero.');
+            }
+
             if ($betAmount >= $targetPrice) {
                 throw new \DomainException('Bet must be less than target price.');
             }

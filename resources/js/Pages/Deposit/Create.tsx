@@ -10,19 +10,23 @@ const METHODS = [
 export default function Create() {
     const [selectedMethod, setSelectedMethod] = useState<string>('sbp');
 
-    const { data, setData, post, processing, errors } = useForm({
+    const form = useForm({
         amount: '',
         method: 'sbp',
     });
 
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
-        post(route('deposit.store'));
+        form.transform((d) => ({
+            ...d,
+            amount: Math.round(Number(d.amount) * 100),
+        }));
+        form.post(route('deposit.store'));
     }
 
     function selectMethod(method: string) {
         setSelectedMethod(method);
-        setData('method', method);
+        form.setData('method', method);
     }
 
     return (
@@ -62,20 +66,20 @@ export default function Create() {
                             min="100"
                             max="100000"
                             step="1"
-                            value={data.amount}
-                            onChange={(e) => setData('amount', e.target.value)}
+                            value={form.data.amount}
+                            onChange={(e) => form.setData('amount', e.target.value)}
                             placeholder="500"
                             className="w-full rounded-lg border border-border bg-[#0a0a0a] px-4 py-3 text-lg text-[#f5f5f5] placeholder-[#888888] focus:border-accent focus:ring-1 focus:ring-accent focus:outline-none"
                         />
-                        {errors.amount && (
-                            <p className="mt-2 text-sm text-[#ef4444]">{errors.amount}</p>
+                        {form.errors.amount && (
+                            <p className="mt-2 text-sm text-[#ef4444]">{form.errors.amount}</p>
                         )}
                         <p className="mt-2 text-xs text-[#888888]">Мин. 100 RUB, макс. 100 000 RUB</p>
                     </div>
 
                     <button
                         type="submit"
-                        disabled={processing}
+                        disabled={form.processing}
                         className="w-full rounded-lg bg-accent px-6 py-3 text-base font-bold text-[#0a0a0a] hover:bg-accent-hover transition-colors disabled:opacity-50"
                     >
                         Пополнить

@@ -26,7 +26,7 @@ class UpgradeController extends Controller
             ->get()
             ->map(fn ($us) => [
                 'id' => $us->id,
-                'skin' => new SkinBriefResource($us->skin),
+                'skin' => (new SkinBriefResource($us->skin))->resolve($request),
                 'price_at_acquisition' => $us->price_at_acquisition,
             ]);
 
@@ -39,8 +39,8 @@ class UpgradeController extends Controller
     public function store(Request $request, UpgradeService $service): RedirectResponse
     {
         $validated = $request->validate([
-            'user_skin_ids' => ['required', 'array', 'min:1'],
-            'user_skin_ids.*' => ['required', 'integer', 'exists:user_skins,id'],
+            'user_skin_ids' => ['sometimes', 'array'],
+            'user_skin_ids.*' => ['integer', 'exists:user_skins,id'],
             'balance_amount' => ['required', 'integer', 'min:0'],
             'target_skin_id' => ['required', 'integer', 'exists:skins,id'],
         ]);
