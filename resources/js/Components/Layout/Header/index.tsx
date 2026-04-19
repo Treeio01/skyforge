@@ -17,15 +17,17 @@ function Logo() {
 }
 
 function StatsChips() {
+    const stats = (usePage<PageProps>().props as any).stats as { online: number; total_upgrades: number } | undefined;
+
     return (
         <div className="flex gap-[3px] items-stretch">
             <Chip>
                 <GlobeIcon />
-                <ChipLabel>1 935</ChipLabel>
+                <ChipLabel>{stats?.online?.toLocaleString('ru-RU') ?? '0'}</ChipLabel>
             </Chip>
             <Chip>
                 <LevelsIcon />
-                <ChipLabel>351 935</ChipLabel>
+                <ChipLabel>{stats?.total_upgrades?.toLocaleString('ru-RU') ?? '0'}</ChipLabel>
             </Chip>
             <Chip
                 interactive

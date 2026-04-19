@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import Header from '@/Components/Layout/Header';
 import LiveFeed from '@/Components/Upgrade/LiveFeed';
+import LoginModal from '@/Components/UI/LoginModal';
 
 interface AppLayoutProps {
     children: ReactNode;
@@ -14,6 +15,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
                 <Header />
                 {children}
             </div>
+            <LoginModal />
         </div>
     );
 }

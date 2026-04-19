@@ -23,7 +23,7 @@ use MoonShine\Laravel\Pages\LoginPage;
 use MoonShine\Laravel\Pages\ProfilePage;
 
 return [
-    'title' => env('MOONSHINE_TITLE', 'SKYFORGE Admin'),
+    'title' => env('MOONSHINE_TITLE', 'GROWSKINS Admin'),
     'logo' => '/assets/img/logo.png',
     'logo_small' => '/assets/img/logo.png',
 

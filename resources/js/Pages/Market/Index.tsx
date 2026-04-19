@@ -1,6 +1,7 @@
 import AppLayout from "@/Layouts/AppLayout";
 import Modal from "@/Components/UI/Modal";
 import SkinCard from "@/Components/Upgrade/SkinCard";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { useTargetSkins } from "@/hooks/useTargetSkins";
 import { apiSkinToEntry, formatKopecks } from "@/utils/skinHelpers";
 import { useMemo, useRef, useState, useCallback } from "react";
@@ -21,6 +22,7 @@ function parseSortOption(s: SortOption) {
 }
 
 export default function MarketIndex() {
+    const { guard } = useAuthGuard();
     const [search, setSearch] = useState("");
     const [sortOption, setSortOption] = useState<SortOption>("price_asc");
     const [minPrice, setMinPrice] = useState("");
@@ -179,7 +181,7 @@ export default function MarketIndex() {
                                     выделенное
                                 </button>
                                 <button
-                                    onClick={() => setCartOpen(true)}
+                                    onClick={() => guard(() => setCartOpen(true))}
                                     style={{ background: "linear-gradient(90deg, #FE7A02 0%, #FE4D00 100%)" }}
                                     className="relative w-full max-w-[120px] flex rounded-[12px] py-[7px] pl-2.5 pr-[52px] cursor-pointer hover:brightness-110 active:scale-[0.98] transition-all"
                                 >

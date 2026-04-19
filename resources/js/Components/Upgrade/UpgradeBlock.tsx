@@ -1,6 +1,7 @@
 import { PageProps, Skin } from "@/types";
 import axios from "axios";
 import { apiSkinToEntry, inventoryItemToEntry } from "@/utils/skinHelpers";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { useTargetSkins } from "@/hooks/useTargetSkins";
 import { router, usePage } from "@inertiajs/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -82,6 +83,8 @@ function stageToVideoState(
 }
 
 export default function UpgradeBlock({ inventory, balance: _balance }: UpgradeBlockProps) {
+    const { guard } = useAuthGuard();
+
     // ─── Selection ───────────────────────────────────────────
     const [selectedInventory, setSelectedInventory] = useState<SkinId | null>(
         null,
@@ -282,6 +285,7 @@ export default function UpgradeBlock({ inventory, balance: _balance }: UpgradeBl
     }, []);
 
     const handleGo = useCallback(() => {
+        return guard(() => {
         if (!canStart || !inventorySkin || !targetSkin) return;
 
         setResultSkin(targetSkin);
@@ -312,7 +316,8 @@ export default function UpgradeBlock({ inventory, balance: _balance }: UpgradeBl
                 },
             },
         );
-    }, [canStart, inventorySkin, targetSkin]);
+        });
+    }, [canStart, inventorySkin, targetSkin, guard]);
 
     const handleClosingComplete = useCallback(() => {
         setStage((s) => (s === "closing" ? "playing" : s));

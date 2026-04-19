@@ -6,7 +6,10 @@ namespace App\Http\Middleware;
 
 use App\Http\Resources\UserResource;
 use App\Models\Setting;
+use App\Models\Upgrade;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -35,6 +38,11 @@ class HandleInertiaRequests extends Middleware
     {
         $user = $request->user();
 
+        // Обновляем last_active_at раз в минуту
+        if ($user && (! $user->last_active_at || $user->last_active_at->diffInMinutes(now()) >= 1)) {
+            $user->update(['last_active_at' => now()]);
+        }
+
         return [
             ...parent::share($request),
             'auth' => [
@@ -44,6 +52,10 @@ class HandleInertiaRequests extends Middleware
                 'error' => $request->session()->get('error'),
                 'success' => $request->session()->get('success'),
             ],
+            'stats' => Cache::remember('site_stats', 30, fn () => [
+                'online' => User::where('last_active_at', '>=', now()->subMinutes(5))->count(),
+                'total_upgrades' => Upgrade::count(),
+            ]),
             'socials' => [
                 'vk' => Setting::get('social_vk', ''),
                 'telegram' => Setting::get('social_telegram', ''),
