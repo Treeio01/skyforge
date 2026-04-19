@@ -34,13 +34,13 @@ class SkinIndexPage extends IndexPage
     {
         return [
             ID::make(),
-            Text::make('market_hash_name'),
-            Text::make('weapon_type'),
-            Text::make('category'),
-            Number::make('price')
+            Text::make('Название', 'market_hash_name'),
+            Text::make('Оружие', 'weapon_type'),
+            Text::make('Категория', formatted: fn ($item) => $item->category?->value ?? ''),
+            Number::make('Цена', 'price')
                 ->modifyRawValue(fn (mixed $value) => number_format(((int) $value) / 100, 2, '.', ' ').' ₽'),
-            Switcher::make('is_active'),
-            Switcher::make('is_available_for_upgrade'),
+            Switcher::make('Активен', 'is_active'),
+            Switcher::make('Для апгрейда', 'is_available_for_upgrade'),
         ];
     }
 
@@ -58,13 +58,13 @@ class SkinIndexPage extends IndexPage
     protected function filters(): iterable
     {
         return [
-            Select::make('category')
+            Select::make('Категория', 'category')
                 ->options(array_combine(
                     array_column(SkinCategory::cases(), 'value'),
                     array_column(SkinCategory::cases(), 'value'),
                 ))
                 ->nullable(),
-            Switcher::make('is_active'),
+            Switcher::make('Активен', 'is_active'),
         ];
     }
 

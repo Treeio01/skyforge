@@ -20,6 +20,8 @@ class DepositResource extends ModelResource
 
     protected string $title = 'Депозиты';
 
+    protected array $with = ['user'];
+
     protected bool $isCreatable = false;
 
     protected bool $isEditable = false;

@@ -105,6 +105,19 @@ services:
         condition: service_healthy
     command: php artisan reverb:start --host=0.0.0.0 --port=8080
 
+  node:
+    image: node:20-alpine
+    container_name: skyforge-node
+    restart: unless-stopped
+    working_dir: /var/www
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/var/www
+    networks:
+      - skyforge
+    command: sh -c "npm install --legacy-peer-deps && npm run dev -- --host 0.0.0.0"
+
 networks:
   skyforge:
     driver: bridge

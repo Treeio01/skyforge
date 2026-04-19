@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKYFORGE — Апгрейд скинов CS2</title>
+    <meta name="description" content="Платформа апгрейда скинов CS2 с доказуемой честностью, мгновенными выплатами и тысячами скинов на выбор.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0a0a0a;
+            --card: #111111;
+            --card-hover: #161616;
+            --border: #1e1e1e;
+            --text: #f5f5f5;
+            --text-muted: #888888;
+            --text-dim: #555555;
+            --accent: #a3e635;
+            --accent-hover: #bef264;
+            --accent-dim: rgba(163,230,53,0.1);
+            --green: #4ade80;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.6;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        /* ===== HEADER ===== */
+        header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+            background: rgba(10,10,10,0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent), #34d399);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-icon svg { width: 20px; height: 20px; color: #000; }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .header-nav a:hover { color: var(--text); transition: color 0.2s; }
+
+        .btn-steam {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--accent), #34d399);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            transition: all 0.2s;
+            box-shadow: 0 8px 32px rgba(163,230,53,0.15);
+        }
+
+        .btn-steam:hover {
+            background: linear-gradient(135deg, var(--accent-hover), #6ee7b7);
+            box-shadow: 0 8px 32px rgba(163,230,53,0.25);
+            transform: translateY(-1px);
+        }
+
+        .btn-steam svg { width: 18px; height: 18px; }
+
+        @media (max-width: 768px) {
+            .header-nav { display: none; }
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 24px 80px;
+            overflow: hidden;
+        }
+
+        .hero-glow {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 700px;
+            height: 500px;
+            background: radial-gradient(ellipse, rgba(163,230,53,0.07), transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-glow-2 {
+            position: absolute;
+            bottom: 0;
+            left: 20%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(163,230,53,0.04), transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-content { position: relative; max-width: 900px; }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(163,230,53,0.2);
+            background: var(--accent-dim);
+            color: var(--accent);
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 32px;
+        }
+
+        .badge-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .hero h1 {
+            font-size: clamp(48px, 8vw, 96px);
+            font-weight: 900;
+            line-height: 0.9;
+            letter-spacing: -0.03em;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 .accent { color: var(--accent); }
+
+        .hero p {
+            max-width: 640px;
+            margin: 0 auto 40px;
+            font-size: 18px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent);
+            color: #000;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            transition: all 0.2s;
+            box-shadow: 0 12px 40px rgba(163,230,53,0.2);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            box-shadow: 0 12px 40px rgba(163,230,53,0.3);
+            transform: scale(1.02);
+        }
+
+        .btn-primary:active { transform: scale(0.98); }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--text-muted);
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: var(--card-hover);
+            color: var(--text);
+        }
+
+        .stats {
+            margin-top: 80px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-top: 4px;
+        }
+
+        @media (max-width: 640px) {
+            .stats { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+            .hero p { font-size: 16px; }
+        }
+
+        /* ===== SECTIONS ===== */
+        section { padding: 96px 0; border-top: 1px solid var(--border); }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .section-header h2 {
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+
+        .section-header h2 .accent { color: var(--accent); }
+
+        .section-header p {
+            color: var(--text-muted);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 640px) {
+            section { padding: 64px 0; }
+            .section-header h2 { font-size: 28px; }
+        }
+
+        /* ===== FEATURES ===== */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .feature-card {
+            border: 1px solid var(--border);
+            background: var(--card);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(163,230,53,0.2);
+            background: var(--card-hover);
+        }
+
+        .feature-icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            background: var(--accent-dim);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .feature-icon svg { width: 24px; height: 24px; }
+
+        .feature-card h3 {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .feature-card p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        @media (max-width: 1024px) { .features-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 640px) { .features-grid { grid-template-columns: 1fr; } }
+
+        /* ===== STEPS ===== */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+        }
+
+        .step { text-align: center; }
+
+        .step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 64px; height: 64px;
+            border-radius: 16px;
+            background: var(--accent-dim);
+            border: 1px solid rgba(163,230,53,0.2);
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .step h3 {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .step p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        @media (max-width: 1024px) { .steps-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 640px) { .steps-grid { grid-template-columns: 1fr; } }
+
+        /* ===== PROVABLY FAIR ===== */
+        .pf-card {
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 64px;
+            background: linear-gradient(135deg, rgba(163,230,53,0.03), transparent);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pf-glow {
+            position: absolute;
+            top: -50px; right: -50px;
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(163,230,53,0.06), transparent 70%);
+            pointer-events: none;
+        }
+
+        .pf-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+            position: relative;
+        }
+
+        .pf-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid rgba(163,230,53,0.2);
+            background: var(--accent-dim);
+            color: var(--accent);
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .pf-badge svg { width: 14px; height: 14px; }
+
+        .pf-grid h2 {
+            font-size: 36px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 16px;
+        }
+
+        .pf-grid > div:first-child p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .pf-formula {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--text-dim);
+        }
+
+        .pf-formula svg { width: 16px; height: 16px; color: var(--accent); flex-shrink: 0; }
+
+        .pf-code {
+            background: rgba(10,10,10,0.6);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .pf-code .comment { color: var(--text-dim); }
+        .pf-code .key { color: var(--accent); }
+        .pf-code .val { color: var(--text-muted); }
+        .pf-code .fn { color: var(--green); }
+        .pf-code .bold { font-weight: 700; color: var(--text); }
+        .pf-code .divider { border-top: 1px solid var(--border); margin: 8px 0; }
+
+        @media (max-width: 768px) {
+            .pf-card { padding: 32px; }
+            .pf-grid { grid-template-columns: 1fr; gap: 32px; }
+            .pf-grid h2 { font-size: 28px; }
+        }
+
+        /* ===== FAQ ===== */
+        .faq-list { max-width: 720px; margin: 0 auto; }
+
+        details {
+            border: 1px solid var(--border);
+            background: var(--card);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            list-style: none;
+            transition: background 0.2s;
+        }
+
+        summary::-webkit-details-marker { display: none; }
+        summary:hover { background: var(--card-hover); }
+
+        .faq-icon {
+            width: 20px; height: 20px;
+            color: var(--text-dim);
+            flex-shrink: 0;
+            transition: transform 0.2s;
+        }
+
+        details[open] .faq-icon { transform: rotate(45deg); }
+
+        .faq-answer {
+            padding: 0 24px 20px;
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* ===== CTA ===== */
+        .cta { text-align: center; }
+
+        .cta h2 {
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+
+        .cta p {
+            color: var(--text-muted);
+            max-width: 480px;
+            margin: 0 auto 40px;
+        }
+
+        @media (max-width: 640px) { .cta h2 { font-size: 32px; } }
+
+        /* ===== FOOTER ===== */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 48px 0;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand p {
+            font-size: 14px;
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin-top: 12px;
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .footer-col ul { list-style: none; }
+
+        .footer-col li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col a {
+            font-size: 14px;
+            color: var(--text-dim);
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover { color: var(--text-muted); }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border);
+            padding-top: 32px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .footer-bottom p {
+            font-size: 12px;
+            color: #444;
+        }
+
+        .footer-bottom .disclaimer { color: #333; }
+
+        @media (max-width: 768px) {
+            .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 100px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+    <div class="header-inner">
+        <a href="#" class="logo">
+            <div class="logo-icon">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/>
+                </svg>
+            </div>
+            <span class="logo-text">SKYFORGE</span>
+        </a>
+        <nav class="header-nav">
+            <a href="#features">Возможности</a>
+            <a href="#how-it-works">Как это работает</a>
+            <a href="#faq">FAQ</a>
+        </nav>
+        <a href="#" class="btn-steam">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 11.999-5.373 11.999-12S18.605 0 11.979 0zM7.54 18.21l-1.473-.61c.262.543.714.999 1.314 1.25 1.297.539 2.793-.076 3.332-1.375.263-.63.264-1.319.005-1.949s-.75-1.121-1.377-1.383c-.624-.26-1.29-.249-1.878-.03l1.523.63c.956.4 1.409 1.5 1.009 2.455-.397.957-1.497 1.41-2.454 1.012H7.54zm11.415-9.303c0-1.662-1.353-3.015-3.015-3.015-1.665 0-3.015 1.353-3.015 3.015 0 1.665 1.35 3.015 3.015 3.015 1.663 0 3.015-1.35 3.015-3.015zm-5.273-.005c0-1.252 1.013-2.266 2.265-2.266 1.249 0 2.266 1.014 2.266 2.266 0 1.251-1.017 2.265-2.266 2.265-1.253 0-2.265-1.014-2.265-2.265z"/></svg>
+            Войти через Steam
+        </a>
+    </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-glow-2"></div>
+    <div class="hero-content">
+        <div class="badge">
+            <span class="badge-dot"></span>
+            Provably Fair система
+        </div>
+        <h1>
+            Апгрейд скинов<br><span class="accent">CS2</span>
+        </h1>
+        <p>
+            Превращай дешёвые скины в дорогие. Честная система с доказуемой
+            вероятностью, мгновенные выплаты и тысячи скинов на выбор.
+        </p>
+        <div class="hero-actions">
+            <a href="#" class="btn-primary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 11.999-5.373 11.999-12S18.605 0 11.979 0zM7.54 18.21l-1.473-.61c.262.543.714.999 1.314 1.25 1.297.539 2.793-.076 3.332-1.375.263-.63.264-1.319.005-1.949s-.75-1.121-1.377-1.383c-.624-.26-1.29-.249-1.878-.03l1.523.63c.956.4 1.409 1.5 1.009 2.455-.397.957-1.497 1.41-2.454 1.012H7.54zm11.415-9.303c0-1.662-1.353-3.015-3.015-3.015-1.665 0-3.015 1.353-3.015 3.015 0 1.665 1.35 3.015 3.015 3.015 1.663 0 3.015-1.35 3.015-3.015zm-5.273-.005c0-1.252 1.013-2.266 2.265-2.266 1.249 0 2.266 1.014 2.266 2.266 0 1.251-1.017 2.265-2.266 2.265-1.253 0-2.265-1.014-2.265-2.265z"/></svg>
+                Начать играть
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+            </a>
+            <a href="#how-it-works" class="btn-secondary">Как это работает</a>
+        </div>
+        <div class="stats">
+            <div>
+                <div class="stat-value">10K+</div>
+                <div class="stat-label">Скинов в каталоге</div>
+            </div>
+            <div>
+                <div class="stat-value">1–95%</div>
+                <div class="stat-label">Диапазон шансов</div>
+            </div>
+            <div>
+                <div class="stat-value">&lt; 1 мин</div>
+                <div class="stat-label">Скорость вывода</div>
+            </div>
+            <div>
+                <div class="stat-value">24/7</div>
+                <div class="stat-label">Поддержка</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+    <div class="container">
+        <div class="section-header">
+            <h2>Почему <span class="accent">SKYFORGE</span></h2>
+            <p>Прозрачность, скорость и честная игра — наши главные принципы.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+                </div>
+                <h3>Мгновенные апгрейды</h3>
+                <p>Выбирай скин, ставь сумму и испытай удачу. Результат за секунду.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+                </div>
+                <h3>Provably Fair</h3>
+                <p>Каждый раунд можно проверить. Серверный и клиентский сид, открытый алгоритм.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"/></svg>
+                </div>
+                <h3>Быстрые выплаты</h3>
+                <p>Вывод скинов через Steam Trade Offer. Без задержек и скрытых комиссий.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.58-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/></svg>
+                </div>
+                <h3>Широкий каталог</h3>
+                <p>Тысячи скинов CS2 с актуальными ценами. От бюджетных до редких ножей.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works">
+    <div class="container">
+        <div class="section-header">
+            <h2>Как это работает</h2>
+            <p>Четыре простых шага от авторизации до скина мечты</p>
+        </div>
+        <div class="steps-grid">
+            <div class="step">
+                <div class="step-num">01</div>
+                <h3>Войди через Steam</h3>
+                <p>Авторизуйся через свой Steam аккаунт — безопасно и быстро.</p>
+            </div>
+            <div class="step">
+                <div class="step-num">02</div>
+                <h3>Пополни баланс</h3>
+                <p>Выбери удобный способ оплаты и пополни игровой баланс.</p>
+            </div>
+            <div class="step">
+                <div class="step-num">03</div>
+                <h3>Выбери скин</h3>
+                <p>Найди желаемый скин в каталоге с актуальными рыночными ценами.</p>
+            </div>
+            <div class="step">
+                <div class="step-num">04</div>
+                <h3>Апгрейд!</h3>
+                <p>Сделай ставку, выбери шанс и попробуй выиграть скин мечты.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PROVABLY FAIR -->
+<section>
+    <div class="container">
+        <div class="pf-card">
+            <div class="pf-glow"></div>
+            <div class="pf-grid">
+                <div>
+                    <div class="pf-badge">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+                        Доказуемая честность
+                    </div>
+                    <h2>Каждый раунд<br>можно проверить</h2>
+                    <p>
+                        Мы используем криптографический алгоритм HMAC-SHA256 для генерации результатов.
+                        Серверный сид фиксируется до начала раунда, а после — раскрывается для проверки.
+                    </p>
+                    <div class="pf-formula">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                        Server seed + Client seed + Nonce = Result
+                    </div>
+                </div>
+                <div class="pf-code">
+                    <div class="comment">// Verify round #1847</div>
+                    <br>
+                    <div><span class="key">server_seed:</span> <span class="val">a3f8c9...</span></div>
+                    <div><span class="key">client_seed:</span> <span class="val">myCustomSeed</span></div>
+                    <div><span class="key">nonce:</span> <span class="val">1847</span></div>
+                    <div class="divider"></div>
+                    <div><span class="fn">hmac_sha256</span><span class="val">(seed, data)</span></div>
+                    <br>
+                    <div><span class="key">roll:</span> <span class="bold">47.23</span> <span class="comment">/ 100</span></div>
+                    <div><span class="key">chance:</span> <span class="val">52.00%</span></div>
+                    <div><span class="fn" style="font-weight:700">result: WIN</span> <span class="comment">✓</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+    <div class="container">
+        <div class="section-header">
+            <h2>Частые вопросы</h2>
+            <p>Ответы на популярные вопросы о платформе</p>
+        </div>
+        <div class="faq-list">
+            <details>
+                <summary>
+                    Как работает апгрейд?
+                    <svg class="faq-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                </summary>
+                <div class="faq-answer">Ты выбираешь скин и делаешь ставку. Система рассчитывает шанс выигрыша на основе соотношения ставки к цене скина. Чем выше ставка — тем больше шанс получить скин.</div>
+            </details>
+            <details>
+                <summary>
+                    Что такое Provably Fair?
+                    <svg class="faq-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                </summary>
+                <div class="faq-answer">Это система доказуемой честности. Перед каждым раундом генерируется серверный сид, а ты можешь задать свой клиентский сид. После раунда можно проверить, что результат не был подтасован.</div>
+            </details>
+            <details>
+                <summary>
+                    Как вывести выигранный скин?
+                    <svg class="faq-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                </summary>
+                <div class="faq-answer">Укажи свой Trade URL в профиле, и мы отправим скин через Steam Trade Offer. Обычно это занимает не больше нескольких минут.</div>
+            </details>
+            <details>
+                <summary>
+                    Какие способы пополнения доступны?
+                    <svg class="faq-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                </summary>
+                <div class="faq-answer">Мы поддерживаем банковские карты, электронные кошельки и другие популярные способы оплаты. Минимальная сумма пополнения — 1 ₽.</div>
+            </details>
+            <details>
+                <summary>
+                    Есть ли комиссия?
+                    <svg class="faq-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+                </summary>
+                <div class="faq-answer">Комиссия платформы уже заложена в расчёт шанса. Никаких скрытых сборов при пополнении или выводе скинов.</div>
+            </details>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+    <div class="container">
+        <h2>Готов к апгрейду?</h2>
+        <p>Присоединяйся к SKYFORGE и начни превращать свои скины в нечто большее.</p>
+        <a href="#" class="btn-primary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 11.999-5.373 11.999-12S18.605 0 11.979 0zM7.54 18.21l-1.473-.61c.262.543.714.999 1.314 1.25 1.297.539 2.793-.076 3.332-1.375.263-.63.264-1.319.005-1.949s-.75-1.121-1.377-1.383c-.624-.26-1.29-.249-1.878-.03l1.523.63c.956.4 1.409 1.5 1.009 2.455-.397.957-1.497 1.41-2.454 1.012H7.54zm11.415-9.303c0-1.662-1.353-3.015-3.015-3.015-1.665 0-3.015 1.353-3.015 3.015 0 1.665 1.35 3.015 3.015 3.015 1.663 0 3.015-1.35 3.015-3.015zm-5.273-.005c0-1.252 1.013-2.266 2.265-2.266 1.249 0 2.266 1.014 2.266 2.266 0 1.251-1.017 2.265-2.266 2.265-1.253 0-2.265-1.014-2.265-2.265z"/></svg>
+            Начать играть
+        </a>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+                    </div>
+                    <span class="logo-text">SKYFORGE</span>
+                </div>
+                <p>Платформа апгрейда скинов CS2 с доказуемой честностью и мгновенными выплатами.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Платформа</h4>
+                <ul>
+                    <li><a href="#features">Возможности</a></li>
+                    <li><a href="#how-it-works">Как это работает</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Информация</h4>
+                <ul>
+                    <li><a href="#">Пользовательское соглашение</a></li>
+                    <li><a href="#">Политика конфиденциальности</a></li>
+                    <li><a href="#">Поддержка</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 SKYFORGE. Все права защищены.</p>
+            <p class="disclaimer">SKYFORGE не аффилирован с Valve Corporation. Counter-Strike 2 является торговой маркой Valve Corporation.</p>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

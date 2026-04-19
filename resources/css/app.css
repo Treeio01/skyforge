@@ -1,8 +1,130 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Gotham */
+@font-face { font-family: 'Gotham'; src: url('../fonts/gotham_thin.otf')         format('opentype'); font-weight: 100; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham'; src: url('../fonts/gotham_thinitalic.otf')   format('opentype'); font-weight: 100; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham'; src: url('../fonts/gotham_xlight.otf')       format('opentype'); font-weight: 200; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham'; src: url('../fonts/gotham_xlightitalic.otf') format('opentype'); font-weight: 200; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham'; src: url('../fonts/gotham_light.otf')        format('opentype'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham'; src: url('../fonts/gotham_lightitalic.otf')  format('opentype'); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham'; src: url('../fonts/gotham_book.otf')         format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham'; src: url('../fonts/gotham_bookitalic.otf')   format('opentype'); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham'; src: url('../fonts/gotham_medium.otf')       format('opentype'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham'; src: url('../fonts/gotham_mediumitalic.otf') format('opentype'); font-weight: 500; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham'; src: url('../fonts/gotham_bold.otf')         format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham'; src: url('../fonts/gotham_bolditalic.otf')   format('opentype'); font-weight: 700; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham'; src: url('../fonts/gotham_black.otf')        format('opentype'); font-weight: 800; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham'; src: url('../fonts/gotham_blackitalic.otf')  format('opentype'); font-weight: 800; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham'; src: url('../fonts/gotham_ultra.otf')        format('opentype'); font-weight: 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham'; src: url('../fonts/gotham_ultraitalic.otf')  format('opentype'); font-weight: 900; font-style: italic; font-display: swap; }
+
+/* Gotham Condensed */
+@font-face { font-family: 'Gotham Condensed'; src: url('../fonts/gothamcond_thin.otf')         format('opentype'); font-weight: 100; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham Condensed'; src: url('../fonts/gothamcond_thinitalic.otf')   format('opentype'); font-weight: 100; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham Condensed'; src: url('../fonts/gothamcond_xlight.otf')       format('opentype'); font-weight: 200; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham Condensed'; src: url('../fonts/gothamcond_xlightitalic.otf') format('opentype'); font-weight: 200; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham Condensed'; src: url('../fonts/gothamcond_light.otf')        format('opentype'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham Condensed'; src: url('../fonts/gothamcond_lightitalic.otf')  format('opentype'); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham Condensed'; src: url('../fonts/gothamcond_book.otf')         format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham Condensed'; src: url('../fonts/gothamcond_bookitalic.otf')   format('opentype'); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham Condensed'; src: url('../fonts/gothamcond_medium.otf')       format('opentype'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham Condensed'; src: url('../fonts/gothamcond_mediumitalic.otf') format('opentype'); font-weight: 500; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham Condensed'; src: url('../fonts/gothamcond_bold.otf')         format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham Condensed'; src: url('../fonts/gothamcond_bolditalic.otf')   format('opentype'); font-weight: 700; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham Condensed'; src: url('../fonts/gothamcond_black.otf')        format('opentype'); font-weight: 800; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham Condensed'; src: url('../fonts/gothamcond_blackitalic.otf')  format('opentype'); font-weight: 800; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham Condensed'; src: url('../fonts/gothamcond_xblack.otf')       format('opentype'); font-weight: 850; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham Condensed'; src: url('../fonts/gothamcond_xblackitalic.otf') format('opentype'); font-weight: 850; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham Condensed'; src: url('../fonts/gothamcond_ultra.otf')        format('opentype'); font-weight: 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham Condensed'; src: url('../fonts/gothamcond_ultraitalic.otf')  format('opentype'); font-weight: 900; font-style: italic; font-display: swap; }
+
+/* Gotham Narrow (partial set) */
+@font-face { font-family: 'Gotham Narrow'; src: url('../fonts/gothamnarrow_thin.otf')            format('opentype'); font-weight: 100; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham Narrow'; src: url('../fonts/gothamnarrow_thinitalic.otf')      format('opentype'); font-weight: 100; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham Narrow'; src: url('../fonts/gothamnarrow_xlightitalic.otf')    format('opentype'); font-weight: 200; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham Narrow'; src: url('../fonts/gothamnarrow_bookitalic.otf')      format('opentype'); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham Narrow'; src: url('../fonts/gothamnarrow_medium.otf')          format('opentype'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham Narrow'; src: url('../fonts/gothamnarrow_bolditalic.otf')      format('opentype'); font-weight: 700; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham Narrow'; src: url('../fonts/gothamnarrow_black.otf')           format('opentype'); font-weight: 800; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham Narrow'; src: url('../fonts/gothamnarrow_blackitalic.otf')     format('opentype'); font-weight: 800; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham Narrow'; src: url('../fonts/gothamnarrow_ultra.otf')           format('opentype'); font-weight: 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham Narrow'; src: url('../fonts/gothamnarrow_ultraitalic.otf')     format('opentype'); font-weight: 900; font-style: italic; font-display: swap; }
+
+/* Gotham X-Narrow */
+@font-face { font-family: 'Gotham X-Narrow'; src: url('../fonts/gothamxnarrow_thin.otf')          format('opentype'); font-weight: 100; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham X-Narrow'; src: url('../fonts/gothamxnarrow_thinitalic.otf')    format('opentype'); font-weight: 100; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham X-Narrow'; src: url('../fonts/gothamxnarrow_xlight.otf')        format('opentype'); font-weight: 200; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham X-Narrow'; src: url('../fonts/gothamxnarrow_xlightitalic.otf')  format('opentype'); font-weight: 200; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham X-Narrow'; src: url('../fonts/gothamxnarrow_light.otf')         format('opentype'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham X-Narrow'; src: url('../fonts/gothamxnarrow_lightitalic.otf')   format('opentype'); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham X-Narrow'; src: url('../fonts/gothamxnarrow_medium.otf')        format('opentype'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham X-Narrow'; src: url('../fonts/gothamxnarrow_mediumitalic.otf')  format('opentype'); font-weight: 500; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham X-Narrow'; src: url('../fonts/gothamxnarrow_bold.otf')          format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham X-Narrow'; src: url('../fonts/gothamxnarrow_bolditalic.otf')    format('opentype'); font-weight: 700; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham X-Narrow'; src: url('../fonts/gothamxnarrow_black.otf')         format('opentype'); font-weight: 800; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham X-Narrow'; src: url('../fonts/gothamxnarrow_blackitalic.otf')   format('opentype'); font-weight: 800; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Gotham X-Narrow'; src: url('../fonts/gothamxnarrow_ultra.otf')         format('opentype'); font-weight: 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Gotham X-Narrow'; src: url('../fonts/gothamxnarrow_ultraitalic.otf')   format('opentype'); font-weight: 900; font-style: italic; font-display: swap; }
+
+/* SF Compact Rounded */
+@font-face { font-family: 'SF Compact Rounded'; src: url('../fonts/SF-Compact-Rounded-Light.woff2')    format('woff2'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Compact Rounded'; src: url('../fonts/SF-Compact-Rounded-Regular.woff2')  format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Compact Rounded'; src: url('../fonts/SF-Compact-Rounded-Medium.woff2')   format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Compact Rounded'; src: url('../fonts/SF-Compact-Rounded-Semibold.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Compact Rounded'; src: url('../fonts/SF-Compact-Rounded-Bold.woff2')     format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Compact Rounded'; src: url('../fonts/SF-Compact-Rounded-Heavy.woff2')    format('woff2'); font-weight: 800; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Compact Rounded'; src: url('../fonts/SF-Compact-Rounded-Black.woff2')    format('woff2'); font-weight: 900; font-style: normal; font-display: swap; }
+
+/* SF Pro Display */
+@font-face { font-family: 'SF Pro Display'; src: url('../fonts/SF-Pro-Display-Ultralight.otf')       format('opentype'); font-weight: 100; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Display'; src: url('../fonts/SF-Pro-Display-UltralightItalic.otf') format('opentype'); font-weight: 100; font-style: italic; font-display: swap; }
+@font-face { font-family: 'SF Pro Display'; src: url('../fonts/SF-Pro-Display-Thin.otf')             format('opentype'); font-weight: 200; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Display'; src: url('../fonts/SF-Pro-Display-ThinItalic.otf')       format('opentype'); font-weight: 200; font-style: italic; font-display: swap; }
+@font-face { font-family: 'SF Pro Display'; src: url('../fonts/SF-Pro-Display-Light.otf')            format('opentype'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Display'; src: url('../fonts/SF-Pro-Display-LightItalic.otf')      format('opentype'); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: 'SF Pro Display'; src: url('../fonts/SF-Pro-Display-Regular.otf')          format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Display'; src: url('../fonts/SF-Pro-Display-RegularItalic.otf')    format('opentype'); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: 'SF Pro Display'; src: url('../fonts/SF-Pro-Display-Medium.otf')           format('opentype'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Display'; src: url('../fonts/SF-Pro-Display-MediumItalic.otf')     format('opentype'); font-weight: 500; font-style: italic; font-display: swap; }
+@font-face { font-family: 'SF Pro Display'; src: url('../fonts/SF-Pro-Display-Semibold.otf')         format('opentype'); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Display'; src: url('../fonts/SF-Pro-Display-SemiboldItalic.otf')   format('opentype'); font-weight: 600; font-style: italic; font-display: swap; }
+@font-face { font-family: 'SF Pro Display'; src: url('../fonts/SF-Pro-Display-Bold.otf')             format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Display'; src: url('../fonts/SF-Pro-Display-BoldItalic.otf')       format('opentype'); font-weight: 700; font-style: italic; font-display: swap; }
+@font-face { font-family: 'SF Pro Display'; src: url('../fonts/SF-Pro-Display-Heavy.otf')            format('opentype'); font-weight: 800; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Display'; src: url('../fonts/SF-Pro-Display-HeavyItalic.otf')      format('opentype'); font-weight: 800; font-style: italic; font-display: swap; }
+@font-face { font-family: 'SF Pro Display'; src: url('../fonts/SF-Pro-Display-Black.otf')            format('opentype'); font-weight: 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Display'; src: url('../fonts/SF-Pro-Display-BlackItalic.otf')      format('opentype'); font-weight: 900; font-style: italic; font-display: swap; }
+
+/* SF Pro Rounded */
+@font-face { font-family: 'SF Pro Rounded'; src: url('../fonts/SF-Pro-Rounded-Ultralight.otf') format('opentype'); font-weight: 100; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Rounded'; src: url('../fonts/SF-Pro-Rounded-Thin.otf')       format('opentype'); font-weight: 200; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Rounded'; src: url('../fonts/SF-Pro-Rounded-Light.otf')      format('opentype'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Rounded'; src: url('../fonts/SF-Pro-Rounded-Regular.otf')    format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Rounded'; src: url('../fonts/SF-Pro-Rounded-Medium.otf')     format('opentype'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Rounded'; src: url('../fonts/SF-Pro-Rounded-Semibold.otf')   format('opentype'); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Rounded'; src: url('../fonts/SF-Pro-Rounded-Bold.otf')       format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Rounded'; src: url('../fonts/SF-Pro-Rounded-Heavy.otf')      format('opentype'); font-weight: 800; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Rounded'; src: url('../fonts/SF-Pro-Rounded-Black.otf')      format('opentype'); font-weight: 900; font-style: normal; font-display: swap; }
+
+/* SF Pro Text */
+@font-face { font-family: 'SF Pro Text'; src: url('../fonts/SF-Pro-Text-Ultralight.otf')       format('opentype'); font-weight: 100; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Text'; src: url('../fonts/SF-Pro-Text-UltralightItalic.otf') format('opentype'); font-weight: 100; font-style: italic; font-display: swap; }
+@font-face { font-family: 'SF Pro Text'; src: url('../fonts/SF-Pro-Text-Thin.otf')             format('opentype'); font-weight: 200; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Text'; src: url('../fonts/SF-Pro-Text-ThinItalic.otf')       format('opentype'); font-weight: 200; font-style: italic; font-display: swap; }
+@font-face { font-family: 'SF Pro Text'; src: url('../fonts/SF-Pro-Text-Light.otf')            format('opentype'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Text'; src: url('../fonts/SF-Pro-Text-LightItalic.otf')      format('opentype'); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: 'SF Pro Text'; src: url('../fonts/SF-Pro-Text-Regular.otf')          format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Text'; src: url('../fonts/SF-Pro-Text-RegularItalic.otf')    format('opentype'); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: 'SF Pro Text'; src: url('../fonts/SF-Pro-Text-Medium.otf')           format('opentype'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Text'; src: url('../fonts/SF-Pro-Text-MediumItalic.otf')     format('opentype'); font-weight: 500; font-style: italic; font-display: swap; }
+@font-face { font-family: 'SF Pro Text'; src: url('../fonts/SF-Pro-Text-Semibold.otf')         format('opentype'); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Text'; src: url('../fonts/SF-Pro-Text-SemiboldItalic.otf')   format('opentype'); font-weight: 600; font-style: italic; font-display: swap; }
+@font-face { font-family: 'SF Pro Text'; src: url('../fonts/SF-Pro-Text-Bold.otf')             format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Text'; src: url('../fonts/SF-Pro-Text-BoldItalic.otf')       format('opentype'); font-weight: 700; font-style: italic; font-display: swap; }
+@font-face { font-family: 'SF Pro Text'; src: url('../fonts/SF-Pro-Text-Heavy.otf')            format('opentype'); font-weight: 800; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Text'; src: url('../fonts/SF-Pro-Text-HeavyItalic.otf')      format('opentype'); font-weight: 800; font-style: italic; font-display: swap; }
+@font-face { font-family: 'SF Pro Text'; src: url('../fonts/SF-Pro-Text-Black.otf')            format('opentype'); font-weight: 900; font-style: normal; font-display: swap; }
+@font-face { font-family: 'SF Pro Text'; src: url('../fonts/SF-Pro-Text-BlackItalic.otf')      format('opentype'); font-weight: 900; font-style: italic; font-display: swap; }
 
 @layer base {
     body {
@@ -25,4 +147,185 @@
     ::-webkit-scrollbar-thumb:hover {
         @apply bg-[#3a3a3a];
     }
+}
+
+
+@theme{
+
+    --font-sans: 'Inter', system-ui, sans-serif;
+    --font-antonio: 'Antonio', system-ui, sans-serif;
+    --font-montserrat: 'Montserrat', system-ui, sans-serif;
+    --font-sf-compact: 'SF Compact Rounded', system-ui, sans-serif;
+    --font-sf-display: 'SF Pro Display', system-ui, sans-serif;
+    --font-sf-rounded: 'SF Pro Rounded', system-ui, sans-serif;
+    --font-sf-text: 'SF Pro Text', system-ui, sans-serif;
+    --font-gotham: 'Gotham', system-ui, sans-serif;
+    --font-gotham-cond: 'Gotham Condensed', system-ui, sans-serif;
+    --font-gotham-narrow: 'Gotham Narrow', system-ui, sans-serif;
+    --font-gotham-xnarrow: 'Gotham X-Narrow', system-ui, sans-serif;
+
+    --color-bg:#000;
+    --color-accent:#070A10;
+    --color-cons: #878F9D;
+    --color-indus: #356C9D;
+    --color-mils: #2D4FFA;
+    --color-restr: #50318D;
+    --color-class: #A64BB5;
+    --color-covrt: #EA2F2F;
+    --color-contra: #D4AF37;
+    --color-extra: #D4AF37;
+
+    --breakpoint-402: 402px;
+    --breakpoint-450: 450px;
+    --breakpoint-550: 550px;
+    --breakpoint-1024: 1024px;
+    --breakpoint-1155: 1155px;
+    --breakpoint-1340: 1340px;
+    --breakpoint-1440: 1440px;
+}
+
+@keyframes feed-item-expand {
+    0%   { grid-template-rows: 0fr; }
+    100% { grid-template-rows: 1fr; }
+}
+
+@keyframes dropdown-in {
+    0%   { opacity: 0; transform: translateY(-4px) scale(0.97); }
+    100% { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+@keyframes upgrade-result-in {
+    0% {
+        opacity: 0;
+        transform: translateY(-80px) scale(0.7) rotate(-4deg);
+        filter: blur(12px);
+    }
+    55% {
+        opacity: 1;
+        transform: translateY(6px) scale(1.04) rotate(0.8deg);
+        filter: blur(0);
+    }
+    75% {
+        transform: translateY(-2px) scale(0.98) rotate(-0.3deg);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotate(0);
+        filter: blur(0);
+    }
+}
+
+@keyframes upgrade-result-title {
+    0%   { transform: scaleX(0); opacity: 0; }
+    100% { transform: scaleX(1); opacity: 1; }
+}
+
+@keyframes upgrade-result-skin {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+        clip-path: inset(0 50% 0 50%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+        clip-path: inset(0 0 0 0);
+    }
+}
+
+@keyframes upgrade-result-glow {
+    0%, 100% { filter: drop-shadow(0 0 0 transparent); }
+    50%      { filter: drop-shadow(0 0 18px currentColor); }
+}
+
+@keyframes skin-card-in {
+    from { opacity: 0; transform: scale(0.96) translateY(4px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes feed-item-reveal {
+    0%   { opacity: 0; transform: scale(0.94) translateX(-10px); }
+    100% { opacity: 1; transform: scale(1)    translateX(0); }
+}
+
+@layer components {
+    .animate-feed-in {
+        animation: feed-item-expand 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .animate-feed-reveal {
+        animation: feed-item-reveal 0.35s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+    }
+
+    .animate-dropdown-in {
+        animation: dropdown-in 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+        transform-origin: top center;
+    }
+
+    .animate-upgrade-result-in {
+        animation: upgrade-result-in 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    .animate-upgrade-result-title {
+        animation: upgrade-result-title 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both;
+        transform-origin: center;
+    }
+
+    .animate-upgrade-result-skin {
+        animation: upgrade-result-skin 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.45s both;
+    }
+
+    .animate-skin-card-in {
+        animation: skin-card-in 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .custom-scrollbar {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.16);
+    }
+
+    .skins-scroll {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+    }
+    .skins-scroll::-webkit-scrollbar {
+        width: 6px;
+    }
+    .skins-scroll::-webkit-scrollbar-track {
+        background: transparent;
+        margin: 6px 0;
+    }
+    .skins-scroll::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 999px;
+        transition: background 0.15s ease;
+    }
+    .skins-scroll::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.16);
+    }
+    .skins-scroll::-webkit-scrollbar-thumb:active {
+        background: rgba(255, 255, 255, 0.24);
+    }
+
+    .rarity-cons   { --rarity-accent: var(--color-cons);   --rarity-from: #9DA4B0;             --rarity-to: #525B68; }
+    .rarity-indus  { --rarity-accent: var(--color-indus);  --rarity-from: #3378B6;             --rarity-to: #1D3952; }
+    .rarity-mils   { --rarity-accent: var(--color-mils);   --rarity-from: #2C49D8;             --rarity-to: #1E285A; }
+    .rarity-restr  { --rarity-accent: var(--color-restr);  --rarity-from: #6843B2;             --rarity-to: #261940; }
+    .rarity-class  { --rarity-accent: var(--color-class);  --rarity-from: #873D94;             --rarity-to: #441F4A; }
+    .rarity-covrt  { --rarity-accent: var(--color-covrt);  --rarity-from: #932525;             --rarity-to: #411F27; }
+    .rarity-contra { --rarity-accent: var(--color-contra); --rarity-from: #D4AF37;             --rarity-to: #4D3A0F; }
+    .rarity-extra  { --rarity-accent: var(--color-extra);  --rarity-from: #D4AF37;             --rarity-to: #4D3A0F; }
 }

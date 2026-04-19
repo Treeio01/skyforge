@@ -15,6 +15,7 @@ use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\UI\Fields\Date;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Number;
+use MoonShine\UI\Fields\Select;
 use MoonShine\UI\Fields\Text;
 use Throwable;
 
@@ -32,15 +33,16 @@ class UpgradeIndexPage extends IndexPage
     {
         return [
             ID::make(),
-            Number::make('user_id'),
-            Number::make('bet_amount')
+            Text::make('Игрок', formatted: fn ($item) => $item->user?->username ?? '—'),
+            Number::make('Ставка', 'bet_amount')
                 ->modifyRawValue(fn (mixed $value) => number_format(((int) $value) / 100, 2, '.', ' ').' ₽'),
-            Number::make('target_price')
+            Text::make('Скин', formatted: fn ($item) => mb_substr($item->targetSkin?->market_hash_name ?? '—', 0, 35)),
+            Number::make('Цена цели', 'target_price')
                 ->modifyRawValue(fn (mixed $value) => number_format(((int) $value) / 100, 2, '.', ' ').' ₽'),
-            Number::make('chance')
-                ->modifyRawValue(fn (mixed $value) => $value.'%'),
-            Text::make('result'),
-            Date::make('created_at'),
+            Number::make('Шанс', 'chance')
+                ->modifyRawValue(fn (mixed $value) => round((float) $value, 2).'%'),
+            Text::make('Результат', formatted: fn ($item) => $item->result?->value === 'win' ? '✅ Победа' : '❌ Проигрыш'),
+            Date::make('Дата', 'created_at'),
         ];
     }
 
@@ -57,7 +59,11 @@ class UpgradeIndexPage extends IndexPage
      */
     protected function filters(): iterable
     {
-        return [];
+        return [
+            Select::make('Результат', 'result')
+                ->options(['win' => 'Победа', 'lose' => 'Проигрыш'])
+                ->nullable(),
+        ];
     }
 
     /**

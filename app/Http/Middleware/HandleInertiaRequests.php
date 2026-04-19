@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Middleware;
 
 use App\Http\Resources\UserResource;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -42,6 +43,14 @@ class HandleInertiaRequests extends Middleware
             'flash' => [
                 'error' => $request->session()->get('error'),
                 'success' => $request->session()->get('success'),
+            ],
+            'socials' => [
+                'vk' => Setting::get('social_vk', ''),
+                'telegram' => Setting::get('social_telegram', ''),
+                'discord' => Setting::get('social_discord', ''),
+                'tiktok' => Setting::get('social_tiktok', ''),
+                'youtube' => Setting::get('social_youtube', ''),
+                'twitch' => Setting::get('social_twitch', ''),
             ],
         ];
     }

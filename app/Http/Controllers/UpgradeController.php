@@ -20,19 +20,21 @@ class UpgradeController extends Controller
     {
         $user = $request->user();
 
-        $inventory = $user->userSkins()
-            ->where('status', UserSkinStatus::Available)
-            ->with('skin')
-            ->get()
-            ->map(fn ($us) => [
-                'id' => $us->id,
-                'skin' => (new SkinBriefResource($us->skin))->resolve($request),
-                'price_at_acquisition' => $us->price_at_acquisition,
-            ]);
+        $inventory = $user
+            ? $user->userSkins()
+                ->where('status', UserSkinStatus::Available)
+                ->with('skin')
+                ->get()
+                ->map(fn ($us) => [
+                    'id' => $us->id,
+                    'skin' => (new SkinBriefResource($us->skin))->resolve($request),
+                    'price_at_acquisition' => $us->price_at_acquisition,
+                ])
+            : collect();
 
         return Inertia::render('Upgrade/Index', [
             'inventory' => $inventory,
-            'balance' => $user->balance,
+            'balance' => $user?->balance ?? 0,
         ]);
     }
 

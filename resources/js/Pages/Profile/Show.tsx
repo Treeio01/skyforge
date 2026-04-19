@@ -1,115 +1,84 @@
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import AppLayout from '@/Layouts/AppLayout';
-import { type PageProps } from '@/types';
-import { FormEvent } from 'react';
+import ProfileSidebar from '@/Components/Profile/ProfileSidebar';
+import ProfileStatCards from '@/Components/Profile/ProfileStatCards';
+import ProfileTabs from '@/Components/Profile/ProfileTabs';
+import SellModal from '@/Components/Profile/SellModal';
+import { usePage } from '@inertiajs/react';
+import { PageProps, Skin } from '@/types';
+import { useState } from 'react';
 
-interface Profile {
-    id: number;
-    username: string;
-    avatar_url: string | null;
-    steam_id: string;
-    balance: number;
-    trade_url: string | null;
-    is_admin: boolean;
-    total_deposited: number;
-    total_withdrawn: number;
-    total_upgraded: number;
-    total_won: number;
-    created_at: string;
-}
-
-interface Props extends Record<string, unknown> {
-    profile: Profile;
-}
-
-function formatPrice(kopecks: number): string {
-    return (kopecks / 100).toLocaleString('ru-RU', { minimumFractionDigits: 2 }) + ' \u20BD';
+interface ProfilePageProps extends Record<string, unknown> {
+    profile: {
+        id: number;
+        username: string;
+        avatar_url: string | null;
+        steam_id: string;
+        balance: number;
+        trade_url: string | null;
+        total_deposited: number;
+        total_withdrawn: number;
+        total_upgraded: number;
+        total_won: number;
+        created_at: string;
+    };
+    inventory: Array<{ id: number; skin: Skin; price_at_acquisition: number }>;
+    recentUpgrades: Array<{
+        id: number;
+        target_skin_name: string;
+        target_skin_image: string | null;
+        target_skin_rarity_color: string | null;
+        bet_skin_name: string | null;
+        bet_skin_image: string | null;
+        bet_skin_rarity_color: string | null;
+        target_price: number;
+        bet_amount: number;
+        chance: number;
+        result: 'win' | 'lose';
+        created_at: string;
+    }>;
 }
 
 export default function Show() {
-    const { profile } = usePage<PageProps<Props>>().props;
+    const { profile, inventory, recentUpgrades } = usePage<PageProps<ProfilePageProps>>().props;
 
-    const { data, setData, put, processing, errors } = useForm({
-        trade_url: profile.trade_url ?? '',
-    });
+    const [sellModalVisible, setSellModalVisible] = useState(false);
+    const [sellMode, setSellMode] = useState<'all' | 'selected'>('all');
+    const [selectedSkins, setSelectedSkins] = useState<Set<number>>(new Set());
 
-    function handleSubmit(e: FormEvent) {
-        e.preventDefault();
-        put(route('profile.trade-url'));
-    }
+    const toggleSkinSelection = (id: number) => {
+        setSelectedSkins((prev) => {
+            const next = new Set(prev);
+            if (next.has(id)) next.delete(id);
+            else next.add(id);
+            return next;
+        });
+    };
 
     return (
         <AppLayout>
-            <Head title="Профиль" />
-
-            <div className="max-w-3xl mx-auto px-4 py-10 space-y-8">
-                {/* User Card */}
-                <div className="rounded-xl border border-border bg-card p-6 flex items-center gap-5">
-                    {profile.avatar_url ? (
-                        <img
-                            src={profile.avatar_url}
-                            alt={profile.username}
-                            className="w-16 h-16 rounded-full"
-                        />
-                    ) : (
-                        <div className="w-16 h-16 rounded-full bg-border flex items-center justify-center text-2xl font-bold text-[#888888]">
-                            {profile.username.charAt(0).toUpperCase()}
-                        </div>
-                    )}
-                    <div>
-                        <h1 className="text-xl font-bold">{profile.username}</h1>
-                        <p className="text-sm text-[#888888]">Steam ID: {profile.steam_id}</p>
-                    </div>
-                    <Link
-                        href={route('profile.history')}
-                        className="ml-auto text-sm font-medium text-accent hover:text-accent-hover transition-colors"
-                    >
-                        История
-                    </Link>
+            <div className="flex flex-col gap-1.5 w-full max-w-[1280px] self-center p-2 1024:p-0">
+                <div className="flex flex-col 1024:flex-row p-4 1024:p-6 gap-4 1024:gap-6 items-stretch w-full bg-[#070A10] rounded-[24px]">
+                    <ProfileSidebar profile={profile} />
+                    <ProfileStatCards recentUpgrades={recentUpgrades} />
                 </div>
 
-                {/* Trade URL Form */}
-                <div className="rounded-xl border border-border bg-card p-6">
-                    <h2 className="text-lg font-semibold mb-4">Trade URL</h2>
-                    <form onSubmit={handleSubmit} className="flex gap-3">
-                        <input
-                            type="url"
-                            value={data.trade_url}
-                            onChange={(e) => setData('trade_url', e.target.value)}
-                            placeholder="https://steamcommunity.com/tradeoffer/new/?partner=..."
-                            className="flex-1 rounded-lg border border-border bg-[#0a0a0a] px-4 py-2.5 text-sm text-[#f5f5f5] placeholder-[#555] focus:border-accent focus:ring-1 focus:ring-accent focus:outline-none"
-                        />
-                        <button
-                            type="submit"
-                            disabled={processing}
-                            className="rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-[#0a0a0a] hover:bg-accent-hover transition-colors disabled:opacity-50"
-                        >
-                            Сохранить
-                        </button>
-                    </form>
-                    {errors.trade_url && (
-                        <p className="mt-2 text-sm text-[#ef4444]">{errors.trade_url}</p>
-                    )}
-                </div>
-
-                {/* Stats Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {[
-                        { label: 'Пополнено', value: profile.total_deposited },
-                        { label: 'Выведено', value: profile.total_withdrawn },
-                        { label: 'Поставлено', value: profile.total_upgraded },
-                        { label: 'Выиграно', value: profile.total_won },
-                    ].map((stat) => (
-                        <div
-                            key={stat.label}
-                            className="rounded-xl border border-border bg-card p-5 text-center"
-                        >
-                            <p className="text-xs font-medium text-[#888888] mb-1">{stat.label}</p>
-                            <p className="text-lg font-bold">{formatPrice(stat.value)}</p>
-                        </div>
-                    ))}
-                </div>
+                <ProfileTabs
+                    inventory={inventory}
+                    recentUpgrades={recentUpgrades}
+                    selectedSkins={selectedSkins}
+                    onToggleSkin={toggleSkinSelection}
+                    onSellAll={() => { setSellMode('all'); setSellModalVisible(true); }}
+                    onSellSelected={() => { setSellMode('selected'); setSellModalVisible(true); }}
+                />
             </div>
+
+            <SellModal
+                visible={sellModalVisible}
+                onClose={() => setSellModalVisible(false)}
+                mode={sellMode}
+                selectedIds={selectedSkins}
+                onSuccess={() => setSelectedSkins(new Set())}
+            />
         </AppLayout>
     );
 }

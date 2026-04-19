@@ -12,6 +12,7 @@ use App\Models\Deposit;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -20,6 +21,46 @@ class DepositController extends Controller
     public function create(): Response
     {
         return Inertia::render('Deposit/Create');
+    }
+
+    public function config(Request $request): JsonResponse
+    {
+        $rates = Cache::get('exchange_rates', [
+            'RUB' => 1.0,
+            'USD' => 96.0,
+            'EUR' => 105.0,
+            'UAH' => 2.2,
+            'KZT' => 0.19,
+            'BYN' => 29.0,
+            'USDT' => 96.0,
+            'TON' => 340.0,
+            'TRX' => 24.0,
+        ]);
+
+        $bonus = null;
+        $user = $request->user();
+
+        if ($user) {
+            // Ищем deposit_bonus промокод, который юзер активировал (ввёл)
+            $usage = $user->promoCodeUsages()
+                ->whereHas('promoCode', fn ($q) => $q->where('type', 'deposit_bonus'))
+                ->with('promoCode')
+                ->latest('created_at')
+                ->first();
+
+            if ($usage && $usage->promoCode) {
+                $bonus = [
+                    'code' => $usage->promoCode->code,
+                    'percent' => $usage->promoCode->amount,
+                ];
+            }
+        }
+
+        return response()->json([
+            'rates' => $rates,
+            'updated_at' => Cache::get('exchange_rates_updated_at'),
+            'bonus' => $bonus,
+        ]);
     }
 
     public function store(Request $request, CreateDepositAction $action): RedirectResponse

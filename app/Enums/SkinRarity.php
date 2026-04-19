@@ -18,14 +18,14 @@ enum SkinRarity: string
     public function color(): string
     {
         return match ($this) {
-            self::Consumer => '#b0c3d9',
-            self::Industrial => '#5e98d9',
-            self::MilSpec => '#4b69ff',
-            self::Restricted => '#8847ff',
-            self::Classified => '#d32ce6',
-            self::Covert => '#eb4b4b',
-            self::Extraordinary => '#e4ae39',
-            self::Contraband => '#e4ae39',
+            self::Consumer => '#878F9D',
+            self::Industrial => '#356C9D',
+            self::MilSpec => '#2D4FFA',
+            self::Restricted => '#50318D',
+            self::Classified => '#A64BB5',
+            self::Covert => '#EA2F2F',
+            self::Extraordinary => '#D4AF37',
+            self::Contraband => '#D4AF37',
         };
     }
 }

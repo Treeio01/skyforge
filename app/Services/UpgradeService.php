@@ -46,7 +46,7 @@ class UpgradeService
                 ->get();
 
             if ($betSkins->count() !== count($userSkinIds)) {
-                throw new \DomainException('Some skins are not available for upgrade.');
+                throw new \DomainException('Некоторые скины недоступны для апгрейда.');
             }
 
             // Fetch target skin price from DB
@@ -58,11 +58,11 @@ class UpgradeService
             $betAmount = $skinsTotal + $balanceAmount;
 
             if ($betAmount <= 0) {
-                throw new \DomainException('Bet amount must be greater than zero.');
+                throw new \DomainException('Сумма ставки должна быть больше нуля.');
             }
 
             if ($betAmount >= $targetPrice) {
-                throw new \DomainException('Bet must be less than target price.');
+                throw new \DomainException('Ставка должна быть меньше цены цели.');
             }
 
             // Debit balance portion
@@ -90,7 +90,7 @@ class UpgradeService
 
             // Generate roll
             /** @var ProvablyFairSeed $seedPair */
-            $seedPair = $user->activeSeedPair ?? throw new \DomainException('No active seed pair.');
+            $seedPair = $user->activeSeedPair ?? throw new \DomainException('Нет активной пары сидов. Обновите страницу.');
             $seedPair->increment('nonce');
 
             $roll = $this->generateRoll->execute(
@@ -147,6 +147,7 @@ class UpgradeService
                 ]);
             }
 
+            $upgrade->load(['user', 'targetSkin']);
             UpgradeCompleted::dispatch($upgrade);
 
             return new UpgradeResultDTO(upgrade: $upgrade);

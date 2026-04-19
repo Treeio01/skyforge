@@ -33,15 +33,17 @@ class UserFormPage extends FormPage
         return [
             Box::make([
                 ID::make(),
-                Text::make('username')->readonly(),
-                Text::make('steam_id')->readonly(),
-                Text::make('trade_url'),
-                Number::make('balance')->readonly(),
-                Switcher::make('is_banned'),
-                Textarea::make('ban_reason'),
-                Switcher::make('is_admin'),
-                Number::make('house_edge_override')->step(0.01),
-                Number::make('chance_modifier')->step(0.001),
+                Text::make('Никнейм', 'username')->readonly(),
+                Text::make('Steam ID', 'steam_id')->readonly(),
+                Text::make('Trade URL', 'trade_url'),
+                Number::make('Баланс', 'balance')
+                    ->hint('В копейках. 100 = 1₽')
+                    ->step(1),
+                Switcher::make('Забанен', 'is_banned'),
+                Textarea::make('Причина бана', 'ban_reason'),
+                Switcher::make('Админ', 'is_admin'),
+                Number::make('Край казино (%)', 'house_edge_override')->step(0.01)->hint('Оставьте пустым для дефолта'),
+                Number::make('Модификатор шанса', 'chance_modifier')->step(0.001)->hint('Оставьте пустым для дефолта'),
             ]),
         ];
     }

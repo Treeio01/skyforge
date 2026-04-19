@@ -34,15 +34,14 @@ class UserIndexPage extends IndexPage
     {
         return [
             ID::make(),
-            Text::make('steam_id'),
-            Text::make('username'),
-            Preview::make('avatar_url')
-                ->image(),
-            Number::make('balance')
+            Preview::make('Аватар', 'avatar_url')->image(),
+            Text::make('Никнейм', 'username'),
+            Text::make('Steam ID', 'steam_id'),
+            Number::make('Баланс', 'balance')
                 ->modifyRawValue(fn (mixed $value) => number_format(((int) $value) / 100, 2, '.', ' ').' ₽'),
-            Switcher::make('is_banned'),
-            Switcher::make('is_admin'),
-            Date::make('last_active_at'),
+            Switcher::make('Бан', 'is_banned'),
+            Switcher::make('Админ', 'is_admin'),
+            Date::make('Активность', 'last_active_at'),
         ];
     }
 
@@ -60,8 +59,8 @@ class UserIndexPage extends IndexPage
     protected function filters(): iterable
     {
         return [
-            Switcher::make('is_banned'),
-            Switcher::make('is_admin'),
+            Switcher::make('Бан', 'is_banned'),
+            Switcher::make('Админ', 'is_admin'),
         ];
     }
 

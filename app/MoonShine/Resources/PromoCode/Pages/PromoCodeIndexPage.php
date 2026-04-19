@@ -33,14 +33,19 @@ class PromoCodeIndexPage extends IndexPage
     {
         return [
             ID::make(),
-            Text::make('code'),
-            Text::make('type'),
-            Number::make('amount')
-                ->modifyRawValue(fn (mixed $value) => number_format(((int) $value) / 100, 2, '.', ' ').' ₽'),
-            Number::make('max_uses'),
-            Number::make('times_used'),
-            Switcher::make('is_active'),
-            Date::make('expires_at'),
+            Text::make('Код', 'code'),
+            Text::make('Тип', formatted: fn ($item) => match ($item->type) {
+                'balance' => 'Баланс',
+                'deposit_bonus' => 'Бонус депозита',
+                default => $item->type,
+            }),
+            Text::make('Сумма / %', formatted: fn ($item) => $item->type === 'deposit_bonus'
+                ? $item->amount.'%'
+                : number_format(((int) $item->amount) / 100, 2, '.', ' ').' ₽'),
+            Number::make('Макс. исп.', 'max_uses'),
+            Number::make('Использован', 'times_used'),
+            Switcher::make('Активен', 'is_active'),
+            Date::make('Истекает', 'expires_at'),
         ];
     }
 

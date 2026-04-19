@@ -9,5 +9,10 @@ Schedule::command('skins:sync-prices')
     ->withoutOverlapping()
     ->onOneServer();
 
+Schedule::command('skyforge:sync-rates')
+    ->everyTenMinutes()
+    ->withoutOverlapping()
+    ->onOneServer();
+
 Schedule::command('horizon:snapshot')
     ->everyFiveMinutes();

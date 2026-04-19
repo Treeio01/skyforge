@@ -23,7 +23,7 @@ class CreateWithdrawalAction
                 ->count();
 
             if ($pendingCount >= self::MAX_PENDING_WITHDRAWALS) {
-                throw new \DomainException('Maximum pending withdrawals reached.');
+                throw new \DomainException('Достигнут лимит ожидающих выводов. Дождитесь завершения предыдущих.');
             }
 
             /** @var UserSkin $userSkin */

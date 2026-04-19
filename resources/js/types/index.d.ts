@@ -45,6 +45,7 @@ export interface FeedItem {
     avatar_url: string | null;
     target_skin_name: string;
     target_skin_image: string | null;
+    rarity_color: string | null;
     chance: number;
     result: string;
     created_at: string;

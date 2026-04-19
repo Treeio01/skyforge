@@ -16,6 +16,7 @@ use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Fields\Date;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Number;
+use MoonShine\UI\Fields\Select;
 use MoonShine\UI\Fields\Switcher;
 use MoonShine\UI\Fields\Text;
 use Throwable;
@@ -33,13 +34,18 @@ class PromoCodeFormPage extends FormPage
         return [
             Box::make([
                 ID::make(),
-                Text::make('code'),
-                Text::make('type'),
-                Number::make('amount'),
-                Number::make('max_uses'),
-                Number::make('min_deposit'),
-                Switcher::make('is_active'),
-                Date::make('expires_at'),
+                Text::make('Код', 'code'),
+                Select::make('Тип', 'type')
+                    ->options([
+                        'balance' => 'Баланс (копейки)',
+                        'deposit_bonus' => 'Бонус депозита (%)',
+                    ]),
+                Number::make('Сумма / Процент', 'amount')
+                    ->hint('Для баланса — копейки (100 = 1₽). Для бонуса депозита — процент (20 = +20%)'),
+                Number::make('Макс. использований', 'max_uses')->hint('Пусто = безлимит'),
+                Number::make('Мин. депозит', 'min_deposit')->hint('В копейках'),
+                Switcher::make('Активен', 'is_active'),
+                Date::make('Истекает', 'expires_at'),
             ]),
         ];
     }

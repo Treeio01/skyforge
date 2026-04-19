@@ -70,4 +70,29 @@ return [
         'webhook_secret' => env('SKYFORGE_PAYMENT_WEBHOOK_SECRET'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | SEO
+    |--------------------------------------------------------------------------
+    */
+    'seo' => [
+        'description' => env('SKYFORGE_SEO_DESCRIPTION', 'SKYFORGE — апгрейд скинов CS2. Улучшайте свои предметы в пару кликов с системой Provably Fair.'),
+        'keywords' => env('SKYFORGE_SEO_KEYWORDS', 'CS2 скины, апгрейд скинов, CS2 upgrade, CSGO скины, Provably Fair, рулетка скинов'),
+        'og_title' => env('SKYFORGE_SEO_OG_TITLE', 'Апгрейд скинов CS2'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Social Links
+    |--------------------------------------------------------------------------
+    */
+    'socials' => [
+        'vk' => env('SKYFORGE_SOCIAL_VK', 'https://vk.com/skyforge'),
+        'telegram' => env('SKYFORGE_SOCIAL_TELEGRAM', 'https://t.me/skyforge'),
+        'discord' => env('SKYFORGE_SOCIAL_DISCORD', 'https://discord.gg/skyforge'),
+        'tiktok' => env('SKYFORGE_SOCIAL_TIKTOK', 'https://tiktok.com/@skyforge'),
+        'youtube' => env('SKYFORGE_SOCIAL_YOUTUBE', 'https://youtube.com/@skyforge'),
+        'twitch' => env('SKYFORGE_SOCIAL_TWITCH', 'https://twitch.tv/skyforge'),
+    ],
+
 ];

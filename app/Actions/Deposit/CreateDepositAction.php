@@ -23,7 +23,7 @@ class CreateDepositAction
         $pendingCount = $user->deposits()->where('status', DepositStatus::Pending)->count();
 
         if ($pendingCount >= self::MAX_PENDING_DEPOSITS) {
-            throw new \DomainException('Maximum pending deposits reached.');
+            throw new \DomainException('Достигнут лимит ожидающих пополнений. Дождитесь завершения предыдущих.');
         }
 
         $payment = $this->paymentProvider->createPayment($amount, $method->value);

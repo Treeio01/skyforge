@@ -34,6 +34,7 @@ class UpgradeCompleted implements ShouldBroadcastNow
             'target_skin_image' => $this->upgrade->targetSkin->image_path
                 ? asset('storage/'.$this->upgrade->targetSkin->image_path)
                 : null,
+            'rarity_color' => $this->upgrade->targetSkin->rarity_color,
             'chance' => $this->upgrade->chance,
             'result' => $this->upgrade->result->value,
             'created_at' => $this->upgrade->created_at->toISOString(),

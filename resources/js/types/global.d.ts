@@ -6,6 +6,8 @@ import { PageProps as AppPageProps } from './';
 declare global {
     interface Window {
         axios: AxiosInstance;
+        Pusher: any;
+        Echo: import('laravel-echo').default;
     }
 
     /* eslint-disable no-var */

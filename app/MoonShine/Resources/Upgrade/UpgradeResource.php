@@ -10,6 +10,7 @@ use App\MoonShine\Resources\Upgrade\Pages\UpgradeFormPage;
 use App\MoonShine\Resources\Upgrade\Pages\UpgradeIndexPage;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Enums\SortDirection;
 
 /**
  * @extends ModelResource<Upgrade, UpgradeIndexPage, UpgradeFormPage, UpgradeDetailPage>
@@ -23,6 +24,12 @@ class UpgradeResource extends ModelResource
     protected bool $isCreatable = false;
 
     protected bool $isEditable = false;
+
+    protected string $sortColumn = 'id';
+
+    protected SortDirection $sortDirection = SortDirection::DESC;
+
+    protected array $with = ['user', 'targetSkin'];
 
     /**
      * @return list<class-string<PageContract>>

@@ -20,6 +20,8 @@ class WithdrawalResource extends ModelResource
 
     protected string $title = 'Выводы';
 
+    protected array $with = ['user'];
+
     protected bool $isCreatable = false;
 
     protected bool $isEditable = false;

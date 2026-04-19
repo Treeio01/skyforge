@@ -30,6 +30,7 @@ class UpdateTradeUrlRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'trade_url.required' => 'Введите Trade URL.',
             'trade_url.regex' => 'Невалидная Steam Trade URL.',
         ];
     }

@@ -11,7 +11,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WithdrawalController;
 use App\Http\Middleware\EnsureTradeUrlSet;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,23 +21,29 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome');
-})->name('home');
-
 Route::get('/api/skins', [SkinController::class, 'index'])->name('skins.index');
 Route::get('/api/skins/search', [SkinController::class, 'search'])->name('skins.search');
 Route::get('/api/live-feed', [LiveFeedController::class, 'index'])->name('live-feed');
+
+Route::get('/', [UpgradeController::class, 'index'])->name('home');
+Route::get('/market', [SkinController::class, 'market'])->name('market');
+
+Route::middleware('auth')->group(function () {
+    Route::post('/market/buy', [SkinController::class, 'buy'])->name('market.buy');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [UserController::class, 'show'])->name('profile');
     Route::put('/profile/trade-url', [UserController::class, 'updateTradeUrl'])->name('profile.trade-url');
     Route::get('/profile/history', [UserController::class, 'history'])->name('profile.history');
+    Route::post('/profile/sell-skins', [UserController::class, 'sellSkins'])->name('profile.sell-skins');
+    Route::get('/profile/deposits', [UserController::class, 'deposits'])->name('profile.deposits');
+    Route::post('/profile/promo', [UserController::class, 'redeemPromo'])->name('profile.promo');
 
     Route::get('/deposit', [DepositController::class, 'create'])->name('deposit.create');
+    Route::get('/deposit/config', [DepositController::class, 'config'])->name('deposit.config');
     Route::post('/deposit', [DepositController::class, 'store'])->name('deposit.store');
 
-    Route::get('/upgrade', [UpgradeController::class, 'index'])->name('upgrade');
     Route::post('/upgrade', [UpgradeController::class, 'store'])
         ->name('upgrade.store')
         ->middleware('throttle:upgrade');

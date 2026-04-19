@@ -36,12 +36,24 @@ class SyncSkinPricesCommand extends Command
             return self::FAILURE;
         }
 
-        $prices = $response->json();
+        $data = $response->json();
 
-        if (! is_array($prices)) {
+        if (! is_array($data)) {
             $this->error('Invalid price data format.');
 
             return self::FAILURE;
+        }
+
+        // API возвращает { items: [{market_hash_name, price}] } — конвертируем в keyed map.
+        $items = $data['items'] ?? $data;
+        $prices = [];
+
+        foreach ($items as $key => $item) {
+            if (is_array($item) && isset($item['market_hash_name'])) {
+                $prices[$item['market_hash_name']] = $item;
+            } elseif (is_string($key) && is_array($item)) {
+                $prices[$key] = $item;
+            }
         }
 
         $this->info('Processing '.count($prices).' prices...');

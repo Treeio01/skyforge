@@ -1,0 +1,19 @@
+- generic [ref=e2]:
+  - link "SKYFORGE" [ref=e4] [cursor=pointer]:
+    - /url: http://localhost:8000/admin
+    - img "SKYFORGE" [ref=e5]
+  - generic [ref=e6]:
+    - generic [ref=e7]:
+      - heading "Welcome to SKYFORGE!" [level=1] [ref=e9]
+      - generic [ref=e10]: Please sign-in to your account
+    - generic [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e13] [cursor=pointer]: Username *
+        - textbox "Username *" [active] [ref=e15]
+      - generic [ref=e16]:
+        - generic [ref=e17] [cursor=pointer]: Password *
+        - textbox "Password *" [ref=e19]
+      - generic [ref=e20]:
+        - checkbox "Remember me" [ref=e22] [cursor=pointer]
+        - generic [ref=e24] [cursor=pointer]: Remember me
+      - button "Log in" [ref=e28] [cursor=pointer]

@@ -32,13 +32,20 @@ class WithdrawalIndexPage extends IndexPage
     {
         return [
             ID::make(),
-            Number::make('user_id'),
-            Number::make('amount')
+            Text::make('Пользователь', formatted: fn ($item) => $item->user?->username ?? 'ID:'.$item->user_id),
+            Number::make('Сумма', 'amount')
                 ->modifyRawValue(fn (mixed $value) => number_format(((int) $value) / 100, 2, '.', ' ').' ₽'),
-            Text::make('status'),
-            Text::make('trade_offer_id'),
-            Date::make('completed_at'),
-            Date::make('created_at'),
+            Text::make('Статус', formatted: fn ($item) => match ((string) ($item->status?->value ?? $item->status)) {
+                'pending' => '⏳ Ожидает',
+                'processing' => '🔄 Обработка',
+                'completed' => '✅ Завершён',
+                'failed' => '❌ Ошибка',
+                'cancelled' => '🚫 Отменён',
+                default => (string) ($item->status?->value ?? $item->status),
+            }),
+            Text::make('Trade Offer', 'trade_offer_id'),
+            Date::make('Завершён', 'completed_at'),
+            Date::make('Создан', 'created_at'),
         ];
     }
 

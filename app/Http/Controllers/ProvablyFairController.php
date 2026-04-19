@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Actions\ProvablyFair\GenerateSeedPairAction;
+use App\Models\FaqCategory;
+use App\Models\FaqItem;
+use App\Models\ProvablyFairSeed;
 use App\Models\Upgrade;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,8 +18,21 @@ class ProvablyFairController extends Controller
 {
     public function index(Request $request): Response
     {
-        /** @var \App\Models\ProvablyFairSeed|null $seedPair */
-        $seedPair = $request->user()->activeSeedPair;
+        $seedPair = $request->user()?->activeSeedPair;
+
+        $categories = FaqCategory::active()
+            ->orderBy('sort_order')
+            ->get(['id', 'slug', 'name']);
+
+        $faqItems = FaqItem::active()
+            ->with('faqCategory')
+            ->orderBy('sort_order')
+            ->get()
+            ->groupBy(fn ($item) => $item->faqCategory?->slug ?? $item->category ?? 'other')
+            ->map(fn ($items) => $items->map(fn ($item) => [
+                'question' => $item->question,
+                'answer' => $item->answer,
+            ])->values());
 
         return Inertia::render('ProvablyFair/Index', [
             'seedPair' => $seedPair ? [
@@ -24,6 +40,8 @@ class ProvablyFairController extends Controller
                 'server_seed_hash' => $seedPair->server_seed_hash,
                 'nonce' => $seedPair->nonce,
             ] : null,
+            'categories' => $categories,
+            'faq' => $faqItems,
         ]);
     }
 
@@ -34,7 +52,7 @@ class ProvablyFairController extends Controller
         ]);
 
         $user = $request->user();
-        /** @var \App\Models\ProvablyFairSeed|null $oldSeed */
+        /** @var ProvablyFairSeed|null $oldSeed */
         $oldSeed = $user->activeSeedPair;
 
         if ($oldSeed) {

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\MoonShine\Layouts\SkyforgeLayout;
+use App\MoonShine\Pages\DashboardPage;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -15,17 +17,15 @@ use MoonShine\Crud\Forms\LoginForm;
 use MoonShine\Laravel\Exceptions\MoonShineNotFoundException;
 use MoonShine\Laravel\Http\Middleware\Authenticate;
 use MoonShine\Laravel\Http\Middleware\ChangeLocale;
-use MoonShine\Laravel\Layouts\AppLayout;
 use MoonShine\Laravel\Models\MoonshineUser;
-use MoonShine\Laravel\Pages\Dashboard;
 use MoonShine\Laravel\Pages\ErrorPage;
 use MoonShine\Laravel\Pages\LoginPage;
 use MoonShine\Laravel\Pages\ProfilePage;
 
 return [
-    'title' => env('MOONSHINE_TITLE', 'MoonShine'),
-    'logo' => '/vendor/moonshine/logo-small.svg',
-    'logo_small' => '/vendor/moonshine/logo-small.svg',
+    'title' => env('MOONSHINE_TITLE', 'SKYFORGE Admin'),
+    'logo' => '/assets/img/logo.png',
+    'logo_small' => '/assets/img/logo.png',
 
     'favicons' => [
         'apple-touch' => '/vendor/moonshine/apple-touch-icon.png',
@@ -88,7 +88,7 @@ return [
     ],
 
     // Layout, palette, pages, forms
-    'layout' => AppLayout::class,
+    'layout' => SkyforgeLayout::class,
     'palette' => PurplePalette::class,
 
     'forms' => [
@@ -97,14 +97,14 @@ return [
     ],
 
     'pages' => [
-        'dashboard' => Dashboard::class,
+        'dashboard' => DashboardPage::class,
         'profile' => ProfilePage::class,
         'login' => LoginPage::class,
         'error' => ErrorPage::class,
     ],
 
     // Localizations
-    'locale' => 'en',
+    'locale' => 'ru',
     'locale_key' => ChangeLocale::KEY,
     'locales' => [
         // en

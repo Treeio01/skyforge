@@ -40,7 +40,11 @@ class Skin extends Model
 
     public function scopeAvailableForUpgrade(Builder $query): Builder
     {
-        return $query->where('is_active', true)->where('is_available_for_upgrade', true);
+        return $query->where('is_active', true)
+            ->where('is_available_for_upgrade', true)
+            ->where('price', '>', 0)
+            ->where('price', '<', 100_000_000)
+            ->whereIn('category', ['weapon', 'knife', 'gloves']);
     }
 
     public function prices(): HasMany

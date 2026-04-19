@@ -32,13 +32,19 @@ class DepositIndexPage extends IndexPage
     {
         return [
             ID::make(),
-            Number::make('user_id'),
-            Text::make('method'),
-            Number::make('amount')
+            Text::make('Пользователь', formatted: fn ($item) => $item->user?->username ?? 'ID:'.$item->user_id),
+            Text::make('Метод', formatted: fn ($item) => $item->method?->value ?? (string) $item->method),
+            Number::make('Сумма', 'amount')
                 ->modifyRawValue(fn (mixed $value) => number_format(((int) $value) / 100, 2, '.', ' ').' ₽'),
-            Text::make('status'),
-            Date::make('completed_at'),
-            Date::make('created_at'),
+            Text::make('Статус', formatted: fn ($item) => match ((string) ($item->status?->value ?? $item->status)) {
+                'pending' => '⏳ Ожидает',
+                'completed' => '✅ Завершён',
+                'failed' => '❌ Ошибка',
+                'cancelled' => '🚫 Отменён',
+                default => (string) ($item->status?->value ?? $item->status),
+            }),
+            Date::make('Завершён', 'completed_at'),
+            Date::make('Создан', 'created_at'),
         ];
     }
 

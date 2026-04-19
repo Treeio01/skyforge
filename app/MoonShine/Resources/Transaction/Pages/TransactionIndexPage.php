@@ -32,15 +32,24 @@ class TransactionIndexPage extends IndexPage
     {
         return [
             ID::make(),
-            Number::make('user_id'),
-            Text::make('type'),
-            Number::make('amount')
+            Text::make('Пользователь', formatted: fn ($item) => $item->user?->username ?? 'ID:'.$item->user_id),
+            Text::make('Тип', formatted: fn ($item) => match ($item->type?->value ?? $item->type) {
+                'deposit' => 'Депозит',
+                'withdrawal' => 'Вывод',
+                'upgrade_bet' => 'Ставка апгрейда',
+                'upgrade_win' => 'Выигрыш апгрейда',
+                'refund' => 'Возврат',
+                'bonus' => 'Бонус',
+                'admin_adjustment' => 'Корректировка',
+                default => (string) ($item->type?->value ?? $item->type),
+            }),
+            Number::make('Сумма', 'amount')
                 ->modifyRawValue(fn (mixed $value) => number_format(((int) $value) / 100, 2, '.', ' ').' ₽'),
-            Number::make('balance_before')
+            Number::make('До', 'balance_before')
                 ->modifyRawValue(fn (mixed $value) => number_format(((int) $value) / 100, 2, '.', ' ').' ₽'),
-            Number::make('balance_after')
+            Number::make('После', 'balance_after')
                 ->modifyRawValue(fn (mixed $value) => number_format(((int) $value) / 100, 2, '.', ' ').' ₽'),
-            Date::make('created_at'),
+            Date::make('Дата', 'created_at'),
         ];
     }
 

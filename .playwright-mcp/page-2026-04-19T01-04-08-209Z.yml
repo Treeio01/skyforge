@@ -1,0 +1,111 @@
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - img [ref=e10]
+          - generic [ref=e12]: 1 935
+        - generic [ref=e13]:
+          - img [ref=e14]
+          - generic [ref=e17]: 351 935
+        - generic [ref=e18] [cursor=pointer]:
+          - img [ref=e19]
+          - generic [ref=e22]: Бонусы
+      - generic [ref=e24]:
+        - link "Рынок Скинов" [ref=e25] [cursor=pointer]:
+          - /url: /market
+          - generic [ref=e26]:
+            - img [ref=e27]
+            - generic [ref=e32]: Рынок Скинов
+        - link "FAQ" [ref=e33] [cursor=pointer]:
+          - /url: /provably-fair
+          - generic [ref=e34]:
+            - img [ref=e35]
+            - generic [ref=e38]: FAQ
+    - generic [ref=e39]:
+      - generic [ref=e40]:
+        - generic [ref=e41]:
+          - link [ref=e42] [cursor=pointer]:
+            - /url: vk
+            - img [ref=e43]
+          - link [ref=e46] [cursor=pointer]:
+            - /url: telega
+            - img [ref=e47]
+          - link [ref=e50] [cursor=pointer]:
+            - /url: discord
+            - img [ref=e51]
+          - link [ref=e54] [cursor=pointer]:
+            - /url: tiktok
+            - img [ref=e55]
+          - link [ref=e58] [cursor=pointer]:
+            - /url: youtube
+            - img [ref=e59]
+          - link [ref=e62] [cursor=pointer]:
+            - /url: twitch
+            - img [ref=e63]
+        - generic [ref=e67] [cursor=pointer]:
+          - img [ref=e68]
+          - generic [ref=e71]: Вкл
+        - generic [ref=e73] [cursor=pointer]:
+          - img [ref=e74]
+          - generic [ref=e79]: Ру
+          - generic [ref=e80]: "|"
+          - generic [ref=e81]: ₽
+      - button "Войти" [ref=e83] [cursor=pointer]:
+        - img [ref=e84]
+        - generic [ref=e86]: Войти
+  - generic:
+    - generic:
+      - generic:
+        - generic:
+          - generic: Добро пожаловать!
+          - paragraph: Текст ляллялляляля и вот так лялялля
+        - img
+      - generic:
+        - generic:
+          - checkbox "Я подтверждаю, что мне больше 18 лет"
+          - text: Я подтверждаю, что мне больше 18 лет
+        - generic:
+          - checkbox "Я принимаю правила и условия использования сайта"
+          - text: Я принимаю правила и условия использования сайта
+      - generic:
+        - img
+        - generic: Войти через Steam
+  - generic [ref=e88]:
+    - generic [ref=e89]:
+      - button "GO" [disabled] [ref=e91]
+      - generic [ref=e92]:
+        - button "x2" [ref=e93] [cursor=pointer]:
+          - generic [ref=e94]: x2
+        - button "x3" [ref=e95] [cursor=pointer]:
+          - generic [ref=e96]: x3
+        - button "x5" [ref=e97] [cursor=pointer]:
+          - generic [ref=e98]: x5
+        - button "x10" [ref=e99] [cursor=pointer]:
+          - generic [ref=e100]: x10
+    - generic [ref=e101]:
+      - generic [ref=e102]:
+        - img [ref=e103]
+        - generic [ref=e105]: Апгрейд
+      - generic [ref=e106]: Улучшайте ваши предметы в пару кликов
+    - generic [ref=e107]:
+      - generic [ref=e108]:
+        - generic [ref=e110]:
+          - img [ref=e112]
+          - generic [ref=e115]: Ваши скины
+        - button [ref=e117] [cursor=pointer]:
+          - img
+          - img [ref=e119]
+      - generic [ref=e122]:
+        - generic [ref=e123]:
+          - img [ref=e124]
+          - generic [ref=e126]: Скин апгрейда
+        - generic [ref=e127]:
+          - button "Цена" [ref=e128] [cursor=pointer]:
+            - generic [ref=e129]: Цена
+            - img [ref=e131]
+          - generic [ref=e133]: от
+          - spinbutton [ref=e135]
+          - generic [ref=e136]:
+            - textbox "Поиск" [ref=e137]
+            - img [ref=e138]

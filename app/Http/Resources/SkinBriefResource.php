@@ -20,8 +20,8 @@ class SkinBriefResource extends JsonResource
             'image_url' => $this->image_path ? asset('storage/'.$this->image_path) : null,
             'price' => $this->price,
             'rarity_color' => $this->rarity_color,
-            'exterior' => $this->exterior,
-            'category' => $this->category,
+            'exterior' => $this->exterior?->value,
+            'category' => $this->category?->value,
         ];
     }
 }

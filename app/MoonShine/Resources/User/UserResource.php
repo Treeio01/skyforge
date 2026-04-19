@@ -20,6 +20,8 @@ class UserResource extends ModelResource
 
     protected string $title = 'Пользователи';
 
+    protected array $search = ['username', 'steam_id'];
+
     /**
      * @return list<class-string<PageContract>>
      */
