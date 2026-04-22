@@ -1095,7 +1095,7 @@ import type { DepositMethod } from './depositConstants';
 
 interface DepositMethodSelectorProps {
     method: DepositMethod;
-    onChange: (m: DepositMethod) from './depositConstants';
+    onChange: (m: DepositMethod) => void;
 }
 
 // Read DepositModal.tsx and find the method tabs/selector section.
