@@ -2,6 +2,7 @@ import AppLayout from "@/Layouts/AppLayout";
 import { usePage } from "@inertiajs/react";
 import { useState } from "react";
 import { PageProps } from "@/types";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface FaqPageProps extends Record<string, unknown> {
     categories: Array<{ id: number; slug: string; name: string }>;
@@ -111,12 +112,14 @@ const FAQ_DATA: Record<string, Array<{ question: string; answer: string }>> = {
 
 function ChevronIcon({ open }: { open: boolean }) {
     return (
-        <svg
+        <motion.svg
             width="20"
             height="20"
             viewBox="0 0 20 20"
             fill="none"
-            className={`shrink-0 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+            className="shrink-0"
+            animate={{ rotate: open ? 180 : 0 }}
+            transition={{ duration: 0.2 }}
         >
             <path
                 d="M5 7.5L10 12.5L15 7.5"
@@ -126,7 +129,7 @@ function ChevronIcon({ open }: { open: boolean }) {
                 strokeLinecap="round"
                 strokeLinejoin="round"
             />
-        </svg>
+        </motion.svg>
     );
 }
 
@@ -150,14 +153,22 @@ function AccordionItem({
                 </span>
                 <ChevronIcon open={open} />
             </div>
-            <div
-                className="overflow-hidden transition-all duration-300 w-full"
-                style={{ maxHeight: open ? "300px" : "0" }}
-            >
-                <p className="text-white font-sf-display font-light text-[13px] leading-[184%]">
-                    {answer}
-                </p>
-            </div>
+            <AnimatePresence initial={false}>
+                {open && (
+                    <motion.div
+                        key="content"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25, ease: "easeInOut" }}
+                        className="overflow-hidden w-full"
+                    >
+                        <p className="text-white font-sf-display font-light text-[13px] leading-[184%]">
+                            {answer}
+                        </p>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </button>
     );
 }
