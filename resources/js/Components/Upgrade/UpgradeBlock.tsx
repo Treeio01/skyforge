@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { Skin } from "@/types";
 import { PageTitleIcon } from "@/Components/UI/Icons";
 import UpgradeResult from "./UpgradeResult";
@@ -106,10 +107,21 @@ export default function UpgradeBlock({ inventory }: UpgradeBlockProps) {
                     />
 
                     {stage === "result" && outcome && resultSkin && (
-                        <UpgradeResult
-                            variant={outcome === "success" ? "win" : "lose"}
-                            skin={resultSkin}
-                        />
+                        <motion.div
+                            variants={{
+                                idle: { x: 0 },
+                                shake: {
+                                    x: [-8, 8, -8, 8, 0],
+                                    transition: { duration: 0.4 },
+                                },
+                            }}
+                            animate={outcome === "fail" ? "shake" : "idle"}
+                        >
+                            <UpgradeResult
+                                variant={outcome === "success" ? "win" : "lose"}
+                                skin={resultSkin}
+                            />
+                        </motion.div>
                     )}
 
                     <div className="flex flex-col gap-1 z-50 md:pt-[32px] md:px-[44px] px-[16px] pt-[14px]">

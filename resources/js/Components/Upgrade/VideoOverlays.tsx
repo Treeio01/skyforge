@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { QuickMultiplier } from './UpgradeBlock';
 import { DeviceKind } from './upgradeVideos';
 
@@ -49,12 +50,13 @@ export function GameHud({ device, chance, multiplier }: GameHudProps) {
 interface GoButtonProps {
     device: DeviceKind;
     canStart: boolean;
+    isProcessing?: boolean;
     onGo: () => void;
 }
 
-export function GoButton({ device, canStart, onGo }: GoButtonProps) {
+export function GoButton({ device, canStart, isProcessing = false, onGo }: GoButtonProps) {
     return (
-        <button
+        <motion.button
             type="button"
             onClick={onGo}
             disabled={!canStart}
@@ -78,11 +80,20 @@ export function GoButton({ device, canStart, onGo }: GoButtonProps) {
                           transform: 'translate(-50%, -50%)',
                       }
             }
+            animate={
+                isProcessing
+                    ? {
+                          scale: [1, 1.03, 1],
+                          transition: { repeat: Infinity, duration: 0.8 },
+                      }
+                    : { scale: 1 }
+            }
+            whileTap={{ scale: 0.97 }}
         >
             <span className="font-gotham-cond font-bold text-white text-[min(2vw,22px)] leading-none">
                 GO
             </span>
-        </button>
+        </motion.button>
     );
 }
 

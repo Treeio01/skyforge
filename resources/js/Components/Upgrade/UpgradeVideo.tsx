@@ -308,6 +308,7 @@ export default function UpgradeVideo({
                 <GoButton
                     device={device}
                     canStart={canStart}
+                    isProcessing={canStart}
                     onGo={onGo}
                 />
             )}
