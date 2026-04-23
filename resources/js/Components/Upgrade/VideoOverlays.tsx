@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { QuickMultiplier } from './UpgradeBlock';
+import { QuickMultiplier } from './upgradeCalculations';
 import { DeviceKind } from './upgradeVideos';
 
 const MULTIPLIER_OPTIONS: Array<{ label: string; value: QuickMultiplier }> = [
