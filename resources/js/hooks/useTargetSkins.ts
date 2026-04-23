@@ -1,5 +1,6 @@
-import axios, { CancelTokenSource } from 'axios';
+import axios from 'axios';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useToast } from '@/Components/UI/Toast';
 import { Skin } from '@/types';
 
 interface UseTargetSkinsParams {
@@ -31,8 +32,10 @@ export function useTargetSkins(params: UseTargetSkinsParams) {
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(false);
 
+    const { toast } = useToast();
+
     const nextPageUrlRef = useRef<string | null>(null);
-    const cancelSourceRef = useRef<CancelTokenSource | null>(null);
+    const abortControllerRef = useRef<AbortController | null>(null);
     const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const loadingRef = useRef(false);
 
@@ -71,18 +74,14 @@ export function useTargetSkins(params: UseTargetSkinsParams) {
 
     const fetchPage = useCallback(
         (url: string, append: boolean) => {
-            if (cancelSourceRef.current) {
-                cancelSourceRef.current.cancel();
-            }
-
-            const source = axios.CancelToken.source();
-            cancelSourceRef.current = source;
+            abortControllerRef.current?.abort();
+            abortControllerRef.current = new AbortController();
 
             setLoading(true);
             loadingRef.current = true;
 
             axios
-                .get<PaginatedResponse>(url, { cancelToken: source.token })
+                .get<PaginatedResponse>(url, { signal: abortControllerRef.current.signal })
                 .then((res) => {
                     const fetched = res.data.data;
                     setSkins((prev) => (append ? [...prev, ...fetched] : fetched));
@@ -90,9 +89,10 @@ export function useTargetSkins(params: UseTargetSkinsParams) {
                     setHasMore(res.data.links?.next !== null);
                 })
                 .catch((err) => {
-                    if (!axios.isCancel(err)) {
-                        console.error('useTargetSkins fetch error:', err);
+                    if (axios.isCancel(err) || err.name === 'CanceledError') {
+                        return;
                     }
+                    toast('error', 'Не удалось загрузить скины для апгрейда');
                 })
                 .finally(() => {
                     setLoading(false);
@@ -136,9 +136,7 @@ export function useTargetSkins(params: UseTargetSkinsParams) {
 
     useEffect(() => {
         return () => {
-            if (cancelSourceRef.current) {
-                cancelSourceRef.current.cancel();
-            }
+            abortControllerRef.current?.abort();
             if (debounceTimerRef.current) {
                 clearTimeout(debounceTimerRef.current);
             }
