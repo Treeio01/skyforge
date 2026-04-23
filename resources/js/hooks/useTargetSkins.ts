@@ -89,7 +89,7 @@ export function useTargetSkins(params: UseTargetSkinsParams) {
                     setHasMore(res.data.links?.next !== null);
                 })
                 .catch((err) => {
-                    if (axios.isCancel(err) || err.name === 'CanceledError') {
+                    if (axios.isCancel(err)) {
                         return;
                     }
                     toast('error', 'Не удалось загрузить скины для апгрейда');
@@ -109,6 +109,7 @@ export function useTargetSkins(params: UseTargetSkinsParams) {
 
         if (debounceTimerRef.current) {
             clearTimeout(debounceTimerRef.current);
+            abortControllerRef.current?.abort();
         }
 
         if (search.trim().length > 0 && search.trim().length < 2) {
