@@ -1,5 +1,6 @@
 import { SkinEntry } from "./SkinCard";
-import { QuickMultiplier } from "./UpgradeBlock";
+
+export type QuickMultiplier = 2 | 3 | 5 | 10;
 
 // Формула шанса совпадает с бэком: (bet / target) * (1 - houseEdge/100) * 100
 export const HOUSE_EDGE_PERCENT = 5;

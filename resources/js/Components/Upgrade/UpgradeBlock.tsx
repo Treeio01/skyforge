@@ -14,11 +14,11 @@ import UpgradeResult from "./UpgradeResult";
 import UpgradeTargetToolbar, { PriceSort } from "./UpgradeTargetToolbar";
 import UpgradeVideo from "./UpgradeVideo";
 import { UpgradeState } from "./upgradeVideos";
-import { calculateChance, canBeTarget, deriveMultiplier, isChanceValid, pickTargetForMultiplier } from "./upgradeCalculations";
+import { calculateChance, canBeTarget, deriveMultiplier, isChanceValid, pickTargetForMultiplier, QuickMultiplier } from "./upgradeCalculations";
 
 type SkinId = string | number;
 export type Stage = "idle" | "closing" | "playing" | "playing_two" | "result";
-export type QuickMultiplier = 2 | 3 | 5 | 10;
+export type { QuickMultiplier };
 
 interface UpgradeBlockProps {
     inventory: Array<{ id: number; skin: Skin; price_at_acquisition: number }>;
