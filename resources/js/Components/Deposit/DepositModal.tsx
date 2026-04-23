@@ -275,7 +275,6 @@ export default function DepositModal({ visible, onClose }: DepositModalProps) {
             axios
                 .get("/deposit/config")
                 .then((res) => {
-                    console.log('[DepositConfig] response:', res.data);
                     if (res.data.rates) setRates(res.data.rates);
                     if (res.data.bonus) setBonus(res.data.bonus);
                     setConfigLoaded(true);

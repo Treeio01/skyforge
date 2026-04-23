@@ -103,21 +103,6 @@ export default function UpgradeBlock({ inventory, balance: _balance }: UpgradeBl
     const [outcome, setOutcome] = useState<DefuseOutcome | null>(null);
     const [resultSkin, setResultSkin] = useState<SkinEntry | null>(null);
 
-    // ─── DEBUG: показать result + defuse для отладки ────────
-    const DEBUG_SHOW = false;
-    const debugSkin: SkinEntry = {
-        id: 'debug',
-        rarity: 'covrt',
-        weapon: 'AK-47',
-        name: 'Fire Serpent (Factory New)',
-        price: '99\u2009999₽',
-        priceKopecks: 9999900,
-        image: '',
-    };
-    const debugStage = DEBUG_SHOW ? "result" as Stage : stage;
-    const debugOutcome = DEBUG_SHOW ? "success" as DefuseOutcome : outcome;
-    const debugResultSkin = DEBUG_SHOW ? debugSkin : resultSkin;
-
     // ─── Login modal ────────────────────────────────────────
     const [modalVisible, setModalVisible] = useState(false);
     const [adultChecked, setAdultChecked] = useState(false);
@@ -495,10 +480,10 @@ export default function UpgradeBlock({ inventory, balance: _balance }: UpgradeBl
                         className="hidden 1024:block min-w-[820px] 450:min-w-[1000px] 550:min-w-[1100px] 1024:min-w-[1300px]"
                     />
 
-                    {debugStage === "result" && debugOutcome && debugResultSkin && (
+                    {stage === "result" && outcome && resultSkin && (
                         <UpgradeResult
-                            variant={debugOutcome === "success" ? "win" : "lose"}
-                            skin={debugResultSkin}
+                            variant={outcome === "success" ? "win" : "lose"}
+                            skin={resultSkin}
                         />
                     )}
 
