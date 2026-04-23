@@ -2,7 +2,9 @@ import { mapRarityColor, parseSkinName } from '@/utils/skinHelpers';
 import { FeedItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { AnimatePresence } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { useToast } from '@/Components/UI/Toast';
 import LiveFeedItem, { SkinRarity } from './LiveFeedItem';
 
 export type LiveFeedEntry = {
@@ -15,21 +17,24 @@ export type LiveFeedEntry = {
 
 const MAX_FEED_ITEMS = 20;
 
-let feedCounter = 0;
-
-function feedItemToEntry(item: FeedItem): LiveFeedEntry {
-    const { weapon, name } = parseSkinName(item.target_skin_name);
-    return {
-        id: `feed-${item.id}-${++feedCounter}`,
-        rarity: mapRarityColor(item.rarity_color),
-        weapon,
-        name,
-        image: item.target_skin_image || '',
+function makeFeedItemToEntry(counterRef: React.MutableRefObject<number>) {
+    return function feedItemToEntry(item: FeedItem): LiveFeedEntry {
+        const { weapon, name } = parseSkinName(item.target_skin_name);
+        return {
+            id: `feed-${item.id}-${++counterRef.current}`,
+            rarity: mapRarityColor(item.rarity_color),
+            weapon,
+            name,
+            image: item.target_skin_image || '',
+        };
     };
 }
 
 export default function LiveFeed() {
     const [items, setItems] = useState<LiveFeedEntry[]>([]);
+    const feedCounterRef = useRef(0);
+    const { toast } = useToast();
+    const feedItemToEntry = makeFeedItemToEntry(feedCounterRef);
 
     // Загрузить последние апгрейды при монтировании
     useEffect(() => {
@@ -39,7 +44,9 @@ export default function LiveFeed() {
                 const entries = (res.data.data || []).map(feedItemToEntry);
                 setItems(entries.slice(0, MAX_FEED_ITEMS));
             })
-            .catch(() => {});
+            .catch(() => {
+                toast('error', 'Не удалось загрузить ленту апгрейдов');
+            });
     }, []);
 
     // WebSocket: слушаем канал 'upgrades' через Echo
@@ -108,15 +115,14 @@ export default function LiveFeed() {
                 </button>
             </div>
             <div className="flex flex-col gap-[1px] flex-1 min-h-0 overflow-hidden">
-                {items.map((item) => (
-                    <LiveFeedItem
-                        key={item.id}
-                        rarity={item.rarity}
-                        weapon={item.weapon}
-                        name={item.name}
-                        image={item.image}
-                    />
-                ))}
+                <AnimatePresence initial={false}>
+                    {items.map((item) => (
+                        <LiveFeedItem
+                            key={item.id}
+                            item={item}
+                        />
+                    ))}
+                </AnimatePresence>
             </div>
         </div>
     );
