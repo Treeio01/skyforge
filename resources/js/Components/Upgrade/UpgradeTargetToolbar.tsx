@@ -1,4 +1,4 @@
-import { ChevronDownIcon, SearchIcon } from './icons';
+import { ChevronDownIcon, SearchIcon } from '@/Components/UI/Icons';
 
 export type PriceSort = 'asc' | 'desc' | null;
 

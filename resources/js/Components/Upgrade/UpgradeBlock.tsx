@@ -7,7 +7,7 @@ import { router, usePage } from "@inertiajs/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DefuseOutcome } from "./DefuseOverlay";
 import EmptySkinCard from "./EmptySkinCard";
-import { InventoryIcon, PageTitleIcon, UpgradeTargetIcon } from "./icons";
+import { InventoryIcon, PageTitleIcon, UpgradeTargetIcon } from "@/Components/UI/Icons";
 import SkinCard, { SkinEntry } from "./SkinCard";
 import SkinsPanel from "./SkinsPanel";
 import UpgradeResult from "./UpgradeResult";
