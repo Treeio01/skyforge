@@ -19,12 +19,6 @@ export default function MarketIndex() {
                     <MarketToolbar
                         search={market.search}
                         onSearchChange={market.setSearch}
-                        minPrice={market.minPrice}
-                        onMinPriceChange={market.setMinPrice}
-                        maxPrice={market.maxPrice}
-                        onMaxPriceChange={market.setMaxPrice}
-                        sortOption={market.sortOption}
-                        onSortChange={market.setSortOption}
                         selectedCount={market.selected.size}
                         totalSelected={market.totalSelected}
                         onClearSelected={market.clearSelected}

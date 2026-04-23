@@ -8,12 +8,6 @@ import Button from "@/Components/UI/Button";
 interface MarketToolbarProps {
     search: string;
     onSearchChange: (v: string) => void;
-    minPrice: string;
-    onMinPriceChange: (v: string) => void;
-    maxPrice: string;
-    onMaxPriceChange: (v: string) => void;
-    sortOption: SortOption;
-    onSortChange: (v: SortOption) => void;
     selectedCount: number;
     totalSelected: number;
     onClearSelected: () => void;
@@ -25,12 +19,6 @@ interface MarketToolbarProps {
 const MarketToolbar = memo(function MarketToolbar({
     search,
     onSearchChange,
-    minPrice,
-    onMinPriceChange,
-    maxPrice,
-    onMaxPriceChange,
-    sortOption,
-    onSortChange,
     selectedCount,
     totalSelected,
     onClearSelected,
@@ -60,7 +48,7 @@ const MarketToolbar = memo(function MarketToolbar({
                 </span>
             </div>
 
-            <div className="flex items-center gap-2 xs:ml-auto">
+            <div className="w-full xs:w-auto flex flex-col xs:flex-row xs:items-center gap-2 xs:ml-auto min-w-0">
                 {/* Поиск — всегда видим */}
                 <div className="w-full xs:w-[140px] 1024:w-[240px]">
                     <Input
@@ -79,7 +67,7 @@ const MarketToolbar = memo(function MarketToolbar({
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
                         <path d="M2.33301 3.5H11.6663M3.49967 7H10.4997M4.66634 10.5H9.33301" stroke="#4E89FF" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                    <span className="text-[#4E89FF] font-sf-display text-[11px] hidden 550:inline">Фильтры</span>
+                    <span className="text-[#4E89FF] font-sf-display text-[11px] hidden xs:inline">Фильтры</span>
                 </button>
 
                 {/* Отменить + Корзина */}
