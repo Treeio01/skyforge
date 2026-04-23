@@ -1,12 +1,11 @@
 import { Skin } from "@/types";
-import { InventoryIcon, PageTitleIcon, UpgradeTargetIcon } from "@/Components/UI/Icons";
-import SkinCard from "./SkinCard";
-import SkinsPanel from "./SkinsPanel";
+import { PageTitleIcon } from "@/Components/UI/Icons";
 import UpgradeResult from "./UpgradeResult";
-import UpgradeTargetToolbar from "./UpgradeTargetToolbar";
 import UpgradeVideo from "./UpgradeVideo";
-import EmptySkinCard from "./EmptySkinCard";
-import { useUpgrade, MULTIPLIERS } from "./useUpgrade";
+import UpgradeInventoryPanel from "./UpgradeInventoryPanel";
+import UpgradeTargetPanel from "./UpgradeTargetPanel";
+import UpgradeMultiplierBar from "./UpgradeMultiplierBar";
+import { useUpgrade } from "./useUpgrade";
 
 interface UpgradeBlockProps {
     inventory: Array<{ id: number; skin: Skin; price_at_acquisition: number }>;
@@ -218,82 +217,34 @@ export default function UpgradeBlock({ inventory, balance: _balance }: UpgradeBl
 
                     {/* Мобильный блок иксов */}
                     {stage === "idle" && (
-                        <div className="absolute z-[100] right-3 top-[35%] -translate-y-1/2 flex flex-col items-center gap-1 1024:hidden">
-                                {MULTIPLIERS.map((m) => {
-                                    const active = activeQuick === m;
-                                    return (
-                                        <button
-                                            key={m}
-                                            type="button"
-                                            onClick={() => handleMultiplierChange(m)}
-                                            className={`p-4 flex items-center justify-center rounded-[8px] cursor-pointer ${active ? 'bg-white/20' : 'bg-white/6'}`}
-                                        >
-                                            <span className={`font-gotham font-medium text-[12px] leading-[104%] ${active ? 'text-white' : 'text-white/29'}`}>x{m}</span>
-                                        </button>
-                                    );
-                                })}
-                        </div>
+                        <UpgradeMultiplierBar
+                            activeQuick={activeQuick}
+                            onMultiplierChange={handleMultiplierChange}
+                        />
                     )}
 
                     <div className="absolute bottom-2 left-0 w-full 1024:px-2 1024:gap-2 z-[100] flex items-stretch 1024:static 1024:bottom-auto 1024:px-0 1024:gap-[20px] 1024:max-w-[1281px] 1024:self-center 1024:w-full max-h-[230px] 402:max-h-[280px] 1024:max-h-full">
-                        <SkinsPanel icon={<InventoryIcon />} title="Ваши скины">
-                            {inventoryItems.map((skin) => (
-                                <SkinCard
-                                    key={skin.id}
-                                    {...skin}
-                                    selected={selectedInventory === skin.id}
-                                    dimmed={
-                                        selectedInventory !== null &&
-                                        selectedInventory !== skin.id
-                                    }
-                                    onClick={
-                                        panelLocked
-                                            ? undefined
-                                            : () =>
-                                                  handleSelectInventory(skin.id)
-                                    }
-                                />
-                            ))}
-                            <EmptySkinCard />
-                        </SkinsPanel>
+                        <UpgradeInventoryPanel
+                            inventoryItems={inventoryItems}
+                            selectedInventory={selectedInventory}
+                            panelLocked={panelLocked}
+                            onSelectInventory={handleSelectInventory}
+                        />
 
-                        <SkinsPanel
-                            icon={<UpgradeTargetIcon />}
-                            title="Скин апгрейда"
+                        <UpgradeTargetPanel
+                            targetItems={targetItems}
+                            selectedTarget={selectedTarget}
+                            panelLocked={panelLocked}
+                            targetsLoading={targetsLoading}
+                            priceSort={priceSort}
+                            minPrice={minPrice}
+                            search={search}
+                            onSelectTarget={handleSelectTarget}
                             onScrollEnd={loadMore}
-                            toolbar={
-                                <UpgradeTargetToolbar
-                                    priceSort={priceSort}
-                                    onPriceSortChange={setPriceSort}
-                                    minPrice={minPrice}
-                                    onMinPriceChange={setMinPrice}
-                                    search={search}
-                                    onSearchChange={setSearch}
-                                />
-                            }
-                        >
-                            {targetItems.map((skin) => (
-                                <SkinCard
-                                    key={skin.id}
-                                    {...skin}
-                                    selected={selectedTarget === skin.id}
-                                    dimmed={
-                                        selectedTarget !== null &&
-                                        selectedTarget !== skin.id
-                                    }
-                                    onClick={
-                                        panelLocked
-                                            ? undefined
-                                            : () => handleSelectTarget(skin.id)
-                                    }
-                                />
-                            ))}
-                            {targetsLoading && (
-                                <div className="col-span-full text-center text-white/30 text-sm py-2">
-                                    Загрузка...
-                                </div>
-                            )}
-                        </SkinsPanel>
+                            onPriceSortChange={setPriceSort}
+                            onMinPriceChange={setMinPrice}
+                            onSearchChange={setSearch}
+                        />
                     </div>
                 </div>
             </div>
