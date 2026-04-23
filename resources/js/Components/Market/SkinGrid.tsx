@@ -1,4 +1,4 @@
-import { memo } from "react";
+import React, { memo } from "react";
 import SkinCard from "@/Components/Upgrade/SkinCard";
 import { apiSkinToEntry } from "@/utils/skinHelpers";
 import { SkeletonSkinCard } from "@/Components/UI/Skeleton";
@@ -10,9 +10,11 @@ interface SkinGridProps {
     selected: Set<string | number>;
     onToggle: (id: string | number) => void;
     loading?: boolean;
+    containerRef?: React.RefObject<HTMLDivElement>;
+    onScroll?: () => void;
 }
 
-export default memo(function SkinGrid({ items, selected, onToggle, loading }: SkinGridProps) {
+export default memo(function SkinGrid({ items, selected, onToggle, loading, containerRef, onScroll }: SkinGridProps) {
     if (loading) {
         return (
             <div className="grid grid-cols-2 xs:grid-cols-3 lg:grid-cols-4 wide:grid-cols-5 gap-3">
@@ -23,6 +25,8 @@ export default memo(function SkinGrid({ items, selected, onToggle, loading }: Sk
 
     return (
         <div
+            ref={containerRef}
+            onScroll={onScroll}
             className="flex-1 overflow-y-auto skins-scroll p-2.5 bg-[#070A10] max-h-[calc(100vh-80px)]"
         >
             <div className="grid grid-cols-2 xs:grid-cols-3 lg:grid-cols-4 wide:grid-cols-5 gap-3">

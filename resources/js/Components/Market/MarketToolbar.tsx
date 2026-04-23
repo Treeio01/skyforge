@@ -18,7 +18,6 @@ interface MarketToolbarProps {
     onClearSelected: () => void;
     onOpenFilters: () => void;
     onOpenCart: () => void;
-    onApply: () => void;
     buying?: boolean;
 }
 
@@ -36,7 +35,6 @@ export default function MarketToolbar({
     onClearSelected,
     onOpenFilters,
     onOpenCart,
-    onApply,
     buying = false,
 }: MarketToolbarProps) {
     return (
@@ -57,7 +55,7 @@ export default function MarketToolbar({
                     </span>
                 </div>
                 <span className="text-[12px] font-sf-display leading-[104%] text-[#9C9DA9] hidden 1024:block">
-                    Текст любой какой-то лялял и ляляля
+                    Сортировка и фильтры
                 </span>
             </div>
 

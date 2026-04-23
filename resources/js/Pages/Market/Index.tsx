@@ -30,19 +30,18 @@ export default function MarketIndex() {
                         onClearSelected={market.clearSelected}
                         onOpenFilters={() => market.setFiltersOpen(true)}
                         onOpenCart={() => guard(() => market.setCartOpen(true))}
-                        onApply={market.applyFilters}
                         buying={market.buying}
                     />
 
                     {/* Грид скинов */}
-                    <div ref={market.scrollRef} onScroll={market.handleScroll}>
-                        <SkinGrid
-                            items={market.items}
-                            selected={market.selected}
-                            onToggle={market.toggleSelect}
-                            loading={market.loading}
-                        />
-                    </div>
+                    <SkinGrid
+                        items={market.items}
+                        selected={market.selected}
+                        onToggle={market.toggleSelect}
+                        loading={market.loading}
+                        containerRef={market.scrollRef}
+                        onScroll={market.handleScroll}
+                    />
                 </div>
             </div>
 
@@ -76,7 +75,7 @@ export default function MarketIndex() {
                 )}
 
                 <button
-                    onClick={() => { market.setSelected(new Set()); market.setCartOpen(false); }}
+                    onClick={() => { market.clearSelected(); market.setCartOpen(false); }}
                     className="text-white/20 font-sf-display text-[13px] cursor-pointer hover:text-white/40 transition-colors text-center"
                 >
                     Отменить все выделенное
@@ -110,7 +109,7 @@ export default function MarketIndex() {
                         sortOption={market.sortOption}
                         onSortChange={market.setSortOption}
                         onClose={() => market.setFiltersOpen(false)}
-                        onApply={market.applyFilters}
+                        onApply={() => market.setFiltersOpen(false)}
                     />
                 </div>
                 <button
