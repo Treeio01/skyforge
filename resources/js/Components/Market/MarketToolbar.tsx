@@ -39,7 +39,7 @@ const MarketToolbar = memo(function MarketToolbar({
     buying = false,
 }: MarketToolbarProps) {
     return (
-        <div className="flex flex-wrap gap-2 p-3 items-center justify-between bg-[#070A10]">
+        <div className="flex flex-col xs:flex-row xs:flex-wrap gap-2 p-3 xs:items-center xs:justify-between bg-[#070A10]">
             <div className="flex flex-col gap-1 min-w-0">
                 <div className="flex items-center gap-1">
                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
@@ -60,9 +60,9 @@ const MarketToolbar = memo(function MarketToolbar({
                 </span>
             </div>
 
-            <div className="flex items-center gap-2 ml-auto">
+            <div className="flex items-center gap-2 xs:ml-auto">
                 {/* Поиск — всегда видим */}
-                <div className="w-[140px] 1024:w-[240px]">
+                <div className="w-full xs:w-[140px] 1024:w-[240px]">
                     <Input
                         type="text"
                         value={search}
