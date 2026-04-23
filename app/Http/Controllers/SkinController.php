@@ -19,9 +19,38 @@ use Inertia\Response;
 
 class SkinController extends Controller
 {
-    public function market(): Response
+    public function market(Request $request): Response
     {
-        return Inertia::render('Market/Index');
+        $query = Skin::query()->active()->availableForUpgrade();
+
+        if ($request->filled('search')) {
+            $search = str_replace('%', '', $request->input('search'));
+            $query->where('market_hash_name', 'like', '%'.$search.'%');
+        }
+
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', (int) $request->input('min_price'));
+        }
+
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', (int) $request->input('max_price'));
+        }
+
+        if ($request->filled('sort')) {
+            $direction = $request->input('direction', 'asc') === 'desc' ? 'desc' : 'asc';
+
+            match ($request->input('sort')) {
+                'price' => $query->orderBy('price', $direction),
+                'name' => $query->orderBy('market_hash_name', $direction),
+                default => $query->orderBy('price'),
+            };
+        } else {
+            $query->orderBy('price');
+        }
+
+        return Inertia::render('Market/Index', [
+            'skins' => SkinBriefResource::collection($query->paginate(150)->withQueryString()),
+        ]);
     }
 
     public function index(Request $request): AnonymousResourceCollection

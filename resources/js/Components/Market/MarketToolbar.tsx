@@ -120,6 +120,7 @@ interface FilterControlsProps {
     sortOption: SortOption;
     onSortChange: (v: SortOption) => void;
     onClose: () => void;
+    onApply?: () => void;
 }
 
 export function FilterControls({
@@ -130,6 +131,7 @@ export function FilterControls({
     sortOption,
     onSortChange,
     onClose,
+    onApply,
 }: FilterControlsProps) {
     return (
         <>
@@ -175,7 +177,7 @@ export function FilterControls({
             </div>
 
             {/* Применить фильтры */}
-            <Button size="sm" onClick={() => { onClose(); }}>
+            <Button size="sm" onClick={() => { onApply?.(); onClose(); }}>
                 Применить
             </Button>
         </>

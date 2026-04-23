@@ -43,6 +43,7 @@ export interface UseMarketReturn {
     scrollRef: React.RefObject<HTMLDivElement>;
     handleScroll: () => void;
     handleBuy: () => void;
+    applyFilters: () => void;
 }
 
 export function useMarket(): UseMarketReturn {
@@ -102,6 +103,20 @@ export function useMarket(): UseMarketReturn {
         setSelected(new Set());
     }, []);
 
+    const applyFilters = useCallback(() => {
+        router.reload({
+            data: {
+                search: search,
+                min_price: minPrice,
+                max_price: maxPrice,
+                sort: sort,
+                direction: direction,
+            },
+            only: ['skins'],
+            preserveUrl: false,
+        });
+    }, [search, minPrice, maxPrice, sort, direction]);
+
     const handleBuy = useCallback(() => {
         if (selectedItems.length === 0) return;
         setBuying(true);
@@ -139,5 +154,6 @@ export function useMarket(): UseMarketReturn {
         scrollRef,
         handleScroll,
         handleBuy,
+        applyFilters,
     };
 }

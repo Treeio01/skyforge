@@ -109,10 +109,11 @@ export default function MarketIndex() {
                         sortOption={market.sortOption}
                         onSortChange={market.setSortOption}
                         onClose={() => market.setFiltersOpen(false)}
+                        onApply={market.applyFilters}
                     />
                 </div>
                 <button
-                    onClick={() => market.setFiltersOpen(false)}
+                    onClick={() => { market.applyFilters(); market.setFiltersOpen(false); }}
                     style={{ background: "radial-gradient(80.57% 100% at 50% 100%, #122A51 0%, #091637 100%)" }}
                     className="w-full py-3 rounded-[12px] flex justify-center items-center cursor-pointer hover:brightness-125 active:scale-[0.98] transition-all"
                 >
