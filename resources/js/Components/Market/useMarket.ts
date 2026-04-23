@@ -103,7 +103,7 @@ export function useMarket(): UseMarketReturn {
     }, []);
 
     const handleBuy = useCallback(() => {
-        if (selected.size === 0) return;
+        if (selectedItems.length === 0) return;
         setBuying(true);
         const skinIds = selectedItems.map((s) => s.backendSkinId).filter(Boolean);
         router.post('/market/buy', { skin_ids: skinIds }, {
@@ -111,7 +111,7 @@ export function useMarket(): UseMarketReturn {
             onSuccess: () => { setSelected(new Set()); setCartOpen(false); },
             onFinish: () => setBuying(false),
         });
-    }, [selected, selectedItems]);
+    }, [selectedItems]);
 
     return {
         search,

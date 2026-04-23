@@ -109,7 +109,6 @@ export default function MarketIndex() {
                         sortOption={market.sortOption}
                         onSortChange={market.setSortOption}
                         onClose={() => market.setFiltersOpen(false)}
-                        onApply={() => market.setFiltersOpen(false)}
                     />
                 </div>
                 <button
