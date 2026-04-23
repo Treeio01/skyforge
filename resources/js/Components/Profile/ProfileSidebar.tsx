@@ -1,3 +1,4 @@
+import Input from '@/Components/UI/Input';
 import { formatKopecks } from '@/utils/skinHelpers';
 import { useForm } from '@inertiajs/react';
 import { useState } from 'react';
@@ -65,15 +66,12 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
                 {/* Trade URL */}
                 <div className="flex items-center gap-1 w-full flex-col">
                     <form onSubmit={handleTradeUrl} className="flex flex-col gap-1 w-full">
-                        <div className="flex py-3 px-3.5 w-full items-center justify-between border border-[#23262C] rounded-[8px] gap-2">
-                            <input
-                                type="text"
-                                value={tradeForm.data.trade_url}
-                                onChange={(e) => tradeForm.setData('trade_url', e.target.value)}
-                                className="font-sf-display w-full outline-none text-[13px] leading-[120%]"
-                                placeholder="Трейд-ссылка"
-                            />
-                        </div>
+                        <Input
+                            value={tradeForm.data.trade_url}
+                            onChange={(e) => tradeForm.setData('trade_url', e.target.value)}
+                            error={tradeForm.errors.trade_url}
+                            placeholder="https://steamcommunity.com/tradeoffer/new/..."
+                        />
                         <button
                             type="submit"
                             disabled={tradeForm.processing}

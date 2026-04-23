@@ -1,5 +1,5 @@
+import Button from '@/Components/UI/Button';
 import Modal from '@/Components/UI/Modal';
-import GradientButton from '@/Components/UI/GradientButton';
 import { useForm } from '@inertiajs/react';
 
 interface SellModalProps {
@@ -39,11 +39,14 @@ export default function SellModal({ visible, onClose, mode, selectedIds, onSucce
                 </p>
             </div>
             <div className="flex gap-2">
-                <GradientButton className="flex-1" onClick={handleSell} disabled={form.processing}>
-                    <span className="text-white font-sf-display text-[13px] font-medium">
-                        {form.processing ? 'Продаём...' : 'Продать'}
-                    </span>
-                </GradientButton>
+                <Button
+                    variant="primary"
+                    loading={form.processing}
+                    onClick={handleSell}
+                    className="flex-1"
+                >
+                    Продать
+                </Button>
                 <button
                     onClick={onClose}
                     className="flex-1 py-3 rounded-[10px] bg-white/5 hover:bg-white/10 text-white/60 font-sf-display text-[13px] font-medium cursor-pointer transition-colors"
