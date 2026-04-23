@@ -10,7 +10,7 @@ export default function ProfileChip() {
     }
 
     return (
-        <Link href="/profile">
+        <Link href="/profile" prefetch="hover">
             <Chip interactive className="bg-accent px-2.5">
                 <img
                     src={user.avatar_url ?? ''}

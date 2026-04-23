@@ -11,7 +11,7 @@ import { PageProps } from "@/types";
 
 function Logo() {
     return (
-        <Link href="/" className="1440:hidden 1340:flex hidden py-[3px] px-[3px] bg-accent w-full max-w-[187px]">
+        <Link href="/" prefetch="hover" className="1440:hidden 1340:flex hidden py-[3px] px-[3px] bg-accent w-full max-w-[187px]">
             <img src="/assets/img/logo.png" className="max-w-[56px]" alt="" />
         </Link>
     );
@@ -44,13 +44,13 @@ function StatsChips() {
 function NavChips() {
     return (
         <div className="flex gap-[3px] items-stretch">
-            <Link href="/market">
+            <Link href="/market" prefetch="hover">
                 <Chip interactive className="text-[#23262C] hover:text-white">
                     <MarketIcon />
                     <ChipLabel tone="inherit">Рынок Скинов</ChipLabel>
                 </Chip>
             </Link>
-            <Link href="/provably-fair">
+            <Link href="/provably-fair" prefetch="hover">
                 <Chip interactive className="text-[#23262C] hover:text-white">
                     <FaqIcon />
                     <ChipLabel tone="inherit">FAQ</ChipLabel>
