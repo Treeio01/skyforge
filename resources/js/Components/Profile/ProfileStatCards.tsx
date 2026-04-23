@@ -94,16 +94,17 @@ function StatCard({
     const rarity = upgrade ? mapRarityColor(upgrade.target_skin_rarity_color ?? null) : 'covrt';
     const { weapon, name } = upgrade ? parseSkinName(upgrade.target_skin_name) : { weapon: '—', name: '' };
 
-    let bigTextParts: string[];
-    if (isPrice && upgrade) {
-        bigTextParts = splitPriceKopecks(upgrade.target_price);
-    } else if (bigText.match(/^X\d+$/)) {
-        bigTextParts = ['X', bigText.slice(1)];
-    } else if (bigText.match(/^\d+%$/)) {
-        bigTextParts = ['%', bigText.replace('%', '')];
-    } else {
-        bigTextParts = [bigText];
-    }
+    const bigTextParts = useMemo<string[]>(() => {
+        if (isPrice && upgrade) {
+            return splitPriceKopecks(upgrade.target_price);
+        } else if (bigText.match(/^X\d+$/)) {
+            return ['X', bigText.slice(1)];
+        } else if (bigText.match(/^\d+%$/)) {
+            return ['%', bigText.replace('%', '')];
+        } else {
+            return [bigText];
+        }
+    }, [isPrice, upgrade, bigText]);
 
     return (
         <div
