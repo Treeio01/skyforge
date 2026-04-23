@@ -8,6 +8,7 @@ import {
     SBP_SYSTEMS,
     CURRENCY_SYMBOLS,
     MIN_AMOUNTS,
+    DepositMethod,
 } from "./depositConstants";
 
 const CardIcon = () => (
@@ -151,7 +152,7 @@ const SBPIcon = () => (
     </svg>
 );
 
-const METHODS: { label: string; value: "card" | "crypto" | "skins" | "sbp"; icon: React.ReactNode }[] = [
+const METHODS: { label: string; value: DepositMethod; icon: React.ReactNode }[] = [
     { label: "Карты", value: "card", icon: <CardIcon /> },
     { label: "Crypto", value: "crypto", icon: <CryptoIcon /> },
     { label: "Skins", value: "skins", icon: <SkinsIcon /> },
@@ -433,7 +434,7 @@ export default function DepositModal({ visible, onClose }: DepositModalProps) {
             {/* Кнопка */}
             <button
                 onClick={handleDeposit}
-                disabled={!canDeposit || processing}
+                disabled={!canDeposit || processing || method === "skins"}
                 style={{
                     background: canDeposit
                         ? "radial-gradient(80.57% 100% at 50% 100%, #4F86F5 0%, #05F 100%)"

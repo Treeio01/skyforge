@@ -48,10 +48,10 @@ export function useDeposit(visible: boolean): DepositState {
 
     // При смене валюты — автопереключение платёжной системы
     useEffect(() => {
-        if (currency === "RUB") {
-            if (sbpSystem === "visa") setSbpSystem("qr_sbp_a");
-        } else {
+        if (currency !== "RUB") {
             setSbpSystem("visa");
+        } else {
+            setSbpSystem((prev) => (prev === "visa" ? "qr_sbp_a" : prev));
         }
     }, [currency]);
 

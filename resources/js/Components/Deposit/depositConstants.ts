@@ -1,5 +1,3 @@
-import React from "react";
-
 export type DepositMethod = "card" | "crypto" | "skins" | "sbp";
 export type Currency = "RUB" | "UAH" | "EUR" | "USD" | "KZT" | "BYN";
 export type CryptoNetwork =
