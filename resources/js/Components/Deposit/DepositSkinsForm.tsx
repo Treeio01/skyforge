@@ -1,11 +1,6 @@
 import React from "react";
 
-interface DepositSkinsFormProps {
-    processing: boolean;
-    onSubmit: () => void;
-}
-
-export default function DepositSkinsForm({ processing, onSubmit }: DepositSkinsFormProps) {
+export default function DepositSkinsForm() {
     return (
         <div className="flex flex-col items-center gap-1.5">
             <div className="flex py-[39px] px-[10px] items-center justify-center w-full rounded-[14px] bg-white/1">

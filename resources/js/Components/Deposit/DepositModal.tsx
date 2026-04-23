@@ -1,4 +1,5 @@
 import Modal from "@/Components/UI/Modal";
+import Button from "@/Components/UI/Button";
 import React, { useMemo } from "react";
 import { router } from "@inertiajs/react";
 import { useDeposit } from "./useDeposit";
@@ -129,33 +130,24 @@ export default function DepositModal({ visible, onClose }: DepositModalProps) {
                         />
                     )}
 
-                    {method === "skins" && (
-                        <DepositSkinsForm
-                            processing={processing}
-                            onSubmit={handleDeposit}
-                        />
+                    {method === "sbp" && (
+                        <div className="text-center text-text-dim py-8 text-sm">СБП временно недоступно</div>
                     )}
 
-                    {/* Кнопка (для crypto и sbp методов) */}
-                    {method !== "card" && (
-                        <button
+                    {method === "skins" && (
+                        <DepositSkinsForm />
+                    )}
+
+                    {method === "crypto" && (
+                        <Button
+                            variant="primary"
+                            loading={processing}
                             onClick={handleDeposit}
-                            disabled={!canDeposit || processing || method === "skins" || method === "sbp"}
-                            style={{
-                                background: canDeposit
-                                    ? "radial-gradient(80.57% 100% at 50% 100%, #4F86F5 0%, #05F 100%)"
-                                    : undefined,
-                            }}
-                            className={`w-full py-4 rounded-[76px] flex justify-center items-center cursor-pointer transition-all duration-200 ${
-                                canDeposit
-                                    ? "hover:brightness-110 active:scale-[0.98]"
-                                    : "bg-white/5 opacity-40 cursor-not-allowed"
-                            }`}
+                            disabled={!canDeposit}
+                            className="w-full"
                         >
-                            <span className="text-white font-sf-display text-[14px] font-medium leading-[120%]">
-                                {processing ? "Обработка..." : "Пополнить баланс"}
-                            </span>
-                        </button>
+                            Пополнить
+                        </Button>
                     )}
                 </>
             )}

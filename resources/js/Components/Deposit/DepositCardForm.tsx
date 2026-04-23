@@ -8,7 +8,6 @@ import {
     type PaySystem,
 } from "./depositConstants";
 import { ChipButton, AmountBlock } from "./depositShared";
-import Input from "@/Components/UI/Input";
 import Button from "@/Components/UI/Button";
 
 const SBPIcon = () => (
@@ -150,16 +149,6 @@ export default function DepositCardForm({
                 minAmount={minAmount}
                 currencySymbol={currencySymbol}
                 bonus={bonus}
-            />
-
-            {/* Поле ввода суммы */}
-            <Input
-                type="text"
-                inputMode="numeric"
-                value={amount}
-                onChange={(e) => onAmountChange(e.target.value.replace(/\D/g, ""))}
-                placeholder={`Мин. ${minAmount} ${currencySymbol}`}
-                suffix={currencySymbol}
             />
 
             {/* Кнопка */}

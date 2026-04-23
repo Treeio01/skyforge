@@ -22,11 +22,8 @@ export interface DepositState {
     processing: boolean;
     setProcessing: (v: boolean) => void;
     rates: Record<string, number>;
-    setRates: (v: Record<string, number>) => void;
     bonus: { code: string; percent: number } | null;
-    setBonus: (v: { code: string; percent: number } | null) => void;
     configLoaded: boolean;
-    setConfigLoaded: (v: boolean) => void;
     configError: boolean;
 }
 
@@ -90,11 +87,8 @@ export function useDeposit(visible: boolean): DepositState {
         processing,
         setProcessing,
         rates,
-        setRates,
         bonus,
-        setBonus,
         configLoaded,
-        setConfigLoaded,
         configError,
     };
 }
