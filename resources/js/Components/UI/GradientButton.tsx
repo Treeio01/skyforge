@@ -1,3 +1,4 @@
+/** @deprecated Use Button from @/Components/UI/Button instead. This file will be deleted after full migration. */
 import { ReactNode } from 'react';
 
 interface GradientButtonProps {

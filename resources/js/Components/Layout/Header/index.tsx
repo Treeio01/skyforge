@@ -1,5 +1,6 @@
 import { Link, usePage } from "@inertiajs/react";
 import { BonusIcon, FaqIcon, GlobeIcon, LevelsIcon, MarketIcon, SteamIcon } from "@/Components/UI/Icons";
+import Button from "@/Components/UI/Button";
 import { Chip, ChipLabel, Divider } from "./primitives";
 import DepositBlock from "./sections/DepositBlock";
 import LanguageMenu from "./sections/LanguageMenu";
@@ -86,21 +87,13 @@ export default function Header() {
                         <ProfileChip />
                     </>
                 ) : (
-                    <button
-                        type="button"
+                    <Button
+                        variant="primary"
                         onClick={() => window.dispatchEvent(new Event('show-login-modal'))}
-                        style={{
-                            background:
-                                "radial-gradient(80.57% 100% at 50% 100%, #122A51 0%, #091637 100%)",
-                            boxShadow: "0 0 0 0 #0E1E39",
-                        }}
-                        className="py-[12px] px-[14px] flex rounded-[12px] justify-center items-center gap-[5px] transition-all duration-200 hover:brightness-125 hover:shadow-[0_0_20px_rgba(30,60,120,0.6)] active:scale-[0.98] cursor-pointer"
                     >
                         <SteamIcon />
-                        <span className="text-sm text-white font-sf-display font-medium leading-[120%]">
-                            Войти
-                        </span>
-                    </button>
+                        <span className="text-sm text-white font-sf-display font-medium leading-[120%]">Войти</span>
+                    </Button>
                 )}
             </div>
         </header>
