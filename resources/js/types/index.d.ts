@@ -56,7 +56,14 @@ export interface Flash {
     success: string | null;
 }
 
+export interface SiteStats {
+    online: number;
+    total_upgrades: number;
+}
+
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
     auth: { user: User | null };
     flash: Flash;
+    stats?: SiteStats;
+    socials?: Record<string, string>;
 };

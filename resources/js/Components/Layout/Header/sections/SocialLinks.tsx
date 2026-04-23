@@ -1,4 +1,5 @@
 import { usePage } from '@inertiajs/react';
+import type { PageProps } from '@/types';
 import {
     DiscordIcon,
     TelegramIcon,
@@ -18,7 +19,7 @@ const SOCIAL_ICONS: Record<string, React.FC> = {
 };
 
 export default function SocialLinks() {
-    const socials = (usePage().props as any).socials as Record<string, string> | undefined;
+    const { socials } = usePage<PageProps>().props;
 
     const links = socials
         ? Object.entries(socials).filter(([, url]) => url).map(([key, url]) => ({

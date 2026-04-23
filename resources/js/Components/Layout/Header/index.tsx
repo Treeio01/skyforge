@@ -17,7 +17,7 @@ function Logo() {
 }
 
 function StatsChips() {
-    const stats = (usePage<PageProps>().props as any).stats as { online: number; total_upgrades: number } | undefined;
+    const { stats } = usePage<PageProps>().props;
 
     return (
         <div className="flex gap-[3px] items-stretch">

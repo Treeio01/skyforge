@@ -303,9 +303,7 @@ export default function UpgradeBlock({ inventory, balance: _balance }: UpgradeBl
                 preserveState: true,
                 preserveScroll: true,
                 onSuccess: (page) => {
-                    const flash = (page.props as any).flash as
-                        | { success?: string; error?: string }
-                        | undefined;
+                    const flash = (page.props as PageProps).flash;
                     const isWin = !!flash?.success;
                     setOutcome(isWin ? "success" : "fail");
                     setStage("closing");
