@@ -1,8 +1,7 @@
 import { UpgradeTargetIcon } from "@/Components/UI/Icons";
 import SkinCard, { SkinEntry } from "./SkinCard";
 import SkinsPanel from "./SkinsPanel";
-import UpgradeTargetToolbar from "./UpgradeTargetToolbar";
-import { PriceSort } from "./UpgradeTargetToolbar";
+import UpgradeTargetToolbar, { PriceSort } from "./UpgradeTargetToolbar";
 
 interface UpgradeTargetPanelProps {
     targetItems: SkinEntry[];
