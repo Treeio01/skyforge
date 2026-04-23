@@ -8,6 +8,8 @@ import {
     type PaySystem,
 } from "./depositConstants";
 import { ChipButton, AmountBlock } from "./depositShared";
+import Input from "@/Components/UI/Input";
+import Button from "@/Components/UI/Button";
 
 const SBPIcon = () => (
     <svg
@@ -68,6 +70,8 @@ interface DepositCardFormProps {
     onAmountChange: (v: string) => void;
     credited: number;
     bonus: { code: string; percent: number } | null;
+    processing: boolean;
+    onSubmit: () => void;
 }
 
 export default function DepositCardForm({
@@ -79,6 +83,8 @@ export default function DepositCardForm({
     onAmountChange,
     credited,
     bonus,
+    processing,
+    onSubmit,
 }: DepositCardFormProps) {
     const minAmount = MIN_AMOUNTS[currency];
     const currencySymbol = CURRENCY_SYMBOLS[currency];
@@ -145,6 +151,21 @@ export default function DepositCardForm({
                 currencySymbol={currencySymbol}
                 bonus={bonus}
             />
+
+            {/* Поле ввода суммы */}
+            <Input
+                type="text"
+                inputMode="numeric"
+                value={amount}
+                onChange={(e) => onAmountChange(e.target.value.replace(/\D/g, ""))}
+                placeholder={`Мин. ${minAmount} ${currencySymbol}`}
+                suffix={currencySymbol}
+            />
+
+            {/* Кнопка */}
+            <Button loading={processing} onClick={onSubmit} size="lg" className="w-full">
+                Пополнить
+            </Button>
         </>
     );
 }

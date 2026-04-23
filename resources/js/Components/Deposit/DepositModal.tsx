@@ -7,6 +7,7 @@ import DepositMethodSelector from "./DepositMethodSelector";
 import DepositCardForm from "./DepositCardForm";
 import DepositCryptoForm from "./DepositCryptoForm";
 import DepositSkinsForm from "./DepositSkinsForm";
+import { SkeletonDepositForm } from "@/Components/UI/Skeleton";
 
 interface DepositModalProps {
     visible: boolean;
@@ -14,6 +15,7 @@ interface DepositModalProps {
 }
 
 export default function DepositModal({ visible, onClose }: DepositModalProps) {
+    const deposit = useDeposit(visible);
     const {
         method,
         setMethod,
@@ -29,7 +31,9 @@ export default function DepositModal({ visible, onClose }: DepositModalProps) {
         setProcessing,
         rates,
         bonus,
-    } = useDeposit(visible);
+        configLoaded,
+        configError,
+    } = deposit;
 
     const numericAmount = parseInt(amount, 10) || 0;
 
@@ -84,51 +88,77 @@ export default function DepositModal({ visible, onClose }: DepositModalProps) {
 
             <DepositMethodSelector method={method} onChange={setMethod} />
 
-            {method === "card" && (
-                <DepositCardForm
-                    currency={currency}
-                    onCurrencyChange={setCurrency}
-                    sbpSystem={sbpSystem}
-                    onSbpSystemChange={setSbpSystem}
-                    amount={amount}
-                    onAmountChange={setAmount}
-                    credited={credited}
-                    bonus={bonus}
-                />
+            {!configLoaded && !configError && (
+                <SkeletonDepositForm />
             )}
 
-            {method === "crypto" && (
-                <DepositCryptoForm
-                    cryptoNetwork={cryptoNetwork}
-                    onNetworkChange={setCryptoNetwork}
-                    amount={amount}
-                    onAmountChange={setAmount}
-                    credited={credited}
-                    bonus={bonus}
-                />
+            {configError && (
+                <div className="text-center text-danger text-sm py-4">
+                    Ошибка загрузки.{" "}
+                    <button onClick={() => window.location.reload()} className="underline">
+                        Обновить
+                    </button>
+                </div>
             )}
 
-            {method === "skins" && <DepositSkinsForm />}
+            {configLoaded && (
+                <>
+                    {method === "card" && (
+                        <DepositCardForm
+                            currency={currency}
+                            onCurrencyChange={setCurrency}
+                            sbpSystem={sbpSystem}
+                            onSbpSystemChange={setSbpSystem}
+                            amount={amount}
+                            onAmountChange={setAmount}
+                            credited={credited}
+                            bonus={bonus}
+                            processing={processing}
+                            onSubmit={handleDeposit}
+                        />
+                    )}
 
-            {/* Кнопка */}
-            <button
-                onClick={handleDeposit}
-                disabled={!canDeposit || processing || method === "skins"}
-                style={{
-                    background: canDeposit
-                        ? "radial-gradient(80.57% 100% at 50% 100%, #4F86F5 0%, #05F 100%)"
-                        : undefined,
-                }}
-                className={`w-full py-4 rounded-[76px] flex justify-center items-center cursor-pointer transition-all duration-200 ${
-                    canDeposit
-                        ? "hover:brightness-110 active:scale-[0.98]"
-                        : "bg-white/5 opacity-40 cursor-not-allowed"
-                }`}
-            >
-                <span className="text-white font-sf-display text-[14px] font-medium leading-[120%]">
-                    {processing ? "Обработка..." : "Пополнить баланс"}
-                </span>
-            </button>
+                    {method === "crypto" && (
+                        <DepositCryptoForm
+                            network={cryptoNetwork}
+                            onNetworkChange={setCryptoNetwork}
+                            amount={amount}
+                            onAmountChange={setAmount}
+                            credited={credited}
+                            bonus={bonus}
+                        />
+                    )}
+
+                    {method === "skins" && (
+                        <DepositSkinsForm
+                            processing={processing}
+                            onSubmit={handleDeposit}
+                        />
+                    )}
+
+                    {/* Кнопка (для crypto и sbp методов) */}
+                    {method !== "card" && (
+                        <button
+                            onClick={handleDeposit}
+                            disabled={!canDeposit || processing || method === "skins" || method === "sbp"}
+                            style={{
+                                background: canDeposit
+                                    ? "radial-gradient(80.57% 100% at 50% 100%, #4F86F5 0%, #05F 100%)"
+                                    : undefined,
+                            }}
+                            className={`w-full py-4 rounded-[76px] flex justify-center items-center cursor-pointer transition-all duration-200 ${
+                                canDeposit
+                                    ? "hover:brightness-110 active:scale-[0.98]"
+                                    : "bg-white/5 opacity-40 cursor-not-allowed"
+                            }`}
+                        >
+                            <span className="text-white font-sf-display text-[14px] font-medium leading-[120%]">
+                                {processing ? "Обработка..." : "Пополнить баланс"}
+                            </span>
+                        </button>
+                    )}
+                </>
+            )}
 
             <p className="text-white/12 font-sf-display font-medium text-[10px] leading-[120%] text-center">
                 Если после оплаты прошло более 30 минут, а баланс на сайте не

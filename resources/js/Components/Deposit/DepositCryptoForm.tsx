@@ -3,7 +3,7 @@ import { CRYPTO_NETWORKS, type CryptoNetwork } from "./depositConstants";
 import { ChipButton, AmountBlock } from "./depositShared";
 
 interface DepositCryptoFormProps {
-    cryptoNetwork: CryptoNetwork;
+    network: CryptoNetwork;
     onNetworkChange: (v: CryptoNetwork) => void;
     amount: string;
     onAmountChange: (v: string) => void;
@@ -12,7 +12,7 @@ interface DepositCryptoFormProps {
 }
 
 export default function DepositCryptoForm({
-    cryptoNetwork,
+    network,
     onNetworkChange,
     amount,
     onAmountChange,
@@ -20,7 +20,7 @@ export default function DepositCryptoForm({
     bonus,
 }: DepositCryptoFormProps) {
     const activeNetwork =
-        CRYPTO_NETWORKS.find((n) => n.value === cryptoNetwork) ??
+        CRYPTO_NETWORKS.find((n) => n.value === network) ??
         CRYPTO_NETWORKS[0];
 
     return (
@@ -30,7 +30,7 @@ export default function DepositCryptoForm({
                     <ChipButton
                         className={"w-full max-w-[144px] justify-center"}
                         key={n.value}
-                        active={cryptoNetwork === n.value}
+                        active={network === n.value}
                         onClick={() => onNetworkChange(n.value)}
                     >
                         {n.label}
