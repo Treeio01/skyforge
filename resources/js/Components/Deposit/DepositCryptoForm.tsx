@@ -1,6 +1,7 @@
 import React from "react";
 import { CRYPTO_NETWORKS, type CryptoNetwork } from "./depositConstants";
 import { ChipButton, AmountBlock } from "./depositShared";
+import Button from "@/Components/UI/Button";
 
 interface DepositCryptoFormProps {
     network: CryptoNetwork;
@@ -9,6 +10,9 @@ interface DepositCryptoFormProps {
     onAmountChange: (v: string) => void;
     credited: number;
     bonus: { code: string; percent: number } | null;
+    processing: boolean;
+    onSubmit: () => void;
+    canDeposit: boolean;
 }
 
 export default function DepositCryptoForm({
@@ -18,6 +22,9 @@ export default function DepositCryptoForm({
     onAmountChange,
     credited,
     bonus,
+    processing,
+    onSubmit,
+    canDeposit,
 }: DepositCryptoFormProps) {
     const activeNetwork =
         CRYPTO_NETWORKS.find((n) => n.value === network) ??
@@ -46,6 +53,16 @@ export default function DepositCryptoForm({
                 currencySymbol={activeNetwork.symbol}
                 bonus={bonus}
             />
+
+            <Button
+                variant="primary"
+                loading={processing}
+                onClick={onSubmit}
+                disabled={!canDeposit}
+                className="w-full mt-3"
+            >
+                Пополнить
+            </Button>
         </>
     );
 }

@@ -1,5 +1,4 @@
 import Modal from "@/Components/UI/Modal";
-import Button from "@/Components/UI/Button";
 import React, { useMemo } from "react";
 import { router } from "@inertiajs/react";
 import { useDeposit } from "./useDeposit";
@@ -127,6 +126,9 @@ export default function DepositModal({ visible, onClose }: DepositModalProps) {
                             onAmountChange={setAmount}
                             credited={credited}
                             bonus={bonus}
+                            processing={processing}
+                            onSubmit={handleDeposit}
+                            canDeposit={canDeposit}
                         />
                     )}
 
@@ -136,18 +138,6 @@ export default function DepositModal({ visible, onClose }: DepositModalProps) {
 
                     {method === "skins" && (
                         <DepositSkinsForm />
-                    )}
-
-                    {method === "crypto" && (
-                        <Button
-                            variant="primary"
-                            loading={processing}
-                            onClick={handleDeposit}
-                            disabled={!canDeposit}
-                            className="w-full"
-                        >
-                            Пополнить
-                        </Button>
                     )}
                 </>
             )}
