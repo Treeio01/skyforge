@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SoundIcon } from '../icons';
+import { SoundIcon } from '@/Components/UI/Icons';
 import { Chip, ChipLabel, DropdownItem } from '../primitives';
 import { useClickOutside } from '../useClickOutside';
 

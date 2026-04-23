@@ -7,7 +7,7 @@ import {
     TwitchIcon,
     VkIcon,
     YoutubeIcon,
-} from '../icons';
+} from '@/Components/UI/Icons';
 
 const SOCIAL_ICONS: Record<string, React.FC> = {
     vk: VkIcon,

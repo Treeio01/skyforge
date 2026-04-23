@@ -1,6 +1,6 @@
 import { usePage } from '@inertiajs/react';
 import { PageProps } from '@/types';
-import { WalletIcon } from '../icons';
+import { WalletIcon } from '@/Components/UI/Icons';
 import { ChipLabel } from '../primitives';
 import DepositModal from '@/Components/Deposit/DepositModal';
 import { useState } from 'react';

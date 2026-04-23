@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { LOCALES } from '../constants';
-import { FlagRuIcon } from '../icons';
+import { FlagRuIcon } from '@/Components/UI/Icons';
 import { Chip, ChipLabel, DropdownItem } from '../primitives';
 import { Locale } from '../types';
 import { useClickOutside } from '../useClickOutside';
