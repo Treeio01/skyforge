@@ -57,6 +57,7 @@ export default function UpgradeVideo({
     const hasFullSetup = !!(inventorySkin && targetSkin && multiplier);
     const isIdle = stage === 'idle';
     const isResult = stage === 'result';
+    const goButtonProcessing = stage === 'playing' || stage === 'playing_two';
     const showCrateOverlays = isIdle;
     const showGameHud = !isResult;
     const showGo = isIdle;
@@ -308,7 +309,7 @@ export default function UpgradeVideo({
                 <GoButton
                     device={device}
                     canStart={canStart}
-                    isProcessing={canStart}
+                    isProcessing={goButtonProcessing}
                     onGo={onGo}
                 />
             )}

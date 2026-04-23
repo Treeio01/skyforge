@@ -108,6 +108,7 @@ export default function UpgradeBlock({ inventory }: UpgradeBlockProps) {
 
                     {stage === "result" && outcome && resultSkin && (
                         <motion.div
+                            initial="idle"
                             variants={{
                                 idle: { x: 0 },
                                 shake: {

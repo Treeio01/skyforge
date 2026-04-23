@@ -80,14 +80,8 @@ export function GoButton({ device, canStart, isProcessing = false, onGo }: GoBut
                           transform: 'translate(-50%, -50%)',
                       }
             }
-            animate={
-                isProcessing
-                    ? {
-                          scale: [1, 1.03, 1],
-                          transition: { repeat: Infinity, duration: 0.8 },
-                      }
-                    : { scale: 1 }
-            }
+            animate={isProcessing ? { scale: [1, 1.03, 1] } : { scale: 1 }}
+            transition={isProcessing ? { repeat: Infinity, duration: 0.8 } : { duration: 0.2 }}
             whileTap={{ scale: 0.97 }}
         >
             <span className="font-gotham-cond font-bold text-white text-[min(2vw,22px)] leading-none">
