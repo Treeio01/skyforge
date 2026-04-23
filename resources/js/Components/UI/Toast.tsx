@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from 'framer-motion';
 import { createContext, useContext, useState, useCallback, useEffect, useRef, ReactNode } from 'react';
 import { router } from '@inertiajs/react';
 
@@ -81,9 +82,21 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         <ToastContext.Provider value={{ toast: addToast }}>
             {children}
             <div className="fixed top-5 right-5 z-[9999] flex flex-col gap-2 pointer-events-none max-w-[380px]">
-                {toasts.map((t) => (
-                    <ToastItem key={t.id} toast={t} onDismiss={removeToast} />
-                ))}
+                <AnimatePresence initial={false}>
+                    {toasts.map((t) => (
+                        <motion.div
+                            key={t.id}
+                            layout
+                            initial={{ opacity: 0, x: 60, scale: 0.95 }}
+                            animate={{ opacity: 1, x: 0, scale: 1 }}
+                            exit={{ opacity: 0, x: 60, scale: 0.95 }}
+                            transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+                            className="pointer-events-auto"
+                        >
+                            <ToastItem key={t.id} toast={t} onDismiss={removeToast} />
+                        </motion.div>
+                    ))}
+                </AnimatePresence>
             </div>
         </ToastContext.Provider>
     );
@@ -132,13 +145,7 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: number)
                 background: accent.bg,
                 boxShadow: '0 16px 48px 0 rgba(0, 0, 0, 0.40)',
             }}
-            className={`pointer-events-auto flex items-start gap-3 p-4 rounded-[14px] backdrop-blur-[70px] cursor-pointer transition-all duration-400 ease-out ${
-                state === 'enter'
-                    ? 'opacity-0 translate-x-[40px] scale-95'
-                    : state === 'visible'
-                      ? 'opacity-100 translate-x-0 scale-100'
-                      : 'opacity-0 translate-x-[20px] scale-95'
-            }`}
+            className="flex items-start gap-3 p-4 rounded-[14px] backdrop-blur-[70px] cursor-pointer"
         >
             <div className="flex-shrink-0 mt-0.5">
                 {toast.type === 'success' && <SuccessIcon color={accent.icon} />}
