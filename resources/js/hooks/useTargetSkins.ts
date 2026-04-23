@@ -104,7 +104,6 @@ export function useTargetSkins(params: UseTargetSkinsParams) {
 
     // Debounce all filter changes
     useEffect(() => {
-        // Сразу сбрасываем next page — старый URL невалиден для новых параметров
         nextPageUrlRef.current = null;
 
         if (debounceTimerRef.current) {
@@ -115,6 +114,10 @@ export function useTargetSkins(params: UseTargetSkinsParams) {
         if (search.trim().length > 0 && search.trim().length < 2) {
             return;
         }
+
+        // Сбрасываем список сразу — чтобы показать скелетон, не дожидаясь дебаунса
+        setSkins([]);
+        setLoading(true);
 
         debounceTimerRef.current = setTimeout(() => {
             fetchPage(buildInitialUrl(), false);

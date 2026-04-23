@@ -6,30 +6,26 @@ import { SkeletonSkinCard } from "@/Components/UI/Skeleton";
 
 type SkinEntry = ReturnType<typeof apiSkinToEntry>;
 
-const CARD_HEIGHT = 260;
+const CARD_HEIGHT = 126;
+const CARD_MIN_WIDTH = 150;
 const GAP = 12;
 
-function useColumns(): number {
-    const [cols, setCols] = useState(() => {
-        if (typeof window === "undefined") return 4;
-        const w = window.innerWidth;
-        if (w < 550) return 2;
-        if (w < 1024) return 3;
-        if (w < 1155) return 4;
-        return 5;
-    });
+function useColumns(containerRef: React.RefObject<HTMLDivElement | null>): number {
+    const [cols, setCols] = useState(5);
 
     useEffect(() => {
-        function update() {
-            const w = window.innerWidth;
-            if (w < 550) setCols(2);
-            else if (w < 1024) setCols(3);
-            else if (w < 1155) setCols(4);
-            else setCols(5);
-        }
-        window.addEventListener("resize", update);
-        return () => window.removeEventListener("resize", update);
-    }, []);
+        const el = containerRef.current;
+        if (!el) return;
+
+        const observer = new ResizeObserver(([entry]) => {
+            const available = entry.contentRect.width;
+            const count = Math.max(2, Math.floor((available + GAP) / (CARD_MIN_WIDTH + GAP)));
+            setCols(count);
+        });
+
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, [containerRef]);
 
     return cols;
 }
@@ -46,7 +42,7 @@ interface SkinGridProps {
 export default memo(function SkinGrid({ items, selected, onToggle, loading, containerRef, onScroll }: SkinGridProps) {
     const internalRef = useRef<HTMLDivElement>(null);
     const parentRef = containerRef ?? internalRef;
-    const columns = useColumns();
+    const columns = useColumns(parentRef);
     const rows = Math.ceil(items.length / columns);
 
     const virtualizer = useVirtualizer({
@@ -100,7 +96,6 @@ export default memo(function SkinGrid({ items, selected, onToggle, loading, cont
                                         key={skin.id}
                                         {...skin}
                                         selected={selected.has(skin.id)}
-                                        dimmed={selected.size > 0 && !selected.has(skin.id)}
                                         onClick={() => onToggle(skin.id)}
                                     />
                                 ))}

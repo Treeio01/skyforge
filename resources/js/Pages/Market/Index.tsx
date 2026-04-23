@@ -13,8 +13,8 @@ export default function MarketIndex() {
 
     return (
         <AppLayout>
-            <div className="flex flex-col flex-1 min-h-0 w-full items-center">
-                <div className="flex flex-col w-full max-w-[1664px] flex-1 min-h-0">
+            <div className="flex flex-col flex-1 min-h-0 w-full">
+                <div className="flex flex-col w-full flex-1 min-h-0">
                     {/* Тулбар */}
                     <MarketToolbar
                         search={market.search}

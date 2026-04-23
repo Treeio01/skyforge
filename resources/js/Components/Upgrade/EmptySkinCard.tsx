@@ -22,14 +22,14 @@ export default function EmptySkinCard({ onClick }: EmptySkinCardProps) {
                     rx="13"
                     ry="13"
                     fill="none"
-                    stroke="#0C0F15"
-                    strokeWidth="2"
+                    stroke="rgba(255,255,255,0.18)"
+                    strokeWidth="1.5"
                     pathLength="32"
                     strokeDasharray="3 1"
                     strokeDashoffset="-1.5"
                 />
             </svg>
-            <div className="relative flex rounded-full p-[8.25px] bg-[#0C0F15]">
+            <div className="relative flex rounded-full p-[8.25px] bg-white/8">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="17"
@@ -40,7 +40,7 @@ export default function EmptySkinCard({ onClick }: EmptySkinCardProps) {
                     <path
                         d="M13.8059 8.25H2.69418M8.25002 2.69416V13.8058"
                         stroke="white"
-                        strokeOpacity="0.32"
+                        strokeOpacity="0.7"
                         strokeWidth="0.785714"
                         strokeLinecap="round"
                         strokeLinejoin="round"

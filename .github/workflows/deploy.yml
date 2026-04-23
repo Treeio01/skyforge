@@ -1,0 +1,49 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            set -e
+            cd /var/www/skyforge
+
+            echo "=== [1/7] Pulling code ==="
+            sudo -u skyforge git pull origin main
+
+            echo "=== [2/7] Composer ==="
+            sudo -u skyforge composer install --no-dev --optimize-autoloader --no-interaction
+
+            echo "=== [3/7] NPM build ==="
+            sudo -u skyforge npm install --no-audit --no-fund
+            sudo -u skyforge npm run build
+
+            echo "=== [4/7] Migrations ==="
+            sudo -u skyforge php artisan migrate --force --no-interaction
+
+            echo "=== [5/7] Cache ==="
+            sudo -u skyforge php artisan config:cache
+            sudo -u skyforge php artisan route:cache
+            sudo -u skyforge php artisan view:cache
+            sudo -u skyforge php artisan event:cache
+            sudo -u skyforge php artisan moonshine:optimize
+
+            echo "=== [6/7] Restart services ==="
+            sudo supervisorctl restart skyforge-horizon
+            sudo supervisorctl restart skyforge-reverb
+            sudo systemctl reload php8.3-fpm
+
+            echo "=== [7/7] Status ==="
+            sudo supervisorctl status
+            echo "Deploy complete!"

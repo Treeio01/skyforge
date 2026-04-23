@@ -7,6 +7,7 @@ import UpgradeInventoryPanel from "./UpgradeInventoryPanel";
 import UpgradeTargetPanel from "./UpgradeTargetPanel";
 import UpgradeMultiplierBar from "./UpgradeMultiplierBar";
 import UpgradeLoginModal from "./UpgradeLoginModal";
+import MobileUpgradePanels from "./MobileUpgradePanels";
 import { useUpgrade } from "./useUpgrade";
 
 interface UpgradeBlockProps {
@@ -88,8 +89,8 @@ export default function UpgradeBlock({ inventory }: UpgradeBlockProps) {
                 setAdultChecked={setAdultChecked}
                 setTermsChecked={setTermsChecked}
             />
-            <div className="pt-[6px] px-[6px] flex-1 min-h-0 flex flex-col">
-                <div className="flex flex-col justify-between flex-1 min-h-0 w-full  rounded-t-[24px] bg-[#080B10] relative overflow-hidden">
+            <div className="pt-[6px] px-[6px] pb-[6px] flex flex-col">
+                <div className="flex flex-col justify-between w-full rounded-t-[24px] bg-[#080B10] relative overflow-hidden" style={{ minHeight: 'calc(100dvh - 12px)' }}>
                     <UpgradeVideo
                         {...videoProps}
                         device="mb"
@@ -145,7 +146,29 @@ export default function UpgradeBlock({ inventory }: UpgradeBlockProps) {
                         />
                     )}
 
-                    <div className="z-[100] flex flex-col gap-1 w-full px-2 pb-2 1024:flex-row 1024:items-stretch 1024:gap-[20px] 1024:max-w-[1281px] 1024:self-center 1024:w-full 1024:max-h-full 1024:px-0 1024:pb-0">
+                    {/* Мобильные кнопки-селекторы (< 1024px) */}
+                    <MobileUpgradePanels
+                        inventoryItems={inventoryItems}
+                        inventorySkin={inventorySkin}
+                        selectedInventory={selectedInventory}
+                        panelLocked={panelLocked}
+                        onSelectInventory={handleSelectInventory}
+                        targetItems={targetItems}
+                        targetSkin={targetSkin}
+                        selectedTarget={selectedTarget}
+                        targetsLoading={targetsLoading}
+                        priceSort={priceSort}
+                        minPrice={minPrice}
+                        search={search}
+                        onSelectTarget={handleSelectTarget}
+                        onScrollEnd={loadMore}
+                        onPriceSortChange={setPriceSort}
+                        onMinPriceChange={setMinPrice}
+                        onSearchChange={setSearch}
+                    />
+
+                    {/* Десктопные панели (>= 1024px) */}
+                    <div className="hidden 1024:flex gap-1 w-full 1024:flex-row 1024:items-stretch 1024:gap-[20px] 1024:max-w-[1281px] 1024:self-center 1024:w-full 1024:max-h-full 1024:px-0 1024:pb-0">
                         <UpgradeInventoryPanel
                             inventoryItems={inventoryItems}
                             selectedInventory={selectedInventory}

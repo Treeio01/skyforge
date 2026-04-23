@@ -56,7 +56,7 @@ export default function Show() {
 
     return (
         <AppLayout>
-            <div className="flex flex-col gap-1.5 w-full max-w-[1280px] self-center p-2 1024:p-0">
+            <div className="flex flex-col gap-1.5 w-full p-2 1024:p-0">
                 <div className="flex flex-col 1024:flex-row p-4 1024:p-6 gap-4 1024:gap-6 items-stretch w-full bg-[#070A10] rounded-[24px]">
                     <ProfileSidebar profile={profile} />
                     <ProfileStatCards recentUpgrades={recentUpgrades} />

@@ -124,7 +124,7 @@ function ChevronIcon({ open }: { open: boolean }) {
             <path
                 d="M5 7.5L10 12.5L15 7.5"
                 stroke="white"
-                strokeOpacity="0.3"
+                strokeOpacity="0.7"
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -143,16 +143,23 @@ function AccordionItem({
     const [open, setOpen] = useState(false);
 
     return (
-        <button
-            onClick={() => setOpen(!open)}
-            className="flex flex-col gap-5 w-full text-left cursor-pointer px-6 py-5"
+        <motion.div
+            className={`rounded-[16px] overflow-hidden transition-colors duration-200 ${
+                open ? 'bg-white/4' : 'bg-white/2 hover:bg-white/3'
+            }`}
+            layout
         >
-            <div className="flex items-center justify-between w-full">
-                <span className="text-white font-sf-display text-[14px] leading-[104%]">
+            <button
+                onClick={() => setOpen(!open)}
+                className="flex items-center justify-between w-full text-left cursor-pointer px-5 py-4 gap-4"
+            >
+                <span className={`font-sf-display text-[14px] leading-[140%] transition-colors ${open ? 'text-white' : 'text-white/70'}`}>
                     {question}
                 </span>
-                <ChevronIcon open={open} />
-            </div>
+                <div className={`flex items-center justify-center w-7 h-7 rounded-full shrink-0 transition-colors ${open ? 'bg-brand/20' : 'bg-white/6'}`}>
+                    <ChevronIcon open={open} />
+                </div>
+            </button>
             <AnimatePresence initial={false}>
                 {open && (
                     <motion.div
@@ -160,16 +167,16 @@ function AccordionItem({
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.25, ease: "easeInOut" }}
-                        className="overflow-hidden w-full"
+                        transition={{ duration: 0.22, ease: "easeInOut" }}
+                        className="overflow-hidden"
                     >
-                        <p className="text-white font-sf-display font-light text-[13px] leading-[184%]">
+                        <p className="text-white/50 font-sf-display font-light text-[13px] leading-[190%] px-5 pb-5">
                             {answer}
                         </p>
                     </motion.div>
                 )}
             </AnimatePresence>
-        </button>
+        </motion.div>
     );
 }
 
@@ -186,41 +193,52 @@ export default function ProvablyFairIndex() {
     const items = hasFaqData ? (faq[category] ?? []) : (FAQ_DATA[category] ?? []);
     return (
         <AppLayout>
-            <div className="flex flex-1 w-full gap-6">
+            <div className="flex flex-1 w-full px-4 1024:px-8 py-6 gap-8">
                 {/* Сайдбар категорий */}
-                <div className="hidden 1024:flex flex-col w-[200px] shrink-0 p-4 gap-1">
+                <div className="hidden 1024:flex flex-col w-[220px] shrink-0 gap-1 self-start sticky top-6">
+                    <span className="text-white/30 font-sf-display text-[11px] uppercase tracking-[0.1em] px-3 mb-2">Разделы</span>
                     {CATEGORIES.map((cat) => (
                         <button
                             key={cat.id}
                             onClick={() => setCategory(cat.id)}
-                            className={`flex flex-col pb-5.25 border-b border-[#2A2E35] items-center cursor-pointer transition-colors  ${
+                            className={`flex items-center justify-between gap-2 px-3 py-2.5 rounded-[10px] cursor-pointer transition-all font-sf-display text-[13px] leading-[120%] ${
                                 category === cat.id
-                                    ? "text-white"
-                                    : "text-white/30 hover:text-white/50"
+                                    ? 'bg-white/8 text-white'
+                                    : 'text-white/40 hover:text-white/65 hover:bg-white/4'
                             }`}
                         >
-                            <div className="flex gap-[5px] font-sf-display text-[13px] leading-[120%] text-left w-full justify-between items-center">
-                                <span>{cat.label}</span>
-                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="shrink-0">
+                            <span>{cat.label}</span>
+                            {category === cat.id && (
+                                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className="shrink-0 text-white/40">
                                     <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
-                            </div>
+                            )}
                         </button>
                     ))}
                 </div>
 
                 {/* Контент */}
-                <div className="flex flex-col flex-1">
+                <div className="flex flex-col flex-1 min-w-0 gap-4">
+                    {/* Заголовок */}
+                    <div className="flex flex-col gap-1 mb-2">
+                        <h1 className="text-white font-gotham font-medium text-2xl leading-[110%]">
+                            {CATEGORIES.find(c => c.id === category)?.label ?? 'FAQ'}
+                        </h1>
+                        <span className="text-white/35 font-sf-display text-[13px]">
+                            {items.length} {items.length === 1 ? 'вопрос' : items.length < 5 ? 'вопроса' : 'вопросов'}
+                        </span>
+                    </div>
+
                     {/* Мобильные табы */}
-                    <div className="flex 1024:hidden gap-1 overflow-x-auto skins-scroll pb-3 mb-4">
+                    <div className="flex 1024:hidden gap-1.5 overflow-x-auto skins-scroll pb-1">
                         {CATEGORIES.map((cat) => (
                             <button
                                 key={cat.id}
                                 onClick={() => setCategory(cat.id)}
-                                className={`shrink-0 py-2 px-3 rounded-[8px] cursor-pointer transition-colors font-sf-display text-[12px] leading-[120%] ${
+                                className={`shrink-0 py-2 px-3.5 rounded-[10px] cursor-pointer transition-all font-sf-display text-[12px] leading-[120%] ${
                                     category === cat.id
-                                        ? "bg-white/5 text-white"
-                                        : "text-white/30"
+                                        ? 'bg-white/10 text-white'
+                                        : 'text-white/35 bg-white/4 hover:bg-white/7'
                                 }`}
                             >
                                 {cat.label}
@@ -228,7 +246,8 @@ export default function ProvablyFairIndex() {
                         ))}
                     </div>
 
-                    <div className="flex flex-col">
+                    {/* Список аккордеонов */}
+                    <div className="flex flex-col gap-2">
                         {items.map((item, i) => (
                             <AccordionItem
                                 key={`${category}-${i}`}

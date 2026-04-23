@@ -1,4 +1,5 @@
 import { UpgradeTargetIcon } from "@/Components/UI/Icons";
+import { SkeletonSkinCard } from "@/Components/UI/Skeleton";
 import SkinCard, { SkinEntry } from "./SkinCard";
 import SkinsPanel from "./SkinsPanel";
 import UpgradeTargetToolbar, { PriceSort } from "./UpgradeTargetToolbar";
@@ -48,27 +49,25 @@ export default function UpgradeTargetPanel({
                 />
             }
         >
-            {targetItems.map((skin) => (
-                <SkinCard
-                    key={skin.id}
-                    {...skin}
-                    selected={selectedTarget === skin.id}
-                    dimmed={
-                        selectedTarget !== null &&
-                        selectedTarget !== skin.id
-                    }
-                    onClick={
-                        panelLocked
-                            ? undefined
-                            : () => onSelectTarget(skin.id)
-                    }
-                />
-            ))}
-            {targetsLoading && (
-                <div className="col-span-full text-center text-white/30 text-sm py-2">
-                    Загрузка...
-                </div>
-            )}
+            {targetsLoading
+                ? Array.from({ length: 8 }).map((_, i) => <SkeletonSkinCard key={i} />)
+                : targetItems.map((skin) => (
+                    <SkinCard
+                        key={skin.id}
+                        {...skin}
+                        selected={selectedTarget === skin.id}
+                        dimmed={
+                            selectedTarget !== null &&
+                            selectedTarget !== skin.id
+                        }
+                        onClick={
+                            panelLocked
+                                ? undefined
+                                : () => onSelectTarget(skin.id)
+                        }
+                    />
+                ))
+            }
         </SkinsPanel>
     );
 }

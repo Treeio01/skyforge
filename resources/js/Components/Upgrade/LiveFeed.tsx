@@ -73,7 +73,7 @@ export default function LiveFeed() {
     }, []);
 
     return (
-        <div className="1440:flex hidden flex-col py-[3px] max-w-[187px] h-screen">
+        <div className="1440:flex hidden flex-col py-[3px] max-w-[187px] h-screen sticky top-0 self-start">
             <Link href="/" className="flex py-[3px] px-[3px] bg-accent">
                 <img
                     src="/assets/img/logo.png"
