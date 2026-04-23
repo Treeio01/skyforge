@@ -1,6 +1,8 @@
 import { formatKopecks } from "@/utils/skinHelpers";
 import type { SortOption } from "./useMarket";
 import { SORT_OPTIONS } from "./useMarket";
+import Input from "@/Components/UI/Input";
+import Button from "@/Components/UI/Button";
 
 interface MarketToolbarProps {
     search: string;
@@ -16,6 +18,8 @@ interface MarketToolbarProps {
     onClearSelected: () => void;
     onOpenFilters: () => void;
     onOpenCart: () => void;
+    onApply: () => void;
+    buying?: boolean;
 }
 
 export default function MarketToolbar({
@@ -32,6 +36,8 @@ export default function MarketToolbar({
     onClearSelected,
     onOpenFilters,
     onOpenCart,
+    onApply,
+    buying = false,
 }: MarketToolbarProps) {
     return (
         <div className="flex flex-wrap gap-2 p-3 items-center justify-between bg-[#070A10]">
@@ -57,16 +63,12 @@ export default function MarketToolbar({
 
             <div className="flex items-center gap-2 ml-auto">
                 {/* Поиск — всегда видим */}
-                <div className="flex py-2 px-3 rounded-[8px] bg-[#0A0E17] items-center gap-1 w-[140px] 1024:w-[240px]">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                        <path d="M5.25 1.5C3.18 1.5 1.5 3.18 1.5 5.25C1.5 7.32 3.18 9 5.25 9C7.32 9 9 7.32 9 5.25C9 3.18 7.32 1.5 5.25 1.5ZM10.5 10.5L8.25 8.25" stroke="#313743" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    <input
+                <div className="w-[140px] 1024:w-[240px]">
+                    <Input
                         type="text"
                         value={search}
                         onChange={(e) => onSearchChange(e.target.value)}
                         placeholder="Поиск..."
-                        className="bg-transparent outline-none text-white font-sf-display text-[12px] leading-[104%] w-full placeholder:text-[#313743]"
                     />
                 </div>
 
@@ -90,10 +92,11 @@ export default function MarketToolbar({
                         Отменить все <br />
                         выделенное
                     </button>
-                    <button
+                    <Button
+                        loading={buying}
                         onClick={onOpenCart}
+                        className="relative w-full max-w-[120px] rounded-[12px] py-[7px] pl-2.5 pr-[52px]"
                         style={{ background: "linear-gradient(90deg, #FE7A02 0%, #FE4D00 100%)" }}
-                        className="relative w-full max-w-[120px] flex rounded-[12px] py-[7px] pl-2.5 pr-[52px] cursor-pointer hover:brightness-110 active:scale-[0.98] transition-all"
                     >
                         <div className="flex items-start flex-col">
                             <span className="text-[10px] leading-[120%] text-white">
@@ -104,7 +107,7 @@ export default function MarketToolbar({
                             </span>
                         </div>
                         <img src="/assets/img/bucket.svg" className="absolute bottom-0 right-0" alt="" />
-                    </button>
+                    </Button>
                 </div>
             </div>
         </div>
@@ -119,6 +122,7 @@ interface FilterControlsProps {
     sortOption: SortOption;
     onSortChange: (v: SortOption) => void;
     onClose: () => void;
+    onApply: () => void;
 }
 
 export function FilterControls({
@@ -129,32 +133,31 @@ export function FilterControls({
     sortOption,
     onSortChange,
     onClose,
+    onApply,
 }: FilterControlsProps) {
     return (
         <>
             {/* Мин цена */}
-            <div className="flex py-2 px-3 rounded-[8px] bg-[#0A0E17] items-center gap-1 w-full 1024:w-[90px]">
-                <span className="text-[#313743] text-[11px] font-sf-display">от</span>
-                <input
+            <div className="w-full 1024:w-[90px]">
+                <Input
                     type="number"
                     inputMode="numeric"
                     value={minPrice}
                     onChange={(e) => onMinPriceChange(e.target.value)}
                     placeholder="0"
-                    className="bg-transparent outline-none text-white font-sf-display text-[12px] leading-[104%] w-full placeholder:text-[#313743]"
+                    prefix="от"
                 />
             </div>
 
             {/* Макс цена */}
-            <div className="flex py-2 px-3 rounded-[8px] bg-[#0A0E17] items-center gap-1 w-full 1024:w-[90px]">
-                <span className="text-[#313743] text-[11px] font-sf-display">до</span>
-                <input
+            <div className="w-full 1024:w-[90px]">
+                <Input
                     type="number"
                     inputMode="numeric"
                     value={maxPrice}
                     onChange={(e) => onMaxPriceChange(e.target.value)}
                     placeholder="∞"
-                    className="bg-transparent outline-none text-white font-sf-display text-[12px] leading-[104%] w-full placeholder:text-[#313743]"
+                    prefix="до"
                 />
             </div>
 
@@ -174,6 +177,11 @@ export function FilterControls({
                     </button>
                 ))}
             </div>
+
+            {/* Применить фильтры */}
+            <Button size="sm" onClick={() => { onApply(); onClose(); }}>
+                Применить
+            </Button>
         </>
     );
 }

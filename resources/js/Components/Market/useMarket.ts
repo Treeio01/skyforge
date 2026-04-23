@@ -35,6 +35,8 @@ export interface UseMarketReturn {
     selected: Set<string | number>;
     setSelected: (v: Set<string | number>) => void;
     toggleSelect: (id: string | number) => void;
+    clearSelected: () => void;
+    applyFilters: () => void;
     items: ReturnType<typeof apiSkinToEntry>[];
     selectedItems: ReturnType<typeof apiSkinToEntry>[];
     totalSelected: number;
@@ -94,6 +96,14 @@ export function useMarket(): UseMarketReturn {
         }
     }, [loadMore]);
 
+    const clearSelected = useCallback(() => {
+        setSelected(new Set());
+    }, []);
+
+    const applyFilters = useCallback(() => {
+        router.reload({ only: ['skins'] });
+    }, []);
+
     const handleBuy = useCallback(() => {
         if (selected.size === 0) return;
         setBuying(true);
@@ -123,6 +133,8 @@ export function useMarket(): UseMarketReturn {
         selected,
         setSelected,
         toggleSelect,
+        clearSelected,
+        applyFilters,
         items,
         selectedItems,
         totalSelected,

@@ -27,9 +27,11 @@ export default function MarketIndex() {
                         onSortChange={market.setSortOption}
                         selectedCount={market.selected.size}
                         totalSelected={market.totalSelected}
-                        onClearSelected={() => market.setSelected(new Set())}
+                        onClearSelected={market.clearSelected}
                         onOpenFilters={() => market.setFiltersOpen(true)}
                         onOpenCart={() => guard(() => market.setCartOpen(true))}
+                        onApply={market.applyFilters}
+                        buying={market.buying}
                     />
 
                     {/* Грид скинов */}
@@ -108,6 +110,7 @@ export default function MarketIndex() {
                         sortOption={market.sortOption}
                         onSortChange={market.setSortOption}
                         onClose={() => market.setFiltersOpen(false)}
+                        onApply={market.applyFilters}
                     />
                 </div>
                 <button

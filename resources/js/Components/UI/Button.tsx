@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { CSSProperties, ReactNode } from 'react';
 
 type ButtonVariant = 'primary' | 'ghost' | 'danger';
 type ButtonSize = 'sm' | 'md' | 'lg';
@@ -10,6 +10,7 @@ interface ButtonProps {
     loading?: boolean;
     type?: 'button' | 'submit';
     className?: string;
+    style?: CSSProperties;
     variant?: ButtonVariant;
     size?: ButtonSize;
 }
@@ -54,6 +55,7 @@ export default function Button({
     loading = false,
     type = 'button',
     className = '',
+    style,
     variant = 'primary',
     size = 'md',
 }: ButtonProps) {
@@ -68,6 +70,7 @@ export default function Button({
             style={{
                 background: v.bg,
                 boxShadow: v.shadow,
+                ...style,
             }}
             onMouseEnter={(e) => {
                 if (!isDisabled && v.hoverShadow !== 'none') {
