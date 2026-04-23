@@ -65,22 +65,22 @@ export default function Header() {
     const user = auth.user;
 
     return (
-        <header className="flex p-2.5 justify-between items-center w-full">
+        <header className="flex p-2.5 justify-between items-center w-full overflow-hidden">
             <Logo />
-            <div className="flex items-center gap-3">
-                <div className="hidden 1155:flex items-center gap-3">
+            <div className="flex items-center gap-3 min-w-0 flex-shrink">
+                <div className="hidden wide:flex items-center gap-3">
                     <StatsChips />
                     <Divider />
                 </div>
                 <NavChips />
             </div>
-            <div className="flex items-center md:gap-3 gap-2">
-                <div className="hidden 1155:flex gap-1 items-stretch">
+            <div className="flex items-center md:gap-3 gap-2 shrink-0">
+                <div className="hidden wide:flex gap-1 items-stretch">
                     <SocialLinks />
                     <SoundMenu />
                     <LanguageMenu />
                 </div>
-                <Divider className="hidden 1155:flex" />
+                <Divider className="hidden wide:flex" />
                 {user ? (
                     <>
                         <DepositBlock />

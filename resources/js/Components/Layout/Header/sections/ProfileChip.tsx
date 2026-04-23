@@ -17,7 +17,7 @@ export default function ProfileChip() {
                     className="w-[24px] h-[24px] rounded-full overflow-hidden"
                     alt=""
                 />
-                <ChipLabel className="hidden 1155:inline">
+                <ChipLabel className="hidden wide:inline">
                     {user.username}
                 </ChipLabel>
             </Chip>
