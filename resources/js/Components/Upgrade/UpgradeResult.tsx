@@ -62,8 +62,9 @@ export default function UpgradeResult({
     const text = description ?? DEFAULT_DESCRIPTION[variant];
 
     return (
+        <div className={`relative ${className}`}>
         <div
-            className={`absolute left-1/2 top-[18px] -translate-x-1/2 z-[200] w-full max-w-[757px] ${className}`}
+            className="absolute left-1/2 top-[18px] -translate-x-1/2 z-[200] w-full max-w-[757px]"
         >
             <div className="animate-upgrade-result-in flex flex-col items-center gap-2">
                 <div className="flex rounded-[14px] overflow-hidden items-stretch animate-upgrade-result-title">
@@ -137,6 +138,7 @@ export default function UpgradeResult({
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     );
 }
