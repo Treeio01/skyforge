@@ -1,27 +1,14 @@
 import Modal from "@/Components/UI/Modal";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { router } from "@inertiajs/react";
-import axios from "axios";
-
-type PayMethod = "card" | "crypto" | "skins";
-type Currency = "RUB" | "UAH" | "EUR" | "USD" | "KZT" | "BYN";
-type CryptoNetwork =
-    | "USDTTRC"
-    | "USDTBSC"
-    | "USDTTON"
-    | "USDTERC"
-    | "TON"
-    | "TRX";
-type PaySystem = "qr_sbp_a" | "qr_sbp_b" | "visa";
-
-const FALLBACK_RATES: Record<Currency, number> = {
-    RUB: 1,
-    USD: 96,
-    EUR: 105,
-    UAH: 2.2,
-    KZT: 0.19,
-    BYN: 29,
-};
+import { useDeposit } from "./useDeposit";
+import {
+    CURRENCIES,
+    CRYPTO_NETWORKS,
+    SBP_SYSTEMS,
+    CURRENCY_SYMBOLS,
+    MIN_AMOUNTS,
+} from "./depositConstants";
 
 const CardIcon = () => (
     <svg
@@ -164,82 +151,11 @@ const SBPIcon = () => (
     </svg>
 );
 
-const METHODS: { label: string; value: PayMethod; icon: React.ReactNode }[] = [
+const METHODS: { label: string; value: "card" | "crypto" | "skins"; icon: React.ReactNode }[] = [
     { label: "Карты", value: "card", icon: <CardIcon /> },
     { label: "Crypto", value: "crypto", icon: <CryptoIcon /> },
     { label: "Skins", value: "skins", icon: <SkinsIcon /> },
 ];
-
-const CURRENCIES: { label: string; value: Currency; prefix?: string }[] = [
-    { label: "RUB", value: "RUB", prefix: "₽" },
-    { label: "UAH", value: "UAH" },
-    { label: "EUR", value: "EUR" },
-    { label: "USD", value: "USD" },
-    { label: "KZT", value: "KZT" },
-    { label: "BYN", value: "BYN" },
-];
-
-const CRYPTO_NETWORKS: {
-    label: string;
-    value: CryptoNetwork;
-    rateKey: string;
-    symbol: string;
-    min: number;
-}[] = [
-    {
-        label: "USDTTRC",
-        value: "USDTTRC",
-        rateKey: "USDT",
-        symbol: "$",
-        min: 2,
-    },
-    {
-        label: "USDTBSC",
-        value: "USDTBSC",
-        rateKey: "USDT",
-        symbol: "$",
-        min: 2,
-    },
-    {
-        label: "USDTTON",
-        value: "USDTTON",
-        rateKey: "USDT",
-        symbol: "$",
-        min: 2,
-    },
-    {
-        label: "USDTERC",
-        value: "USDTERC",
-        rateKey: "USDT",
-        symbol: "$",
-        min: 10,
-    },
-    { label: "TON", value: "TON", rateKey: "TON", symbol: "TON", min: 1 },
-    { label: "TRX", value: "TRX", rateKey: "TRX", symbol: "TRX", min: 10 },
-];
-
-const SBP_SYSTEMS: { label: string; value: PaySystem }[] = [
-    { label: "QR | СБП (A)", value: "qr_sbp_a" },
-    { label: "QR | СБП (B)", value: "qr_sbp_b" },
-];
-
-const CURRENCY_SYMBOLS: Record<Currency, string> = {
-    RUB: "₽",
-    UAH: "₴",
-    EUR: "€",
-    USD: "$",
-    KZT: "₸",
-    BYN: "Br",
-};
-
-const MIN_AMOUNTS: Record<Currency, number> = {
-    RUB: 50,
-    UAH: 25,
-    EUR: 1,
-    USD: 2,
-    KZT: 250,
-    BYN: 2,
-};
 
 interface DepositModalProps {
     visible: boolean;
@@ -247,44 +163,23 @@ interface DepositModalProps {
 }
 
 export default function DepositModal({ visible, onClose }: DepositModalProps) {
-    const [method, setMethod] = useState<PayMethod>("card");
-    const [currency, setCurrency] = useState<Currency>("RUB");
-    const [cryptoNetwork, setCryptoNetwork] =
-        useState<CryptoNetwork>("USDTTRC");
-    const [paySystem, setPaySystem] = useState<PaySystem>("qr_sbp_a");
-
-    // При смене валюты — автопереключение платёжной системы
-    useEffect(() => {
-        if (currency === "RUB") {
-            if (paySystem === "visa") setPaySystem("qr_sbp_a");
-        } else {
-            setPaySystem("visa");
-        }
-    }, [currency]);
-    const [amount, setAmount] = useState("1000");
-    const [processing, setProcessing] = useState(false);
-    const [rates, setRates] = useState<Record<string, number>>(FALLBACK_RATES);
-    const [bonus, setBonus] = useState<{
-        code: string;
-        percent: number;
-    } | null>(null);
-    const [configLoaded, setConfigLoaded] = useState(false);
-
-    useEffect(() => {
-        if (visible && !configLoaded) {
-            axios
-                .get("/deposit/config")
-                .then((res) => {
-                    if (res.data.rates) setRates(res.data.rates);
-                    if (res.data.bonus) setBonus(res.data.bonus);
-                    setConfigLoaded(true);
-                })
-                .catch((err) => {
-                    console.error('[DepositConfig] error:', err.response?.status, err.response?.data);
-                    setConfigLoaded(true);
-                });
-        }
-    }, [visible, configLoaded]);
+    const depositState = useDeposit(visible);
+    const {
+        method,
+        setMethod,
+        currency,
+        setCurrency,
+        cryptoNetwork,
+        setCryptoNetwork,
+        paySystem,
+        setPaySystem,
+        amount,
+        setAmount,
+        processing,
+        setProcessing,
+        rates,
+        bonus,
+    } = depositState;
 
     const numericAmount = parseInt(amount, 10) || 0;
 
