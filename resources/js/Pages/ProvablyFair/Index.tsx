@@ -184,8 +184,6 @@ export default function ProvablyFairIndex() {
 
     const hasFaqData = faq && Object.keys(faq).length > 0;
     const items = hasFaqData ? (faq[category] ?? []) : (FAQ_DATA[category] ?? []);
-    const activeLabel = CATEGORIES.find((c) => c.id === category)?.label ?? "";
-
     return (
         <AppLayout>
             <div className="flex flex-1 w-full gap-6">
