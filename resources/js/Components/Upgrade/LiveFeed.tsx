@@ -3,7 +3,7 @@ import { FeedItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import axios from 'axios';
 import { AnimatePresence } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useToast } from '@/Components/UI/Toast';
 import LiveFeedItem, { SkinRarity } from './LiveFeedItem';
 
@@ -34,19 +34,26 @@ export default function LiveFeed() {
     const [items, setItems] = useState<LiveFeedEntry[]>([]);
     const feedCounterRef = useRef(0);
     const { toast } = useToast();
-    const feedItemToEntry = makeFeedItemToEntry(feedCounterRef);
+    const feedItemToEntry = useCallback(
+        makeFeedItemToEntry(feedCounterRef),
+        [] // feedCounterRef is a stable ref
+    );
 
     // Загрузить последние апгрейды при монтировании
     useEffect(() => {
+        const controller = new AbortController();
         axios
-            .get<{ data: FeedItem[] }>('/api/live-feed')
+            .get<{ data: FeedItem[] }>('/api/live-feed', { signal: controller.signal })
             .then((res) => {
                 const entries = (res.data.data || []).map(feedItemToEntry);
                 setItems(entries.slice(0, MAX_FEED_ITEMS));
             })
-            .catch(() => {
-                toast('error', 'Не удалось загрузить ленту апгрейдов');
+            .catch((err) => {
+                if (!axios.isCancel(err)) {
+                    toast('error', 'Не удалось загрузить ленту апгрейдов');
+                }
             });
+        return () => controller.abort();
     }, []);
 
     // WebSocket: слушаем канал 'upgrades' через Echo

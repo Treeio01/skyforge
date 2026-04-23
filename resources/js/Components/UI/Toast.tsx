@@ -125,9 +125,13 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: number)
     const accent = ACCENT[toast.type];
 
     useEffect(() => {
-        requestAnimationFrame(() => setState('visible'));
+        let raf: number;
+        raf = requestAnimationFrame(() => setState('visible'));
         const timer = setTimeout(() => setState('exit'), 4000);
-        return () => clearTimeout(timer);
+        return () => {
+            cancelAnimationFrame(raf);
+            clearTimeout(timer);
+        };
     }, []);
 
     useEffect(() => {
@@ -145,7 +149,7 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: number)
                 background: accent.bg,
                 boxShadow: '0 16px 48px 0 rgba(0, 0, 0, 0.40)',
             }}
-            className="flex items-start gap-3 p-4 rounded-[14px] backdrop-blur-[70px] cursor-pointer"
+            className="relative flex items-start gap-3 p-4 rounded-[14px] backdrop-blur-[70px] cursor-pointer"
         >
             <div className="flex-shrink-0 mt-0.5">
                 {toast.type === 'success' && <SuccessIcon color={accent.icon} />}
