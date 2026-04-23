@@ -1,5 +1,34 @@
 @import "tailwindcss";
 
+@theme {
+  /* Custom breakpoints — xs=550px, wide=1155px preserved as named tokens */
+  --breakpoint-xs: 550px;
+  --breakpoint-wide: 1155px;
+
+  /* Brand */
+  --color-brand: #4E89FF;
+  --color-brand-hover: #3a6fd4;
+
+  /* Surfaces */
+  --color-surface: #070A10;
+  --color-surface-2: #0A0E17;
+  --color-surface-3: #111827;
+  --color-surface-card: rgba(11, 15, 24, 0.8);
+
+  /* Text */
+  --color-text-muted: #BED4FF;
+  --color-text-dim: #6B7FA3;
+
+  /* Borders */
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-active: rgba(255, 255, 255, 0.21);
+
+  /* States */
+  --color-success: #22c55e;
+  --color-danger: #ef4444;
+  --color-warning: #f59e0b;
+}
+
 /* Gotham */
 @font-face { font-family: 'Gotham'; src: url('../fonts/gotham_thin.otf')         format('opentype'); font-weight: 100; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Gotham'; src: url('../fonts/gotham_thinitalic.otf')   format('opentype'); font-weight: 100; font-style: italic; font-display: swap; }
