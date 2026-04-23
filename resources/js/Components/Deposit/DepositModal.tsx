@@ -151,7 +151,7 @@ const SBPIcon = () => (
     </svg>
 );
 
-const METHODS: { label: string; value: "card" | "crypto" | "skins"; icon: React.ReactNode }[] = [
+const METHODS: { label: string; value: "card" | "crypto" | "skins" | "sbp"; icon: React.ReactNode }[] = [
     { label: "Карты", value: "card", icon: <CardIcon /> },
     { label: "Crypto", value: "crypto", icon: <CryptoIcon /> },
     { label: "Skins", value: "skins", icon: <SkinsIcon /> },
@@ -171,8 +171,8 @@ export default function DepositModal({ visible, onClose }: DepositModalProps) {
         setCurrency,
         cryptoNetwork,
         setCryptoNetwork,
-        paySystem,
-        setPaySystem,
+        sbpSystem,
+        setSbpSystem,
         amount,
         setAmount,
         processing,
@@ -216,7 +216,7 @@ export default function DepositModal({ visible, onClose }: DepositModalProps) {
                 amount: credited,
                 method,
                 currency,
-                pay_system: method === "card" ? paySystem : undefined,
+                pay_system: method === "card" ? sbpSystem : undefined,
                 crypto_network: method === "crypto" ? cryptoNetwork : undefined,
             },
             {
@@ -295,8 +295,8 @@ export default function DepositModal({ visible, onClose }: DepositModalProps) {
                             {SBP_SYSTEMS.map((ps) => (
                                 <ChipButton
                                     key={ps.value}
-                                    active={paySystem === ps.value}
-                                    onClick={() => setPaySystem(ps.value)}
+                                    active={sbpSystem === ps.value}
+                                    onClick={() => setSbpSystem(ps.value)}
                                 >
                                     <SBPIcon />
                                     <span className="font-sf-compact text-[13px]">

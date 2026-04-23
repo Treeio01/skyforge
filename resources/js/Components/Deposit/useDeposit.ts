@@ -3,20 +3,20 @@ import axios from "axios";
 import {
     Currency,
     CryptoNetwork,
-    PayMethod,
+    DepositMethod,
     PaySystem,
     FALLBACK_RATES,
 } from "./depositConstants";
 
 export interface DepositState {
-    method: PayMethod;
-    setMethod: (v: PayMethod) => void;
+    method: DepositMethod;
+    setMethod: (v: DepositMethod) => void;
     currency: Currency;
     setCurrency: (v: Currency) => void;
     cryptoNetwork: CryptoNetwork;
     setCryptoNetwork: (v: CryptoNetwork) => void;
-    paySystem: PaySystem;
-    setPaySystem: (v: PaySystem) => void;
+    sbpSystem: PaySystem;
+    setSbpSystem: (v: PaySystem) => void;
     amount: string;
     setAmount: (v: string) => void;
     processing: boolean;
@@ -31,11 +31,11 @@ export interface DepositState {
 }
 
 export function useDeposit(visible: boolean): DepositState {
-    const [method, setMethod] = useState<PayMethod>("card");
+    const [method, setMethod] = useState<DepositMethod>("card");
     const [currency, setCurrency] = useState<Currency>("RUB");
     const [cryptoNetwork, setCryptoNetwork] =
         useState<CryptoNetwork>("USDTTRC");
-    const [paySystem, setPaySystem] = useState<PaySystem>("qr_sbp_a");
+    const [sbpSystem, setSbpSystem] = useState<PaySystem>("qr_sbp_a");
     const [amount, setAmount] = useState("1000");
     const [processing, setProcessing] = useState(false);
     const [rates, setRates] = useState<Record<string, number>>(FALLBACK_RATES);
@@ -49,9 +49,9 @@ export function useDeposit(visible: boolean): DepositState {
     // При смене валюты — автопереключение платёжной системы
     useEffect(() => {
         if (currency === "RUB") {
-            if (paySystem === "visa") setPaySystem("qr_sbp_a");
+            if (sbpSystem === "visa") setSbpSystem("qr_sbp_a");
         } else {
-            setPaySystem("visa");
+            setSbpSystem("visa");
         }
     }, [currency]);
 
@@ -83,8 +83,8 @@ export function useDeposit(visible: boolean): DepositState {
         setCurrency,
         cryptoNetwork,
         setCryptoNetwork,
-        paySystem,
-        setPaySystem,
+        sbpSystem,
+        setSbpSystem,
         amount,
         setAmount,
         processing,
