@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { formatKopecks } from "@/utils/skinHelpers";
 import type { SortOption } from "./useMarket";
 import { SORT_OPTIONS } from "./useMarket";
@@ -21,7 +22,7 @@ interface MarketToolbarProps {
     buying?: boolean;
 }
 
-export default function MarketToolbar({
+const MarketToolbar = memo(function MarketToolbar({
     search,
     onSearchChange,
     minPrice,
@@ -110,7 +111,9 @@ export default function MarketToolbar({
             </div>
         </div>
     );
-}
+});
+
+export default MarketToolbar;
 
 interface FilterControlsProps {
     minPrice: string;
