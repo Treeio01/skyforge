@@ -145,7 +145,7 @@ export default function UpgradeBlock({ inventory }: UpgradeBlockProps) {
                         />
                     )}
 
-                    <div className="absolute bottom-2 left-0 w-full 1024:px-2 1024:gap-2 z-[100] flex items-stretch 1024:static 1024:bottom-auto 1024:px-0 1024:gap-[20px] 1024:max-w-[1281px] 1024:self-center 1024:w-full max-h-[230px] 402:max-h-[280px] 1024:max-h-full">
+                    <div className="z-[100] flex flex-col gap-1 w-full px-2 pb-2 1024:flex-row 1024:items-stretch 1024:gap-[20px] 1024:max-w-[1281px] 1024:self-center 1024:w-full 1024:max-h-full 1024:px-0 1024:pb-0">
                         <UpgradeInventoryPanel
                             inventoryItems={inventoryItems}
                             selectedInventory={selectedInventory}
