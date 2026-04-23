@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useToast } from "@/Components/UI/Toast";
 import {
     Currency,
     CryptoNetwork,
@@ -28,6 +29,7 @@ export interface DepositState {
 }
 
 export function useDeposit(visible: boolean): DepositState {
+    const { toast } = useToast();
     const [method, setMethod] = useState<DepositMethod>("card");
     const [currency, setCurrency] = useState<Currency>("RUB");
     const [cryptoNetwork, setCryptoNetwork] =
@@ -62,13 +64,11 @@ export function useDeposit(visible: boolean): DepositState {
                     setConfigLoaded(true);
                 })
                 .catch((err) => {
-                    console.error(
-                        "[DepositConfig] error:",
-                        err.response?.status,
-                        err.response?.data,
-                    );
-                    setConfigLoaded(true);
-                    setConfigError(true);
+                    if (!axios.isCancel(err)) {
+                        setConfigLoaded(true);
+                        setConfigError(true);
+                        toast('error', 'Не удалось загрузить методы оплаты');
+                    }
                 });
         }
     }, [visible, configLoaded]);
