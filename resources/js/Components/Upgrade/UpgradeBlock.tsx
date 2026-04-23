@@ -14,6 +14,7 @@ import UpgradeResult from "./UpgradeResult";
 import UpgradeTargetToolbar, { PriceSort } from "./UpgradeTargetToolbar";
 import UpgradeVideo from "./UpgradeVideo";
 import { UpgradeState } from "./upgradeVideos";
+import { calculateChance, canBeTarget, deriveMultiplier, isChanceValid, pickTargetForMultiplier } from "./upgradeCalculations";
 
 type SkinId = string | number;
 export type Stage = "idle" | "closing" | "playing" | "playing_two" | "result";
@@ -26,50 +27,10 @@ interface UpgradeBlockProps {
 
 export const MULTIPLIERS: QuickMultiplier[] = [2, 3, 5, 10];
 
-// Формула шанса совпадает с бэком: (bet / target) * (1 - houseEdge/100) * 100
-const HOUSE_EDGE_PERCENT = 5;
-const MIN_CHANCE = 1;
-const MAX_CHANCE = 95;
-
 const RESULT_DISPLAY_MS = 5000;
 
 function toggleSingle(prev: SkinId | null, id: SkinId): SkinId | null {
     return prev === id ? null : id;
-}
-
-export function calculateChance(invKopecks: number, tgtKopecks: number): number {
-    if (tgtKopecks <= 0) return 0;
-    const raw = (invKopecks / tgtKopecks) * (1 - HOUSE_EDGE_PERCENT / 100) * 100;
-    return Math.min(MAX_CHANCE, Math.max(0, raw));
-}
-
-function isChanceValid(chance: number): boolean {
-    return chance >= MIN_CHANCE && chance <= MAX_CHANCE;
-}
-
-function canBeTarget(inv: SkinEntry, tgt: SkinEntry): boolean {
-    if (tgt.id === inv.id) return false;
-    if (tgt.priceKopecks <= inv.priceKopecks) return false;
-    return isChanceValid(calculateChance(inv.priceKopecks, tgt.priceKopecks));
-}
-
-function deriveMultiplier(inv: SkinEntry, tgt: SkinEntry): number | null {
-    if (inv.priceKopecks <= 0 || tgt.priceKopecks <= inv.priceKopecks) return null;
-    return tgt.priceKopecks / inv.priceKopecks;
-}
-
-function pickTargetForMultiplier(
-    inv: SkinEntry,
-    m: QuickMultiplier,
-    pool: SkinEntry[],
-): SkinEntry | null {
-    const ideal = inv.priceKopecks * m;
-    const candidates = pool.filter((s) => canBeTarget(inv, s));
-    if (candidates.length === 0) return null;
-    candidates.sort(
-        (a, b) => Math.abs(a.priceKopecks - ideal) - Math.abs(b.priceKopecks - ideal),
-    );
-    return candidates[0];
 }
 
 function stageToVideoState(
