@@ -1,3 +1,5 @@
+import { memo } from 'react';
+import { motion } from 'framer-motion';
 import { SkinRarity } from './LiveFeedItem';
 
 export type SkinEntry = {
@@ -80,7 +82,7 @@ interface SkinCardProps extends SkinEntry {
     onClick?: () => void;
 }
 
-export default function SkinCard({
+const SkinCard = memo(function SkinCard({
     rarity,
     image,
     weapon,
@@ -91,7 +93,10 @@ export default function SkinCard({
     onClick,
 }: SkinCardProps) {
     return (
-        <div
+        <motion.div
+            whileHover={{ scale: 1.02, y: -2 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ type: 'spring', damping: 20, stiffness: 300 }}
             onClick={onClick}
             className={`rarity-${rarity} animate-skin-card-in flex flex-col w-full min-h-[126px] gap-[59px] pt-3 px-2.5 pb-3.5 rounded-[14px] relative overflow-hidden bg-[#BED4FF]/2 bg-linear-to-b from-transparent to-[var(--rarity-from)] cursor-pointer transition-[opacity,filter,box-shadow] duration-200 ${
                 dimmed ? 'opacity-50 blur-[4px]' : ''
@@ -124,6 +129,8 @@ export default function SkinCard({
                     {name}
                 </span>
             </div>
-        </div>
+        </motion.div>
     );
-}
+});
+
+export default SkinCard;
