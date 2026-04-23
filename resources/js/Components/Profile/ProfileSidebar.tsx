@@ -1,5 +1,5 @@
 import { formatKopecks } from '@/utils/skinHelpers';
-import { useForm, router } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import DepositHistoryModal from './DepositHistoryModal';
 
@@ -18,10 +18,9 @@ interface ProfileSidebarProps {
 
 export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
     const [depositHistoryVisible, setDepositHistoryVisible] = useState(false);
-    const [promoCode, setPromoCode] = useState('');
-    const [promoProcessing, setPromoProcessing] = useState(false);
 
     const tradeForm = useForm({ trade_url: profile.trade_url || '' });
+    const promoForm = useForm({ code: '' });
 
     const handleTradeUrl = (e: React.FormEvent) => {
         e.preventDefault();
@@ -29,12 +28,10 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
     };
 
     const handlePromo = () => {
-        if (!promoCode.trim()) return;
-        setPromoProcessing(true);
-        router.post('/profile/promo', { code: promoCode }, {
+        if (!promoForm.data.code.trim()) return;
+        promoForm.post(route('profile.promo'), {
             preserveScroll: true,
-            onSuccess: () => setPromoCode(''),
-            onFinish: () => setPromoProcessing(false),
+            onSuccess: () => promoForm.reset(),
         });
     };
 
@@ -114,15 +111,15 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
                     <div className="flex w-full py-3 px-3.5 rounded-[8px] border border-white/27">
                         <input
                             type="text"
-                            value={promoCode}
-                            onChange={(e) => setPromoCode(e.target.value)}
+                            value={promoForm.data.code}
+                            onChange={(e) => promoForm.setData('code', e.target.value)}
                             className="text-white/24 leading-[120%] font-sf-display text-[13px] outline-none bg-transparent w-full"
                             placeholder="Введите промокод"
                         />
                     </div>
                     <button
                         onClick={handlePromo}
-                        disabled={promoProcessing}
+                        disabled={promoForm.processing}
                         style={{
                             background:
                                 'radial-gradient(41.52% 77.5% at 50.57% 100%, rgba(255, 255, 255, 0.48) 0%, rgba(255, 255, 255, 0.14) 100%)',
@@ -130,7 +127,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
                         className="py-3 px-3.5 rounded-[8px] flex justify-center cursor-pointer disabled:opacity-50"
                     >
                         <span className="text-white font-sf-display text-[13px] leading-[120%] font-medium">
-                            {promoProcessing ? 'Проверяем...' : 'Применить'}
+                            {promoForm.processing ? 'Проверяем...' : 'Применить'}
                         </span>
                     </button>
                 </div>

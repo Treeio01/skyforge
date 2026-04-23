@@ -1,7 +1,6 @@
 import Modal from '@/Components/UI/Modal';
 import GradientButton from '@/Components/UI/GradientButton';
-import { router } from '@inertiajs/react';
-import { useState } from 'react';
+import { useForm } from '@inertiajs/react';
 
 interface SellModalProps {
     visible: boolean;
@@ -12,20 +11,18 @@ interface SellModalProps {
 }
 
 export default function SellModal({ visible, onClose, mode, selectedIds, onSuccess }: SellModalProps) {
-    const [processing, setProcessing] = useState(false);
+    const form = useForm({
+        mode,
+        ids: mode === 'selected' ? Array.from(selectedIds) : [] as number[],
+    });
 
     const handleSell = () => {
-        setProcessing(true);
-        router.post('/profile/sell-skins', {
-            mode,
-            ids: mode === 'selected' ? Array.from(selectedIds) : [],
-        }, {
+        form.post(route('profile.sell-skins'), {
             preserveScroll: true,
             onSuccess: () => {
                 onSuccess();
                 onClose();
             },
-            onFinish: () => setProcessing(false),
         });
     };
 
@@ -42,9 +39,9 @@ export default function SellModal({ visible, onClose, mode, selectedIds, onSucce
                 </p>
             </div>
             <div className="flex gap-2">
-                <GradientButton className="flex-1" onClick={handleSell} disabled={processing}>
+                <GradientButton className="flex-1" onClick={handleSell} disabled={form.processing}>
                     <span className="text-white font-sf-display text-[13px] font-medium">
-                        {processing ? 'Продаём...' : 'Продать'}
+                        {form.processing ? 'Продаём...' : 'Продать'}
                     </span>
                 </GradientButton>
                 <button
