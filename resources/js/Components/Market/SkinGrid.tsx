@@ -44,7 +44,8 @@ interface SkinGridProps {
 }
 
 export default memo(function SkinGrid({ items, selected, onToggle, loading, containerRef, onScroll }: SkinGridProps) {
-    const parentRef = useRef<HTMLDivElement>(null);
+    const internalRef = useRef<HTMLDivElement>(null);
+    const parentRef = containerRef ?? internalRef;
     const columns = useColumns();
     const rows = Math.ceil(items.length / columns);
 
@@ -67,7 +68,7 @@ export default memo(function SkinGrid({ items, selected, onToggle, loading, cont
 
     return (
         <div
-            ref={parentRef}
+            ref={parentRef as React.RefObject<HTMLDivElement>}
             className="flex-1 overflow-y-auto skins-scroll p-2.5 bg-[#070A10] max-h-[calc(100vh-80px)]"
             onScroll={onScroll}
         >
