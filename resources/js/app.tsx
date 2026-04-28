@@ -3,7 +3,6 @@ import './bootstrap';
 
 import { createInertiaApp, router } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { AnimatePresence, motion } from 'framer-motion';
 import { createRoot } from 'react-dom/client';
 import ErrorBoundary from '@/Components/ErrorBoundary';
 import { ToastProvider } from '@/Components/UI/Toast';
@@ -29,21 +28,7 @@ createInertiaApp({
             <ErrorBoundary>
                 <ToastProvider>
                     <PageTransition>
-                        <App {...props}>
-                            {({ Component, props: pageProps, key }) => (
-                                <AnimatePresence mode="wait" initial={false}>
-                                    <motion.div
-                                        key={key}
-                                        initial={{ opacity: 0, y: 16 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -10 }}
-                                        transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-                                    >
-                                        <Component {...pageProps} />
-                                    </motion.div>
-                                </AnimatePresence>
-                            )}
-                        </App>
+                        <App {...props} />
                     </PageTransition>
                 </ToastProvider>
             </ErrorBoundary>,
