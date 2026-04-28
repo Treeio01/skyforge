@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { usePage } from '@inertiajs/react';
 import Header from '@/Components/Layout/Header';
 import AppFooter from '@/Components/Layout/AppFooter';
@@ -18,18 +18,18 @@ export default function AppLayout({ children }: AppLayoutProps) {
             <LiveFeed />
             <div className="flex flex-col w-full flex-1 min-h-0 overflow-y-auto relative">
                 <Header />
-                <motion.main
-                    key={url}
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{
-                        opacity: 1,
-                        y: 0,
-                        transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1], delay: 0.2 },
-                    }}
-                    className="flex flex-col w-full"
-                >
-                    {children}
-                </motion.main>
+                <AnimatePresence mode="wait" initial={false}>
+                    <motion.main
+                        key={url}
+                        initial={{ opacity: 0, y: 18 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                        className="flex flex-col w-full"
+                    >
+                        {children}
+                    </motion.main>
+                </AnimatePresence>
                 <AppFooter />
             </div>
             <LoginModal />
