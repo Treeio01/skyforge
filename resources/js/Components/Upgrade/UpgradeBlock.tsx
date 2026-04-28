@@ -90,7 +90,7 @@ export default function UpgradeBlock({ inventory }: UpgradeBlockProps) {
                 setTermsChecked={setTermsChecked}
             />
             <div className="pt-[6px] px-[6px] pb-[6px] flex flex-col">
-                <div className="flex flex-col justify-between w-full rounded-t-[24px] bg-[#080B10] relative overflow-hidden" style={{ minHeight: 'calc(100dvh - 12px)' }}>
+                <div className="flex flex-col justify-between w-full rounded-t-[24px] bg-[#080B10] relative overflow-hidden min-h-[calc(100svh-72px)] 1024:min-h-0 1024:h-[calc(100dvh-12px)]">
                     <UpgradeVideo
                         {...videoProps}
                         device="mb"
@@ -109,6 +109,7 @@ export default function UpgradeBlock({ inventory }: UpgradeBlockProps) {
 
                     {stage === "result" && outcome && resultSkin && (
                         <motion.div
+                            className="absolute inset-0 z-[100] pointer-events-none"
                             initial="idle"
                             variants={{
                                 idle: { x: 0 },
@@ -168,7 +169,7 @@ export default function UpgradeBlock({ inventory }: UpgradeBlockProps) {
                     />
 
                     {/* Десктопные панели (>= 1024px) */}
-                    <div className="hidden 1024:flex gap-1 w-full 1024:flex-row 1024:items-stretch 1024:gap-[20px] 1024:max-w-[1281px] 1024:self-center 1024:w-full 1024:max-h-full 1024:px-0 1024:pb-0">
+                    <div className="hidden z-50 1024:flex gap-1 w-full 1024:flex-row 1024:items-end 1024:gap-[20px] 1024:max-w-[1281px] 1024:self-center 1024:w-full 1024:px-0 1024:pb-0">
                         <UpgradeInventoryPanel
                             inventoryItems={inventoryItems}
                             selectedInventory={selectedInventory}

@@ -62,7 +62,7 @@ export default function UpgradeResult({
     const text = description ?? DEFAULT_DESCRIPTION[variant];
 
     return (
-        <div className={`relative ${className}`}>
+        <div className={`relative w-full h-full ${className}`}>
         <div
             className="absolute left-1/2 top-[18px] -translate-x-1/2 z-[200] w-full max-w-[757px]"
         >
@@ -73,7 +73,7 @@ export default function UpgradeResult({
                         style={{ backgroundColor: v.accentStripe }}
                     />
                     <div
-                        className="flex py-2 md:py-3 px-[73px] md:px-[85px]"
+                        className="flex py-2 1024:py-3 px-[73px] 1024:px-[85px]"
                         style={{
                             backgroundImage: `linear-gradient(90deg, rgba(${v.gradientRgb}, 1) 0%, rgba(${v.gradientRgb}, 0.66) 50%, rgba(${v.gradientRgb}, 1) 100%), url("/assets/img/result-block-img-pattern.png")`,
                             backgroundRepeat: 'no-repeat, repeat',
@@ -82,7 +82,7 @@ export default function UpgradeResult({
                     >
                         <div className="flex flex-col items-center">
                             <h1
-                                className="font-bold font-montserrat text-[39px] md:text-[42px] leading-[100%] text-center"
+                                className="font-bold font-montserrat text-[39px] 1024:text-[42px] leading-[100%] text-center"
                                 style={{ color: v.titleColor }}
                             >
                                 {v.title}
@@ -99,25 +99,25 @@ export default function UpgradeResult({
                 </div>
 
                 <div
-                    className="animate-upgrade-result-skin flex w-full px-[56px] py-[5px] md:py-[8px] md:px-[110px] gap-2 justify-center"
+                    className="animate-upgrade-result-skin flex w-full px-[56px] py-[5px] 1024:py-[8px] 1024:px-[110px] gap-2 justify-center"
                     style={{ background: `url(${v.bgImage}) center / contain no-repeat` }}
                 >
                     <SkinCardPreview {...skin} />
-                    <div className="flex flex-col gap-[10px] md:gap-[19px] flex-1 py-[7px]">
-                        <div className="flex flex-col gap-0.5 md:gap-1">
+                    <div className="flex flex-col gap-[10px] 1024:gap-[19px] flex-1 py-[7px]">
+                        <div className="flex flex-col gap-0.5 1024:gap-1">
                             <div
-                                className="flex px-1 md:px-2 py-[1px] md:py-[3px] w-max"
+                                className="flex px-1 1024:px-2 py-[1px] 1024:py-[3px] w-max"
                                 style={{ backgroundColor: v.tagBg }}
                             >
                                 <span
-                                    className="font-montserrat font-bold text-[7px] md:text-[15px] leading-[100%]"
+                                    className="font-montserrat font-bold text-[7px] 1024:text-[15px] leading-[100%]"
                                     style={{ color: v.tagColor }}
                                 >
                                     {skin.weapon}
                                 </span>
                             </div>
                             <span
-                                className="font-montserrat font-medium text-[10px] md:text-[21px] leading-[100%]"
+                                className="font-montserrat font-medium text-[10px] 1024:text-[21px] leading-[100%]"
                                 style={{
                                     color: v.skinNameColor,
                                     textShadow: '-2px 2px 6px rgba(0, 0, 0, 0.40)',
@@ -127,7 +127,7 @@ export default function UpgradeResult({
                             </span>
                         </div>
                         <span
-                            className="text-[6px] md:text-[12px] font-medium font-montserrat leading-[100%]"
+                            className="text-[6px] 1024:text-[12px] font-medium font-montserrat leading-[100%]"
                             style={{
                                 color: v.descriptionColor,
                                 textShadow: '-2px 2px 6px rgba(0, 0, 0, 0.40)',

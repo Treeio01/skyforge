@@ -82,7 +82,7 @@ export default function MobileUpgradePanels({
     return (
         <>
             {/* Селекторы скинов */}
-            <div className="flex z-[100] w-full 1024:hidden">
+            <div className="flex z-[100] w-full mb-5 1024:hidden 1024:mb-0">
                 {/* Инвентарь */}
                 <div className="flex flex-col flex-1 overflow-hidden rounded-t-[14px] bg-accent/90">
                     <div className="flex items-center gap-[5px] bg-accent px-3.5 py-[6.5px]">
@@ -149,7 +149,9 @@ export default function MobileUpgradePanels({
                     }}
                 >
                     {targetsLoading
-                        ? Array.from({ length: 8 }).map((_, i) => <SkeletonSkinCard key={i} />)
+                        ? Array.from({ length: 12 }).map((_, i) => (
+                            <SkeletonSkinCard key={`skel-${priceSort}-${minPrice}-${search}-${i}`} index={i} />
+                        ))
                         : targetItems.map((skin) => (
                             <SkinCard
                                 key={skin.id}

@@ -23,7 +23,7 @@ export default function SkinsPanel({
     };
 
     return (
-        <div className="flex flex-col overflow-hidden max-h-[361px] rounded-t-[14px] w-full max-w-[630px] bg-accent/90">
+        <div className="flex flex-col overflow-hidden min-h-[361px] max-h-[500px] rounded-t-[14px] w-full max-w-[630px] bg-accent/90 relative">
             <div
                 className={`flex bg-accent justify-between items-center ${
                     toolbar ? 'py-[6.5px] px-3.5' : 'p-3.5'
@@ -38,11 +38,12 @@ export default function SkinsPanel({
                 {toolbar}
             </div>
             <div
-                className="skins-scroll h-full grid p-2.5 gap-[4px] bg-accent/90 overflow-y-auto justify-center grid-cols-[repeat(auto-fit,145px)]"
+                className="skins-scroll flex-1 min-h-0 grid content-start auto-rows-min p-2.5 pb-[120px] gap-[4px] bg-accent/90 overflow-y-auto grid-cols-[repeat(auto-fill,minmax(135px,1fr))]"
                 onScroll={handleScroll}
             >
                 {children}
             </div>
+            <div className="pointer-events-none absolute left-0 right-0 bottom-0 h-[140px] z-30 bg-linear-to-t from-[#151B27] from-30% via-[#151B27]/60 via-65% to-transparent" />
         </div>
     );
 }

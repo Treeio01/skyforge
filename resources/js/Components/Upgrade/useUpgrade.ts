@@ -160,13 +160,19 @@ export function useUpgrade({ inventory }: UseUpgradeProps): UseUpgradeReturn {
         inventoryPrice: invPrice,
     });
 
-    const targetItems = useMemo(
-        () => rawTargetSkins.map((s) => apiSkinToEntry(s, 'target-')),
-        [rawTargetSkins],
-    );
-
     // Скин подобранный через множитель (может не быть в загруженном списке)
     const [autoPickedTarget, setAutoPickedTarget] = useState<SkinEntry | null>(null);
+
+    const targetItems = useMemo(
+        () => {
+            const base = rawTargetSkins.map((s) => apiSkinToEntry(s, 'target-'));
+            if (autoPickedTarget && !base.some((s) => s.id === autoPickedTarget.id)) {
+                return [autoPickedTarget, ...base];
+            }
+            return base;
+        },
+        [rawTargetSkins, autoPickedTarget],
+    );
 
     const targetSkin = useMemo(
         () => {

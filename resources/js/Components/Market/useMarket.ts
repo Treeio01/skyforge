@@ -34,12 +34,13 @@ export interface UseMarketReturn {
     setBuying: (v: boolean) => void;
     selected: Set<string | number>;
     setSelected: (v: Set<string | number>) => void;
-    toggleSelect: (id: string | number) => void;
+    toggleSelect: (skin: ReturnType<typeof apiSkinToEntry>) => void;
     clearSelected: () => void;
     items: ReturnType<typeof apiSkinToEntry>[];
     selectedItems: ReturnType<typeof apiSkinToEntry>[];
     totalSelected: number;
     loading: boolean;
+    hasMore: boolean;
     scrollRef: React.RefObject<HTMLDivElement>;
     handleScroll: () => void;
     handleBuy: () => void;
@@ -55,10 +56,11 @@ export function useMarket(): UseMarketReturn {
     const [cartOpen, setCartOpen] = useState(false);
     const [buying, setBuying] = useState(false);
     const [selected, setSelected] = useState<Set<string | number>>(new Set());
+    const [selectedData, setSelectedData] = useState<Map<string | number, ReturnType<typeof apiSkinToEntry>>>(new Map());
 
     const { sort, direction } = parseSortOption(sortOption);
 
-    const { skins, loading, loadMore } = useTargetSkins({
+    const { skins, loading, hasMore, loadMore } = useTargetSkins({
         search,
         sort,
         direction,
@@ -68,11 +70,18 @@ export function useMarket(): UseMarketReturn {
         inventoryPrice: null,
     });
 
-    const items = useMemo(() => skins.map((s) => apiSkinToEntry(s)), [skins]);
+    // В items вкладываем выделенные скины ПЕРЕД отфильтрованной выдачей,
+    // чтобы пользователь всегда видел свой выбор, даже если фильтр их прячет.
+    const items = useMemo(() => {
+        const base = skins.map((s) => apiSkinToEntry(s));
+        const baseIds = new Set(base.map((i) => i.id));
+        const pinned = Array.from(selectedData.values()).filter((s) => !baseIds.has(s.id));
+        return [...pinned, ...base];
+    }, [skins, selectedData]);
 
     const selectedItems = useMemo(
-        () => items.filter((s) => selected.has(s.id)),
-        [items, selected],
+        () => Array.from(selectedData.values()).filter((s) => selected.has(s.id)),
+        [selectedData, selected],
     );
 
     const totalSelected = useMemo(
@@ -80,11 +89,17 @@ export function useMarket(): UseMarketReturn {
         [selectedItems],
     );
 
-    const toggleSelect = useCallback((id: string | number) => {
+    const toggleSelect = useCallback((skin: ReturnType<typeof apiSkinToEntry>) => {
         setSelected((prev) => {
             const next = new Set(prev);
-            if (next.has(id)) next.delete(id);
-            else next.add(id);
+            if (next.has(skin.id)) next.delete(skin.id);
+            else next.add(skin.id);
+            return next;
+        });
+        setSelectedData((prev) => {
+            const next = new Map(prev);
+            if (next.has(skin.id)) next.delete(skin.id);
+            else next.set(skin.id, skin);
             return next;
         });
     }, []);
@@ -101,6 +116,7 @@ export function useMarket(): UseMarketReturn {
 
     const clearSelected = useCallback(() => {
         setSelected(new Set());
+        setSelectedData(new Map());
     }, []);
 
     const applyFilters = useCallback(() => {
@@ -123,7 +139,7 @@ export function useMarket(): UseMarketReturn {
         const skinIds = selectedItems.map((s) => s.backendSkinId).filter(Boolean);
         router.post('/market/buy', { skin_ids: skinIds }, {
             preserveScroll: true,
-            onSuccess: () => { setSelected(new Set()); setCartOpen(false); },
+            onSuccess: () => { setSelected(new Set()); setSelectedData(new Map()); setCartOpen(false); },
             onFinish: () => setBuying(false),
         });
     }, [selectedItems]);
@@ -151,6 +167,7 @@ export function useMarket(): UseMarketReturn {
         selectedItems,
         totalSelected,
         loading,
+        hasMore,
         scrollRef,
         handleScroll,
         handleBuy,

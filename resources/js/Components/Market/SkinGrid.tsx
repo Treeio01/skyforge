@@ -33,17 +33,21 @@ function useColumns(containerRef: React.RefObject<HTMLDivElement | null>): numbe
 interface SkinGridProps {
     items: SkinEntry[];
     selected: Set<string | number>;
-    onToggle: (id: string | number) => void;
+    onToggle: (skin: SkinEntry) => void;
     loading?: boolean;
+    hasMore?: boolean;
     containerRef?: React.RefObject<HTMLDivElement>;
     onScroll?: () => void;
 }
 
-export default memo(function SkinGrid({ items, selected, onToggle, loading, containerRef, onScroll }: SkinGridProps) {
+export default memo(function SkinGrid({ items, selected, onToggle, loading, hasMore, containerRef, onScroll }: SkinGridProps) {
     const internalRef = useRef<HTMLDivElement>(null);
     const parentRef = containerRef ?? internalRef;
     const columns = useColumns(parentRef);
-    const rows = Math.ceil(items.length / columns);
+
+    // Когда есть ещё страницы — показываем только полные ряды, чтобы не было «обрубленного» хвоста.
+    const visibleItems = hasMore ? items.slice(0, Math.floor(items.length / columns) * columns) : items;
+    const rows = Math.ceil(visibleItems.length / columns);
 
     const virtualizer = useVirtualizer({
         count: rows,
@@ -52,57 +56,65 @@ export default memo(function SkinGrid({ items, selected, onToggle, loading, cont
         overscan: 3,
     });
 
-    if (loading) {
-        return (
-            <div className="grid grid-cols-2 xs:grid-cols-3 lg:grid-cols-4 wide:grid-cols-5 gap-3">
-                {Array.from({ length: 12 }).map((_, i) => (
-                    <SkeletonSkinCard key={i} />
-                ))}
-            </div>
-        );
-    }
+    const isInitialLoad = loading && items.length === 0;
 
     return (
         <div
             ref={parentRef as React.RefObject<HTMLDivElement>}
-            className="flex-1 overflow-y-auto skins-scroll p-2.5 bg-[#070A10] max-h-[calc(100vh-80px)]"
+            className="flex-1 min-h-0 overflow-y-auto skins-scroll -mx-3 1024:-mx-4 px-3 1024:px-4"
             onScroll={onScroll}
         >
-            {items.length === 0 ? (
-                <div className="flex justify-center py-12">
-                    <span className="text-white/20 font-sf-display text-[13px]">Скины не найдены</span>
+            {isInitialLoad ? (
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-3">
+                    {Array.from({ length: 24 }).map((_, i) => (
+                        <SkeletonSkinCard key={i} index={i} />
+                    ))}
+                </div>
+            ) : items.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-16 gap-2">
+                    <span className="text-white/40 font-sf-display text-[14px]">Скины не найдены</span>
+                    <span className="text-white/20 font-sf-display text-[12px]">Попробуйте изменить фильтры или поиск</span>
                 </div>
             ) : (
-                <div style={{ height: virtualizer.getTotalSize(), position: "relative" }}>
-                    {virtualizer.getVirtualItems().map((virtualRow) => {
-                        const rowStart = virtualRow.index * columns;
-                        const rowItems = items.slice(rowStart, rowStart + columns);
+                <>
+                    <div style={{ height: virtualizer.getTotalSize(), position: "relative" }}>
+                        {virtualizer.getVirtualItems().map((virtualRow) => {
+                            const rowStart = virtualRow.index * columns;
+                            const rowItems = visibleItems.slice(rowStart, rowStart + columns);
 
-                        return (
-                            <div
-                                key={virtualRow.key}
-                                style={{
-                                    position: "absolute",
-                                    top: virtualRow.start,
-                                    left: 0,
-                                    right: 0,
-                                    display: "grid",
-                                    gridTemplateColumns: `repeat(${columns}, 1fr)`,
-                                    gap: GAP,
-                                }}
-                            >
-                                {rowItems.map((skin) => (
-                                    <SkinCard
-                                        key={skin.id}
-                                        {...skin}
-                                        selected={selected.has(skin.id)}
-                                        onClick={() => onToggle(skin.id)}
-                                    />
-                                ))}
-                            </div>
-                        );
-                    })}
-                </div>
+                            return (
+                                <div
+                                    key={virtualRow.key}
+                                    style={{
+                                        position: "absolute",
+                                        top: virtualRow.start,
+                                        left: 0,
+                                        right: 0,
+                                        display: "grid",
+                                        gridTemplateColumns: `repeat(${columns}, 1fr)`,
+                                        gap: GAP,
+                                    }}
+                                >
+                                    {rowItems.map((skin) => (
+                                        <SkinCard
+                                            key={skin.id}
+                                            {...skin}
+                                            selected={selected.has(skin.id)}
+                                            onClick={() => onToggle(skin)}
+                                        />
+                                    ))}
+                                </div>
+                            );
+                        })}
+                    </div>
+                    {loading && items.length > 0 && (
+                        <div className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-3 mt-3">
+                            {Array.from({ length: columns * 2 }).map((_, i) => (
+                                <SkeletonSkinCard key={`more-${i}`} index={i} />
+                            ))}
+                        </div>
+                    )}
+                </>
             )}
         </div>
     );

@@ -1,4 +1,6 @@
 import { CSSProperties, useEffect, useRef, useState } from 'react';
+import { usePage } from '@inertiajs/react';
+import type { PageProps } from '@/types';
 
 export type DefuseOutcome = 'success' | 'fail';
 
@@ -26,10 +28,12 @@ function formatTime(ms: number): string {
 export default function DefuseOverlay({
     outcome,
     durationSec = 5,
-    name = 'Name',
+    name,
     className = '',
     style,
 }: DefuseOverlayProps) {
+    const user = usePage<PageProps>().props.auth.user;
+    const displayName = name ?? user?.username ?? 'Player';
     const ringRef = useRef<SVGCircleElement>(null);
     const timerRef = useRef<HTMLSpanElement>(null);
     const [hidden, setHidden] = useState(false);
@@ -111,8 +115,8 @@ export default function DefuseOverlay({
                 <div className="flex flex-col h-full justify-between items-end gap-4">
                     <span className="text-white font-sf-display font-bold text-[9px] 1024:text-[14px] leading-[100%]">
                         {outcome === 'success'
-                            ? `${name} defused the bomb.`
-                            : `${name} is defusing the bomb.`}
+                            ? `${displayName} defused the bomb.`
+                            : `${displayName} is defusing the bomb.`}
                     </span>
                     <span
                         ref={timerRef}

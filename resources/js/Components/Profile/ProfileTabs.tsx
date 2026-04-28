@@ -41,7 +41,7 @@ export default function ProfileTabs({
     const [activeTab, setActiveTab] = useState<Tab>('inventory');
 
     return (
-        <div className="flex p-4 1024:p-6 flex-col w-full gap-3 bg-[#070A10] rounded-[24px]">
+        <div className="flex p-4 1024:p-6 flex-col w-full gap-3 bg-[#0E131C] rounded-[14px]">
             <div className="flex w-full items-center justify-between">
                 <div className="flex items-center gap-1">
                     <TabButton active={activeTab === 'inventory'} onClick={() => setActiveTab('inventory')} icon={<InventoryTabIcon active={activeTab === 'inventory'} />} label="Инвентарь" />
@@ -74,7 +74,7 @@ export default function ProfileTabs({
                 )}
             </div>
 
-            <div className={activeTab === 'upgrades' ? 'flex flex-wrap gap-2 justify-center' : 'grid grid-cols-[repeat(auto-fill,minmax(130px,160px))] 1024:grid-cols-[repeat(auto-fill,minmax(140px,175px))] gap-[4px] justify-center'}>
+            <div className={activeTab === 'upgrades' ? 'flex flex-wrap gap-2 justify-center' : 'grid grid-cols-[repeat(auto-fill,minmax(130px,1fr))] 1024:grid-cols-[repeat(auto-fill,minmax(140px,1fr))] gap-[4px]'}>
                 {activeTab === 'inventory' && (
                     inventory.length === 0 ? (
                         <EmptyState text="Нет скинов" />

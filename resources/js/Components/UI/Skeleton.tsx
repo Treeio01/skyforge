@@ -5,13 +5,20 @@ interface SkeletonProps {
 
 export function Skeleton({ className = '', rounded = 'rounded-[10px]' }: SkeletonProps) {
     return (
-        <div className={`animate-pulse bg-surface-2 ${rounded} ${className}`} />
+        <div className={`skeleton-shimmer ${rounded} ${className}`} />
     );
 }
 
-export function SkeletonSkinCard() {
+interface SkeletonSkinCardProps {
+    index?: number;
+}
+
+export function SkeletonSkinCard({ index = 0 }: SkeletonSkinCardProps) {
     return (
-        <div className="flex flex-col justify-between min-h-[126px] pt-3 px-2.5 pb-3.5 rounded-[14px] bg-white/4 overflow-hidden relative">
+        <div
+            className="animate-skeleton-in flex flex-col justify-between min-h-[126px] pt-3 px-2.5 pb-3.5 rounded-[14px] bg-white/[0.025] border border-white/5 overflow-hidden relative"
+            style={{ animationDelay: `${Math.min(index * 30, 360)}ms` }}
+        >
             <Skeleton className="h-[14px] w-14" rounded="rounded-[4px]" />
             <Skeleton className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[80px] h-[60px]" rounded="rounded-[6px]" />
             <div className="flex flex-col gap-1">

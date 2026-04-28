@@ -50,7 +50,9 @@ export default function UpgradeTargetPanel({
             }
         >
             {targetsLoading
-                ? Array.from({ length: 8 }).map((_, i) => <SkeletonSkinCard key={i} />)
+                ? Array.from({ length: 16 }).map((_, i) => (
+                    <SkeletonSkinCard key={`skel-${priceSort}-${minPrice}-${search}-${i}`} index={i} />
+                ))
                 : targetItems.map((skin) => (
                     <SkinCard
                         key={skin.id}

@@ -6,12 +6,15 @@ import DepositBlock from "./sections/DepositBlock";
 import LanguageMenu from "./sections/LanguageMenu";
 import ProfileChip from "./sections/ProfileChip";
 import SocialLinks from "./sections/SocialLinks";
-import SoundMenu from "./sections/SoundMenu";
 import { PageProps } from "@/types";
 
 function Logo() {
     return (
-        <Link href="/" prefetch="hover" className="1440:hidden 1340:flex hidden py-[3px] px-[3px] bg-accent w-full max-w-[187px]">
+        <Link
+            href="/"
+            prefetch="hover"
+            className="flex py-[6px] px-[8px] rounded-[10px] shrink-0 transition-opacity duration-150 hover:opacity-80 1024:hidden 1340:flex 1440:hidden"
+        >
             <img src="/assets/img/logo.png" className="max-w-[56px]" alt="" />
         </Link>
     );
@@ -22,17 +25,17 @@ function StatsChips() {
 
     return (
         <div className="flex gap-[3px] items-stretch">
-            <Chip>
+            <Chip className="bg-chip text-white">
                 <GlobeIcon />
                 <ChipLabel>{stats?.online?.toLocaleString('ru-RU') ?? '0'}</ChipLabel>
             </Chip>
-            <Chip>
+            <Chip className="bg-chip text-white">
                 <LevelsIcon />
                 <ChipLabel>{stats?.total_upgrades?.toLocaleString('ru-RU') ?? '0'}</ChipLabel>
             </Chip>
             <Chip
                 interactive
-                className="bg-linear-to-r from-[#FE7A02] to-[#FE4D00]"
+                className="bg-linear-to-r from-[#FE7A02] to-[#FE4D00] text-white"
             >
                 <BonusIcon />
                 <ChipLabel>Бонусы</ChipLabel>
@@ -41,21 +44,30 @@ function StatsChips() {
     );
 }
 
+function NavChip({ href, icon: Icon, label, className = '' }: { href: string; icon: React.FC; label: string; className?: string }) {
+    const url = usePage().url;
+    const isActive = url === href || url.startsWith(`${href}/`);
+    const stateClass = isActive
+        ? 'bg-chip text-white'
+        : 'bg-transparent text-white/85 hover:bg-chip hover:text-white active:opacity-80';
+    return (
+        <Link href={href} prefetch="hover" className={className}>
+            <Chip
+                interactive
+                className={`${stateClass} transition-colors duration-150`}
+            >
+                <Icon />
+                <ChipLabel tone="inherit">{label}</ChipLabel>
+            </Chip>
+        </Link>
+    );
+}
+
 function NavChips() {
     return (
         <div className="flex gap-[3px] items-stretch">
-            <Link href="/market" prefetch="hover">
-                <Chip interactive className="text-[#23262C] hover:text-white">
-                    <MarketIcon />
-                    <ChipLabel tone="inherit">Рынок Скинов</ChipLabel>
-                </Chip>
-            </Link>
-            <Link href="/provably-fair" prefetch="hover">
-                <Chip interactive className="text-[#23262C] hover:text-white">
-                    <FaqIcon />
-                    <ChipLabel tone="inherit">FAQ</ChipLabel>
-                </Chip>
-            </Link>
+            <NavChip href="/market" icon={MarketIcon} label="Рынок Скинов" />
+            <NavChip href="/provably-fair" icon={FaqIcon} label="FAQ" className="hidden md:flex" />
         </div>
     );
 }
@@ -65,7 +77,7 @@ export default function Header() {
     const user = auth.user;
 
     return (
-        <header className="flex p-2.5 justify-between items-center w-full overflow-hidden">
+        <header className="relative z-[400] flex p-2.5 justify-between items-center w-full overflow-x-clip bg-accent">
             <Logo />
             <div className="flex items-center gap-3 min-w-0 flex-shrink">
                 <div className="hidden wide:flex items-center gap-3">
@@ -77,7 +89,6 @@ export default function Header() {
             <div className="flex items-center md:gap-3 gap-2 shrink-0">
                 <div className="hidden wide:flex gap-1 items-stretch">
                     <SocialLinks />
-                    <SoundMenu />
                     <LanguageMenu />
                 </div>
                 <Divider className="hidden wide:flex" />

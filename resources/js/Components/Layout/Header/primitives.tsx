@@ -7,7 +7,7 @@ import {
 
 export function Chip({
     children,
-    className = 'bg-accent',
+    className = 'bg-chip',
     interactive = false,
     onClick,
 }: ChipProps) {

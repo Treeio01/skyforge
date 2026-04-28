@@ -30,45 +30,49 @@ export default function UpgradeTargetToolbar({
             <button
                 type="button"
                 onClick={() => onPriceSortChange(nextSort(priceSort))}
-                className={`flex py-[9.5px] px-[11px] rounded-[8px] gap-[2px] items-center cursor-pointer transition-colors duration-150 ${
-                    priceSort ? 'bg-[#1A2230]' : 'bg-[#0A0E17]'
+                className={`flex py-[9.5px] px-[11px] rounded-[8px] gap-1 items-center cursor-pointer transition-colors duration-200 ${
+                    priceSort
+                        ? 'bg-white/12 text-white'
+                        : 'bg-white/5 text-white/70 hover:bg-white/8 hover:text-white active:bg-white/15'
                 }`}
             >
-                <span className="text-white text-[11px] font-sf-display leading-[104%]">
+                <span className="text-[11px] font-sf-display leading-[104%]">
                     Цена
                 </span>
                 <span
-                    className="flex transition-transform duration-200"
+                    className="flex transition-transform duration-300"
                     style={{
-                        transform:
-                            priceSort === 'asc' ? 'rotate(180deg)' : 'rotate(0)',
+                        transform: priceSort === 'asc' ? 'rotate(180deg)' : 'rotate(0)',
+                        opacity: priceSort ? 1 : 0.6,
                     }}
                 >
                     <ChevronDownIcon />
                 </span>
             </button>
-            <span className="text-[#22272F] text-[11px] font-sf-display leading-[104%]">
+            <span className="text-white/30 text-[11px] font-sf-display leading-[104%]">
                 от
             </span>
-            <div className="flex py-2.5 px-[11px] rounded-[8px] bg-[#06080D]">
+            <div className={`flex py-2.5 px-[11px] rounded-[8px] bg-white/4 transition-all duration-200 ring-1 ring-inset ${minPrice ? 'ring-white/15' : 'ring-transparent'} hover:bg-white/6 focus-within:bg-white/8 focus-within:ring-white/25`}>
                 <input
                     type="number"
                     inputMode="numeric"
                     placeholder="0"
                     value={minPrice}
                     onChange={(e) => onMinPriceChange(e.target.value)}
-                    className="w-full outline-none max-w-[35px] text-white font-sf-display text-[11px] leading-[104%] placeholder:text-[#313743]"
+                    className="w-full outline-none max-w-[35px] text-white font-sf-display text-[11px] leading-[104%] placeholder:text-white/30"
                 />
             </div>
-            <div className="flex py-2.5 px-[11px] items-center gap-[2px] w-full max-w-[141px] rounded-[8px] bg-[#06080D]">
+            <div className={`flex py-2.5 px-[11px] items-center gap-[2px] w-full max-w-[141px] rounded-[8px] bg-white/4 transition-all duration-200 ring-1 ring-inset ${search ? 'ring-white/15' : 'ring-transparent'} hover:bg-white/6 focus-within:bg-white/8 focus-within:ring-white/25`}>
                 <input
                     type="text"
                     placeholder="Поиск"
                     value={search}
                     onChange={(e) => onSearchChange(e.target.value)}
-                    className="w-full outline-none max-w-[109px] text-white font-sf-display text-[11px] leading-[104%] placeholder:text-[#313743]"
+                    className="w-full outline-none max-w-[109px] text-white font-sf-display text-[11px] leading-[104%] placeholder:text-white/30"
                 />
-                <SearchIcon />
+                <span className={`flex transition-opacity duration-200 ${search ? 'opacity-90' : 'opacity-50'}`}>
+                    <SearchIcon />
+                </span>
             </div>
         </div>
     );

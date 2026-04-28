@@ -60,24 +60,22 @@ export function GoButton({ device, canStart, isProcessing = false, onGo }: GoBut
             type="button"
             onClick={onGo}
             disabled={!canStart}
-            className={`absolute z-[60] ${
+            className={`absolute z-[200] ${
                 canStart ? 'cursor-pointer' : 'cursor-not-allowed opacity-40'
             }`}
             style={
                 device === 'pc'
                     ? {
-                          top: '62%',
-                          left: '50.5%',
+                          top: '49%',
+                          left: '46%',
                           width: '9%',
                           height: '25%',
-                          transform: 'translate(-50%, -50%)',
                       }
                     : {
-                          top: '30%',
-                          left: '50.5%',
-                          width: '9%',
-                          height: '13%',
-                          transform: 'translate(-50%, -50%)',
+                          top: '24%',
+                          left: '46.4%',
+                          width: '8.5%',
+                          height: '11%',
                       }
             }
             animate={isProcessing ? { scale: [1, 1.03, 1] } : { scale: 1 }}

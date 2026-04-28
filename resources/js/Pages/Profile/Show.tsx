@@ -1,4 +1,5 @@
 import AppLayout from '@/Layouts/AppLayout';
+import PageShell from '@/Components/Layout/PageShell';
 import ProfileSidebar from '@/Components/Profile/ProfileSidebar';
 import ProfileStatCards from '@/Components/Profile/ProfileStatCards';
 import ProfileTabs from '@/Components/Profile/ProfileTabs';
@@ -56,21 +57,23 @@ export default function Show() {
 
     return (
         <AppLayout>
-            <div className="flex flex-col gap-1.5 w-full p-2 1024:p-0">
-                <div className="flex flex-col 1024:flex-row p-4 1024:p-6 gap-4 1024:gap-6 items-stretch w-full bg-[#070A10] rounded-[24px]">
-                    <ProfileSidebar profile={profile} />
-                    <ProfileStatCards recentUpgrades={recentUpgrades} />
-                </div>
+            <PageShell title="Профиль" subtitle={profile.username}>
+                <div className="flex flex-col gap-4 1024:gap-6 w-full">
+                    <div className="flex flex-col 1024:flex-row gap-4 1024:gap-6 items-stretch w-full p-4 1024:p-6 rounded-[14px] bg-[#0E131C]">
+                        <ProfileSidebar profile={profile} />
+                        <ProfileStatCards recentUpgrades={recentUpgrades} />
+                    </div>
 
-                <ProfileTabs
-                    inventory={inventory}
-                    recentUpgrades={recentUpgrades}
-                    selectedSkins={selectedSkins}
-                    onToggleSkin={toggleSkinSelection}
-                    onSellAll={() => { setSellMode('all'); setSellModalVisible(true); }}
-                    onSellSelected={() => { setSellMode('selected'); setSellModalVisible(true); }}
-                />
-            </div>
+                    <ProfileTabs
+                        inventory={inventory}
+                        recentUpgrades={recentUpgrades}
+                        selectedSkins={selectedSkins}
+                        onToggleSkin={toggleSkinSelection}
+                        onSellAll={() => { setSellMode('all'); setSellModalVisible(true); }}
+                        onSellSelected={() => { setSellMode('selected'); setSellModalVisible(true); }}
+                    />
+                </div>
+            </PageShell>
 
             <SellModal
                 visible={sellModalVisible}

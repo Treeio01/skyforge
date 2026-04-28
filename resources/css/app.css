@@ -194,7 +194,7 @@
     --font-gotham-xnarrow: 'Gotham X-Narrow', system-ui, sans-serif;
 
     --color-bg:#000;
-    --color-accent:#14213d;
+    --color-accent:#151B27;
     --color-cons: #878F9D;
     --color-indus: #356C9D;
     --color-mils: #2D4FFA;
@@ -211,6 +211,14 @@
     --breakpoint-1155: 1155px;
     --breakpoint-1340: 1340px;
     --breakpoint-1440: 1440px;
+}
+
+@utility bg-accent {
+    background: #151B27;
+}
+
+@utility bg-chip {
+    background: linear-gradient(180deg, #2A3346 0%, #1E2535 100%);
 }
 
 @keyframes feed-item-expand {
@@ -277,6 +285,27 @@
     100% { opacity: 1; transform: scale(1)    translateX(0); }
 }
 
+@keyframes skeleton-shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+@keyframes skeleton-pulse {
+    0%, 100% { opacity: 0.55; }
+    50%      { opacity: 1; }
+}
+
+@keyframes skeleton-fade-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes filter-shake {
+    0%, 100% { transform: translateX(0); }
+    25%      { transform: translateX(-3px); }
+    75%      { transform: translateX(3px); }
+}
+
 @layer components {
     .animate-feed-in {
         animation: feed-item-expand 0.4s cubic-bezier(0.22, 1, 0.36, 1);
@@ -306,6 +335,27 @@
 
     .animate-skin-card-in {
         animation: skin-card-in 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .skeleton-shimmer {
+        background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.04) 0%,
+            rgba(255, 255, 255, 0.04) 35%,
+            rgba(255, 255, 255, 0.12) 50%,
+            rgba(255, 255, 255, 0.04) 65%,
+            rgba(255, 255, 255, 0.04) 100%
+        );
+        background-size: 200% 100%;
+        animation: skeleton-shimmer 1.6s linear infinite;
+    }
+
+    .animate-skeleton-in {
+        animation: skeleton-fade-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .animate-filter-shake {
+        animation: filter-shake 0.18s ease-in-out;
     }
 
     .custom-scrollbar {

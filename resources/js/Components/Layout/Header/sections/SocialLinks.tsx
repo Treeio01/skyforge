@@ -29,7 +29,7 @@ export default function SocialLinks() {
         : [];
 
     return (
-        <div className="flex p-3 gap-[13px] items-center [&_a]:text-[#23262C] [&_a]:transition-colors [&_a]:duration-150 [&_a:hover]:text-white [&_a]:cursor-pointer">
+        <div className="flex p-3 gap-[13px] items-center [&_a]:text-white [&_a]:transition-opacity [&_a]:duration-150 [&_a:hover]:opacity-70 [&_a:active]:opacity-50 [&_a]:cursor-pointer">
             {links.map(({ href, icon: Icon }) => (
                 <a key={href} href={href} target="_blank" rel="noopener noreferrer">
                     <Icon />

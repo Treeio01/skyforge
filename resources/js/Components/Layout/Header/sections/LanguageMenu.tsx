@@ -19,7 +19,7 @@ export default function LanguageMenu() {
                 <ChipLabel>{locale.currency}</ChipLabel>
             </Chip>
             {open && (
-                <div className="animate-dropdown-in absolute top-[calc(100%+4px)] right-0 flex flex-col gap-[1px] bg-accent rounded-[12px] p-1 z-50 min-w-[112px]">
+                <div className="animate-dropdown-in absolute top-[calc(100%+4px)] right-0 flex flex-col gap-[1px] bg-accent rounded-[12px] p-1 z-[500] min-w-[112px]">
                     {LOCALES.map((l) => (
                         <DropdownItem
                             key={l.code}

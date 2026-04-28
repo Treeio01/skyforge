@@ -15,8 +15,8 @@ export default function DepositBlock() {
 
     return (
         <>
-            <div className="flex rounded-[12px] gap-2.5 items-center">
-                <div className="flex pl-3 py-3 gap-1 items-center bg-accent">
+            <div className="flex rounded-[12px] gap-2.5 items-center bg-chip">
+                <div className="flex pl-3 py-3 gap-1 items-center ">
                     <ChipLabel>{balanceRubles}</ChipLabel>
                     <ChipLabel>₽</ChipLabel>
                 </div>
