@@ -1,3 +1,4 @@
+import { router } from "@inertiajs/react";
 import { InventoryIcon } from "@/Components/UI/Icons";
 import SkinCard, { SkinEntry } from "./SkinCard";
 import SkinsPanel from "./SkinsPanel";
@@ -21,7 +22,7 @@ export default function UpgradeInventoryPanel({
             {inventoryItems.length === 0 ? (
                 <div className="col-span-full flex flex-col items-center justify-center min-h-[280px] gap-4 text-center px-6">
                     <div className="w-[145px]">
-                        <EmptySkinCard />
+                        <EmptySkinCard onClick={() => router.visit("/market")} />
                     </div>
                     <div className="flex flex-col gap-1">
                         <span className="text-white/55 font-gotham font-medium text-[15px] leading-[120%]">
@@ -50,7 +51,7 @@ export default function UpgradeInventoryPanel({
                             }
                         />
                     ))}
-                    <EmptySkinCard />
+                    <EmptySkinCard onClick={() => router.visit("/market")} />
                 </>
             )}
         </SkinsPanel>
