@@ -13,6 +13,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WithdrawalController;
 use App\Http\Middleware\EnsureTradeUrlSet;
 use Illuminate\Support\Facades\Route;
+use MoonShine\Laravel\Http\Middleware\Authenticate;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,11 +62,11 @@ Route::middleware('auth')->group(function () {
 
 Route::post('/api/webhooks/payment', [DepositController::class, 'webhook'])->name('webhook.payment');
 
-Route::middleware(['auth'])->prefix('admin')->name('moonshine.online.')->group(function () {
+Route::middleware([Authenticate::class])->prefix('admin')->name('moonshine.online.')->group(function () {
     Route::post('online-settings', [OnlineSettingsController::class, 'update'])->name('save');
     Route::post('online-settings/reset', [OnlineSettingsController::class, 'reset'])->name('reset');
 });
 
-Route::middleware(['auth'])->prefix('admin')->name('moonshine.site-settings.')->group(function () {
+Route::middleware([Authenticate::class])->prefix('admin')->name('moonshine.site-settings.')->group(function () {
     Route::post('site-settings', [SiteSettingsController::class, 'update'])->name('save');
 });

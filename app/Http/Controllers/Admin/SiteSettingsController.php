@@ -13,8 +13,6 @@ class SiteSettingsController extends Controller
 {
     public function update(Request $request): RedirectResponse
     {
-        abort_unless((bool) $request->user()?->is_admin, 403);
-
         $data = $request->validate([
             'site_enabled' => ['required', 'boolean'],
             'withdrawals_enabled' => ['required', 'boolean'],
@@ -45,9 +43,9 @@ class SiteSettingsController extends Controller
 
         foreach ($data as $key => $value) {
             $type = match (true) {
-                in_array($key, $bools, true) => 'boolean',
-                in_array($key, $floats, true) => 'float',
-                in_array($key, $integers, true) => 'integer',
+                \in_array($key, $bools, true) => 'boolean',
+                \in_array($key, $floats, true) => 'float',
+                \in_array($key, $integers, true) => 'integer',
                 default => 'string',
             };
 
