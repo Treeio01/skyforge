@@ -13,6 +13,7 @@ use App\MoonShine\Resources\Skin\SkinResource;
 use App\MoonShine\Resources\Transaction\TransactionResource;
 use App\MoonShine\Resources\Upgrade\UpgradeResource;
 use App\MoonShine\Resources\User\UserResource;
+use App\MoonShine\Resources\UtmMark\UtmMarkResource;
 use App\MoonShine\Resources\Withdrawal\WithdrawalResource;
 use App\MoonShine\SkyforgePalette;
 use MoonShine\Contracts\ColorManager\ColorManagerContract;
@@ -51,6 +52,7 @@ final class SkyforgeLayout extends AppLayout
             ]),
 
             MenuItem::make(SettingResource::class, 'Настройки'),
+            MenuItem::make(UtmMarkResource::class, 'UtmMarks'),
         ];
     }
 

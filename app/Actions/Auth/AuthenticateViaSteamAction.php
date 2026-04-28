@@ -51,6 +51,7 @@ class AuthenticateViaSteamAction
                 'utm_term' => $attribution['utm_term'] ?? null,
                 'referrer' => $attribution['referrer'] ?? null,
                 'registration_ip' => $attribution['ip'] ?? request()->ip(),
+                'utm_mark_id' => $attribution['mark_id'] ?? null,
             ]);
 
             $this->generateSeedPair->execute($user);
@@ -74,6 +75,6 @@ class AuthenticateViaSteamAction
 
         $data = $request->session()->pull('attribution', []);
 
-        return is_array($data) ? $data : [];
+        return \is_array($data) ? $data : [];
     }
 }

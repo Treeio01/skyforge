@@ -14,6 +14,7 @@ use App\MoonShine\Resources\Skin\SkinResource;
 use App\MoonShine\Resources\Transaction\TransactionResource;
 use App\MoonShine\Resources\Upgrade\UpgradeResource;
 use App\MoonShine\Resources\User\UserResource;
+use App\MoonShine\Resources\UtmMark\UtmMarkResource;
 use App\MoonShine\Resources\Withdrawal\WithdrawalResource;
 use Illuminate\Support\ServiceProvider;
 use MoonShine\Contracts\Core\DependencyInjection\CoreContract;
@@ -39,6 +40,7 @@ class MoonShineServiceProvider extends ServiceProvider
                 PromoCodeResource::class,
                 FaqItemMoonResource::class,
                 FaqCategoryMoonResource::class,
+                UtmMarkResource::class,
             ])
             ->pages([
                 OnlineSettingsPage::class,
