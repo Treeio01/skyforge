@@ -102,7 +102,7 @@ export default function LiveFeed() {
     const visibleItems = tab === 'top' ? items.filter((i) => TOP_RARITIES.includes(i.rarity)) : items;
 
     return (
-        <div className="1440:flex hidden flex-col max-w-[187px] h-screen sticky top-0 self-start bg-accent">
+        <div className="hidden 1340:flex flex-col max-w-[187px] h-screen sticky top-0 self-start bg-accent">
             <Link href="/" className="flex py-[10px] px-[10px] rounded-[12px] transition-opacity duration-150 hover:opacity-80">
                 <img
                     src="/assets/img/logo.png"
@@ -140,7 +140,7 @@ export default function LiveFeed() {
                     }
                 />
             </div>
-            <div className="flex flex-col gap-[1px] flex-1 min-h-0 overflow-hidden">
+            <div className="flex flex-col gap-[3px] flex-1 min-h-0 overflow-hidden">
                 <AnimatePresence initial={false}>
                     {visibleItems.map((item) => (
                         <LiveFeedItem
