@@ -54,8 +54,8 @@ final class SkyforgeLayout extends AppLayout
             ]),
 
             MenuGroup::make('Настройки', [
-                MenuItem::make('Настройки сайта', SiteSettingsPage::class),
-                MenuItem::make('Онлайн', OnlineSettingsPage::class),
+                MenuItem::make(SiteSettingsPage::class, 'Настройки сайта'),
+                MenuItem::make(OnlineSettingsPage::class, 'Онлайн'),
                 MenuItem::make(SettingResource::class, 'Все ключи'),
             ]),
             MenuItem::make(UtmMarkResource::class, 'UTM-метки'),
