@@ -7,6 +7,7 @@ import LanguageMenu from "./sections/LanguageMenu";
 import ProfileChip from "./sections/ProfileChip";
 import SocialLinks from "./sections/SocialLinks";
 import { PageProps } from "@/types";
+import { useOnlineCount } from "@/hooks/useOnlineCount";
 
 function Logo() {
     return (
@@ -22,12 +23,13 @@ function Logo() {
 
 function StatsChips() {
     const { stats } = usePage<PageProps>().props;
+    const onlineDisplay = useOnlineCount();
 
     return (
         <div className="flex gap-[3px] items-stretch">
             <Chip className="bg-chip text-white">
                 <GlobeIcon />
-                <ChipLabel>{stats?.online?.toLocaleString('ru-RU') ?? '0'}</ChipLabel>
+                <ChipLabel>{onlineDisplay.toLocaleString('ru-RU')}</ChipLabel>
             </Chip>
             <Chip className="bg-chip text-white">
                 <LevelsIcon />
