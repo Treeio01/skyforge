@@ -8,7 +8,7 @@ use App\Models\UtmMark;
 use App\MoonShine\Resources\UtmMark\Pages\UtmMarkDetailPage;
 use App\MoonShine\Resources\UtmMark\Pages\UtmMarkFormPage;
 use App\MoonShine\Resources\UtmMark\Pages\UtmMarkIndexPage;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Laravel\Resources\ModelResource;
 
