@@ -19,6 +19,11 @@ class OnlineSettingsPage extends Page
         return 'Онлайн на сайте';
     }
 
+    public function getBreadcrumbs(): array
+    {
+        return ['#' => 'Настройки сайта', '' => 'Онлайн'];
+    }
+
     /**
      * @return list<ComponentContract>
      */
@@ -40,8 +45,8 @@ class OnlineSettingsPage extends Page
                             ->hint('Если выключено, в шапке показывается только реальное число активных пользователей.'),
                     ]),
                     Box::make('Диапазон', [
-                        Number::make('Минимум', 'online_min')->required(),
-                        Number::make('Максимум', 'online_max')->required(),
+                        Number::make('Минимум', 'online_min')->min(0)->required(),
+                        Number::make('Максимум', 'online_max')->min(1)->required(),
                     ]),
                     Box::make('Поведение', [
                         Number::make('Частота обновления (сек)', 'online_tick_seconds')->min(3)->max(60)->required(),
