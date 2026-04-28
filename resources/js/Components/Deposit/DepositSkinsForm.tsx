@@ -1,6 +1,11 @@
 import React from "react";
+import Button from "@/Components/UI/Button";
 
 export default function DepositSkinsForm() {
+    const handleContinue = () => {
+        window.open("https://skinsback.com", "_blank", "noopener,noreferrer");
+    };
+
     return (
         <div className="flex flex-col items-center gap-1.5">
             <div className="flex py-[39px] px-[10px] items-center justify-center w-full rounded-[14px] bg-white/1">
@@ -68,6 +73,10 @@ export default function DepositSkinsForm() {
                     быть зачислен моментально.
                 </p>
             </div>
+
+            <Button onClick={handleContinue} size="lg" className="w-full mt-2">
+                Продолжить
+            </Button>
         </div>
     );
 }

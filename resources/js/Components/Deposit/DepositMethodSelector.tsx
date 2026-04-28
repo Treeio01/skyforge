@@ -93,35 +93,8 @@ const SkinsIcon = () => (
     </svg>
 );
 
-const SBPMethodIcon = () => (
-    <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="10"
-        height="13"
-        viewBox="0 0 10 13"
-        fill="none"
-    >
-        <g clipPath="url(#clip0_sbp_method)">
-            <path d="M0 2.69275L1.49814 5.37058V7.00399L0.00175258 9.67656L0 2.69275Z" fill="#5B57A2" />
-            <path d="M5.75195 4.39617L7.15577 3.53576L10.0288 3.53308L5.75195 6.15308V4.39617Z" fill="#D90751" />
-            <path d="M5.7442 2.67701L5.75214 6.22237L4.25049 5.29969V0L5.7442 2.67701Z" fill="#FAB718" />
-            <path d="M10.0289 3.53309L7.15585 3.53577L5.7442 2.67701L4.25049 0L10.0289 3.53309Z" fill="#ED6F26" />
-            <path d="M5.75214 9.69142V7.97132L4.25049 7.06616L4.25131 12.3711L5.75214 9.69142Z" fill="#63B22F" />
-            <path d="M7.15258 8.83883L1.49804 5.37058L0 2.69275L10.023 8.83533L7.15258 8.83883Z" fill="#1487C9" />
-            <path d="M4.25122 12.3711L5.75184 9.69141L7.15215 8.83883L10.0226 8.83533L4.25122 12.3711Z" fill="#017F36" />
-            <path d="M0.00170898 9.6766L4.26284 7.06629L2.83027 6.18732L1.4981 7.00402L0.00170898 9.6766Z" fill="#984995" />
-        </g>
-        <defs>
-            <clipPath id="clip0_sbp_method">
-                <rect width="10" height="12.3711" fill="white" />
-            </clipPath>
-        </defs>
-    </svg>
-);
-
 const METHODS: { label: string; value: DepositMethod; icon: React.ReactNode }[] = [
     { label: "Карты", value: "card", icon: <CardIcon /> },
-    { label: "СБП", value: "sbp", icon: <SBPMethodIcon /> },
     { label: "Crypto", value: "crypto", icon: <CryptoIcon /> },
     { label: "Skins", value: "skins", icon: <SkinsIcon /> },
 ];

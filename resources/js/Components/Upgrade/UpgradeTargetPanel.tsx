@@ -49,11 +49,21 @@ export default function UpgradeTargetPanel({
                 />
             }
         >
-            {targetsLoading
-                ? Array.from({ length: 16 }).map((_, i) => (
+            {targetsLoading ? (
+                Array.from({ length: 16 }).map((_, i) => (
                     <SkeletonSkinCard key={`skel-${priceSort}-${minPrice}-${search}-${i}`} index={i} />
                 ))
-                : targetItems.map((skin) => (
+            ) : targetItems.length === 0 ? (
+                <div className="col-span-full flex flex-col items-center justify-center min-h-[280px] gap-1.5 text-center px-6">
+                    <span className="text-white/55 font-gotham font-medium text-[15px] leading-[120%]">
+                        Подходящих скинов не найдено
+                    </span>
+                    <span className="text-white/30 font-sf-display text-[12px] leading-[140%] max-w-[260px]">
+                        Попробуйте сбросить фильтры или выбрать другой скин из инвентаря
+                    </span>
+                </div>
+            ) : (
+                targetItems.map((skin) => (
                     <SkinCard
                         key={skin.id}
                         {...skin}
@@ -69,7 +79,7 @@ export default function UpgradeTargetPanel({
                         }
                     />
                 ))
-            }
+            )}
         </SkinsPanel>
     );
 }

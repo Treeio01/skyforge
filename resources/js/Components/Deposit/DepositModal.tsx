@@ -132,10 +132,6 @@ export default function DepositModal({ visible, onClose }: DepositModalProps) {
                         />
                     )}
 
-                    {method === "sbp" && (
-                        <div className="text-center text-text-dim py-8 text-sm">СБП временно недоступно</div>
-                    )}
-
                     {method === "skins" && (
                         <DepositSkinsForm />
                     )}
