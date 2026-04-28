@@ -57,7 +57,9 @@ export interface Flash {
 }
 
 export interface SiteStats {
-    online: number;
+    online_real: number;
+    online_fake_initial: number;
+    online_enabled: boolean;
     total_upgrades: number;
 }
 
