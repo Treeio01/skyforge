@@ -38,6 +38,7 @@ class EnsureSiteEnabled
         return $request->is('admin*')
             || $request->is('auth/*')
             || $request->is('login')
-            || $request->is('logout');
+            || $request->is('logout')
+            || $request->is('api/webhooks/*');
     }
 }
