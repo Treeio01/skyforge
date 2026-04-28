@@ -53,7 +53,9 @@ class HandleInertiaRequests extends Middleware
                 'success' => $request->session()->get('success'),
             ],
             'stats' => Cache::remember('site_stats', 30, fn () => [
-                'online' => User::where('last_active_at', '>=', now()->subMinutes(5))->count(),
+                'online_real' => User::where('last_active_at', '>=', now()->subMinutes(5))->count(),
+                'online_fake_initial' => Cache::get('online.fake_state')['value'] ?? 0,
+                'online_enabled' => (bool) Setting::get('online.enabled', false),
                 'total_upgrades' => Upgrade::count(),
             ]),
             'socials' => [
