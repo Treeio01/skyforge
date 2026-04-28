@@ -22,10 +22,10 @@ export default function BottomSheet({ visible, onClose, title, headerRight, chil
             {visible && (
                 <motion.div
                     className="fixed inset-0 z-[500] flex flex-col justify-end 1024:hidden"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.15 }}
+                    initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}
+                    animate={{ opacity: 1, backdropFilter: 'blur(6px)' }}
+                    exit={{ opacity: 0, backdropFilter: 'blur(0px)' }}
+                    transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
                     onClick={onClose}
                 >
                     <div className="absolute inset-0 bg-black/60" />
@@ -34,10 +34,10 @@ export default function BottomSheet({ visible, onClose, title, headerRight, chil
                         onClick={(e) => e.stopPropagation()}
                         style={SHEET_BG}
                         className="relative flex flex-col rounded-t-[24px] w-full h-[calc(100dvh-48px)]"
-                        initial={{ y: '100%' }}
-                        animate={{ y: 0 }}
-                        exit={{ y: '100%' }}
-                        transition={{ type: 'spring', damping: 32, stiffness: 320 }}
+                        initial={{ y: '100%', opacity: 0.7 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        exit={{ y: '100%', opacity: 0.7 }}
+                        transition={{ type: 'spring', damping: 34, stiffness: 280, mass: 0.85 }}
                     >
                         {/* Ручка */}
                         <div className="flex justify-center pt-3 pb-1 shrink-0">
