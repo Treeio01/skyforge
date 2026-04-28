@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
+use App\Events\OnlineUpdated;
+use App\Models\Setting;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class OnlineDriftJob implements ShouldQueue
 {
@@ -21,7 +25,42 @@ class OnlineDriftJob implements ShouldQueue
 
     public function handle(): void
     {
-        // populated in next tasks
+        if (! Setting::get('online.enabled', false)) {
+            return;
+        }
+
+        $tickDefault = 8;
+        $lock = Cache::lock('online.loop', $tickDefault * 2);
+
+        if (! $lock->get()) {
+            return;
+        }
+
+        try {
+            $min = (int) Setting::get('online.min', 1500);
+            $max = (int) Setting::get('online.max', 1600);
+            $tick = (int) Setting::get('online.tick_seconds', 8);
+            $maxStep = (int) Setting::get('online.max_step', 3);
+
+            if ($min >= $max) {
+                Log::warning('online drift: min >= max, skipping', compact('min', 'max'));
+
+                return;
+            }
+
+            Cache::put('online.loop_heartbeat', now()->timestamp, $tick * 3);
+
+            $state = Cache::get('online.fake_state') ?? self::initState($min, $max);
+            $state = self::computeNext($state, $min, $max, $maxStep);
+
+            Cache::put('online.fake_state', $state, $tick * 5);
+
+            event(new OnlineUpdated($state['value']));
+        } finally {
+            $lock->release();
+        }
+
+        self::dispatch()->onQueue('online')->delay(now()->addSeconds($tick));
     }
 
     /**
