@@ -30,6 +30,13 @@ class User extends Authenticatable
         'avatar_url',
         'trade_url',
         'last_active_at',
+        'utm_source',
+        'utm_medium',
+        'utm_campaign',
+        'utm_content',
+        'utm_term',
+        'referrer',
+        'registration_ip',
     ];
 
     protected $hidden = [
