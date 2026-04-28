@@ -218,7 +218,7 @@ return [
         'production' => [
             'supervisor-default' => [
                 'connection' => 'redis',
-                'queue' => ['default', 'broadcasts'],
+                'queue' => ['default', 'broadcasts', 'online'],
                 'maxProcesses' => 6,
                 'balanceMaxShift' => 1,
                 'balanceCooldown' => 3,
@@ -240,7 +240,7 @@ return [
         'local' => [
             'supervisor-default' => [
                 'connection' => 'redis',
-                'queue' => ['default', 'broadcasts', 'payments', 'sync'],
+                'queue' => ['default', 'broadcasts', 'payments', 'sync', 'online'],
                 'maxProcesses' => 3,
             ],
         ],
