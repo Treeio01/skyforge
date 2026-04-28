@@ -15,8 +15,6 @@ class OnlineSettingsController extends Controller
 {
     public function update(Request $request): RedirectResponse
     {
-        abort_unless($request->user()?->is_admin, 403);
-
         $data = $request->validate([
             'online_enabled' => ['required', 'boolean'],
             'online_min' => ['required', 'integer', 'min:0'],
@@ -42,10 +40,8 @@ class OnlineSettingsController extends Controller
         return back()->with('success', 'Настройки применены, обновляются на всех клиентах');
     }
 
-    public function reset(Request $request): RedirectResponse
+    public function reset(): RedirectResponse
     {
-        abort_unless($request->user()?->is_admin, 403);
-
         Cache::forget('online.fake_state');
 
         return back()->with('success', 'Текущее значение сброшено');
