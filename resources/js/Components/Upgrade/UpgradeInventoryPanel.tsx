@@ -19,13 +19,18 @@ export default function UpgradeInventoryPanel({
     return (
         <SkinsPanel icon={<InventoryIcon />} title="Ваши скины">
             {inventoryItems.length === 0 ? (
-                <div className="col-span-full flex flex-col items-center justify-center min-h-[280px] gap-1.5 text-center px-6">
-                    <span className="text-white/55 font-gotham font-medium text-[15px] leading-[120%]">
-                        В инвентаре нет скинов
-                    </span>
-                    <span className="text-white/30 font-sf-display text-[12px] leading-[140%] max-w-[260px]">
-                        Пополните баланс и получите скин в Маркете или через апгрейд
-                    </span>
+                <div className="col-span-full flex flex-col items-center justify-center min-h-[280px] gap-4 text-center px-6">
+                    <div className="w-[145px]">
+                        <EmptySkinCard />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                        <span className="text-white/55 font-gotham font-medium text-[15px] leading-[120%]">
+                            В инвентаре нет скинов
+                        </span>
+                        <span className="text-white/30 font-sf-display text-[12px] leading-[140%] max-w-[260px]">
+                            Пополните баланс и получите скин в Маркете или через апгрейд
+                        </span>
+                    </div>
                 </div>
             ) : (
                 <>
