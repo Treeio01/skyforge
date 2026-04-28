@@ -26,7 +26,7 @@ class SettingsSeeder extends Seeder
             ['key' => 'maintenance_message', 'value' => '', 'type' => 'string', 'description' => 'Сообщение техработ'],
 
             // SEO
-            ['key' => 'seo_title', 'value' => 'SKYFORGE — Апгрейд скинов CS2', 'type' => 'string', 'description' => 'SEO заголовок (OG title)'],
+            ['key' => 'seo_title', 'value' => 'GROWSKINS — Апгрейд скинов CS2', 'type' => 'string', 'description' => 'SEO заголовок (OG title)'],
             ['key' => 'seo_description', 'value' => 'Улучшайте свои предметы CS2 в пару кликов с системой Provably Fair. Честная игра, моментальные выводы.', 'type' => 'string', 'description' => 'SEO описание (meta description)'],
             ['key' => 'seo_keywords', 'value' => 'CS2 скины, апгрейд скинов, CS2 upgrade, CSGO скины, Provably Fair, рулетка скинов', 'type' => 'string', 'description' => 'SEO ключевые слова'],
 

@@ -1,4 +1,4 @@
-# SKYFORGE
+# GROWSKINS
 
 CS2 skin upgrade platform. Laravel 13 + Inertia.js + React (TypeScript).
 

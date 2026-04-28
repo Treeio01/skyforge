@@ -41,7 +41,7 @@ export default function AppFooter() {
                     <Link href="/" className="inline-block">
                         <img
                             src="/assets/img/logo.png"
-                            alt="SkyForge"
+                            alt="GrowSkins"
                             className="h-8 w-auto object-contain object-left"
                         />
                     </Link>
@@ -101,7 +101,7 @@ export default function AppFooter() {
                                 Discord
                             </a>
                         )}
-                        <a href="mailto:support@skyforge.ru" className={linkCls}>
+                        <a href="mailto:support@growskins.ru" className={linkCls}>
                             Обратная связь
                         </a>
                     </div>
@@ -120,7 +120,7 @@ export default function AppFooter() {
 
             {/* Нижняя строка */}
             <div className="flex flex-col xs:flex-row items-center justify-between gap-3 py-5 border-t border-white/4">
-                <span className="text-white/20 font-sf-display text-[12px]">© 2026 SkyForge. Все права защищены.</span>
+                <span className="text-white/20 font-sf-display text-[12px]">© 2026 GrowSkins. Все права защищены.</span>
                 <span className="text-white/15 font-sf-display text-[11px] text-center">
                     Сайт не связан с Valve Corporation. CS2 — товарный знак Valve.
                 </span>

@@ -1,4 +1,4 @@
-# SKYFORGE — Project Rules
+# GROWSKINS — Project Rules
 
 ## Architecture
 
