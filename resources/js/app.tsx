@@ -8,7 +8,7 @@ import ErrorBoundary from '@/Components/ErrorBoundary';
 import { ToastProvider } from '@/Components/UI/Toast';
 import PageTransition from '@/Components/UI/PageTransition';
 
-const appName = import.meta.env.VITE_APP_NAME || 'GROWSKINS';
+const appName = (typeof document !== 'undefined' && document.title) || import.meta.env.VITE_APP_NAME || 'GROWSKINS';
 
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
