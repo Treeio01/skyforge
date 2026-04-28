@@ -52,7 +52,7 @@ final class SkyforgeLayout extends AppLayout
             ]),
 
             MenuItem::make(SettingResource::class, 'Настройки'),
-            MenuItem::make(UtmMarkResource::class, 'UtmMarks'),
+            MenuItem::make(UtmMarkResource::class, 'UTM-метки'),
         ];
     }
 
