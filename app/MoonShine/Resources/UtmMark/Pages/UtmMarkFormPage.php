@@ -24,6 +24,14 @@ use Throwable;
  */
 class UtmMarkFormPage extends FormPage
 {
+    public function getTitle(): string
+    {
+        $resource = $this->getResource();
+        $key = $resource?->getCastedData()?->getKey();
+
+        return $key ? 'Редактирование UTM-метки' : 'Новая UTM-метка';
+    }
+
     /**
      * @return list<ComponentContract|FieldContract>
      */

@@ -11,7 +11,6 @@ use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\QueryTags\QueryTag;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Components\Metrics\Wrapped\Metric;
-use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\UI\Fields\Date;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Number;
@@ -26,6 +25,11 @@ class UtmMarkIndexPage extends IndexPage
 {
     protected bool $isLazy = true;
 
+    public function getTitle(): string
+    {
+        return 'UTM-метки';
+    }
+
     /**
      * @return list<FieldContract>
      */
@@ -37,23 +41,14 @@ class UtmMarkIndexPage extends IndexPage
             Text::make('Название', 'name'),
             Text::make('UTM Source', 'utm_source'),
             Text::make('UTM Campaign', 'utm_campaign'),
-            Number::make('Юзеры', 'users_count')->sortable(),
-            Number::make('Депозиты', 'deposits_count'),
-            Number::make('Апгрейды', 'upgrades_count'),
-            Number::make('Выводы', 'withdrawals_count'),
+            Number::make('Юзеры', 'users_count', formatted: fn ($item) => (int) ($item->users_count ?? 0))->sortable(),
+            Number::make('Депозиты', 'deposits_count', formatted: fn ($item) => (int) ($item->deposits_count ?? 0)),
+            Number::make('Апгрейды', 'upgrades_count', formatted: fn ($item) => (int) ($item->upgrades_count ?? 0)),
+            Number::make('Выводы', 'withdrawals_count', formatted: fn ($item) => (int) ($item->withdrawals_count ?? 0)),
             Switcher::make('Активна', 'is_active'),
-            Switcher::make('Создана админом', 'is_admin_created'),
+            Switcher::make('Ручная', 'is_admin_created'),
             Date::make('Создана', 'created_at')->format('d.m.Y H:i')->sortable(),
         ];
-    }
-
-    protected function modifyListComponent(ComponentContract $component): ComponentContract
-    {
-        if ($component instanceof TableBuilder) {
-            $component->items($component->getItems()->loadCount(['users', 'deposits', 'upgrades', 'withdrawals']));
-        }
-
-        return $component;
     }
 
     /**

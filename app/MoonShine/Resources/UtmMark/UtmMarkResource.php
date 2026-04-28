@@ -8,6 +8,7 @@ use App\Models\UtmMark;
 use App\MoonShine\Resources\UtmMark\Pages\UtmMarkDetailPage;
 use App\MoonShine\Resources\UtmMark\Pages\UtmMarkFormPage;
 use App\MoonShine\Resources\UtmMark\Pages\UtmMarkIndexPage;
+use Illuminate\Database\Eloquent\Builder;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Laravel\Resources\ModelResource;
 
@@ -30,5 +31,13 @@ class UtmMarkResource extends ModelResource
             UtmMarkFormPage::class,
             UtmMarkDetailPage::class,
         ];
+    }
+
+    /**
+     * Eager-load aggregate counts so the index page shows them without N+1.
+     */
+    protected function modifyItemQueryBuilder(Builder $builder): Builder
+    {
+        return $builder->withCount(['users', 'deposits', 'upgrades', 'withdrawals']);
     }
 }
