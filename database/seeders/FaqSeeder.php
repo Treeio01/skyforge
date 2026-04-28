@@ -51,6 +51,7 @@ class FaqSeeder extends Seeder
                 ['question' => $item['question']],
                 [
                     'faq_category_id' => $cat?->id,
+                    'category' => $item['category'],
                     'answer' => $item['answer'],
                     'sort_order' => $i,
                     'is_active' => true,

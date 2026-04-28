@@ -34,7 +34,7 @@ export default function AppFooter() {
         : [];
 
     return (
-        <footer className="bg-[#151B27] border-t border-white/6 px-4 1024:px-8">
+        <footer className="bg-[#151B27] border-t border-white/6 px-4 1024:px-8 pt-10">
             <div className="grid grid-cols-2 1024:grid-cols-4 gap-8 pt-10 pb-8">
                 {/* Бренд */}
                 <div className="col-span-2 1024:col-span-1 flex flex-col gap-3">

@@ -32,7 +32,7 @@ export default function MarketIndex() {
                     />
                 }
             >
-                <div className="flex flex-col flex-1 min-h-0 max-h-[calc(100svh-220px)] p-3 1024:p-4 rounded-[14px] bg-[#0E131C]">
+                <div className="flex flex-col flex-1 min-h-0 max-h-[calc(100svh-220px)] p-3 1024:p-4 rounded-[14px] bg-[#11161F]">
                     <SkinGrid
                         items={market.items}
                         selected={market.selected}

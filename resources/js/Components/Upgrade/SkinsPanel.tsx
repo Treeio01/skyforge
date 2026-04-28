@@ -43,7 +43,7 @@ export default function SkinsPanel({
             >
                 {children}
             </div>
-            <div className="pointer-events-none absolute left-0 right-0 bottom-0 h-[140px] z-30 bg-linear-to-t from-[#151B27] from-30% via-[#151B27]/60 via-65% to-transparent" />
+            <div className="pointer-events-none absolute left-0 right-0 bottom-0 h-[140px] z-30 bg-linear-to-t from-[#151B27] to-transparent" />
         </div>
     );
 }

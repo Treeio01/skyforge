@@ -59,7 +59,7 @@ export default function Show() {
         <AppLayout>
             <PageShell title="Профиль" subtitle={profile.username}>
                 <div className="flex flex-col gap-4 1024:gap-6 w-full">
-                    <div className="flex flex-col 1024:flex-row gap-4 1024:gap-6 items-stretch w-full p-4 1024:p-6 rounded-[14px] bg-[#0E131C]">
+                    <div className="flex flex-col 1024:flex-row gap-4 1024:gap-6 items-stretch w-full p-4 1024:p-6 rounded-[14px] bg-[#11161F]">
                         <ProfileSidebar profile={profile} />
                         <ProfileStatCards recentUpgrades={recentUpgrades} />
                     </div>

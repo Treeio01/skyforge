@@ -20,7 +20,7 @@ export default function PageShell({
 }: PageShellProps) {
     return (
         <div className="pt-[6px] px-[6px] pb-[6px] flex flex-col w-full">
-            <div className="flex flex-col w-full bg-[#070A10] rounded-[24px] overflow-hidden min-h-[calc(100svh-72px)]">
+            <div className="flex flex-col w-full bg-[#0E131C] rounded-[24px] overflow-hidden min-h-[calc(100svh-72px)]">
                 <div className="flex flex-col 1024:flex-row 1024:items-end 1024:justify-between gap-3 px-4 1024:px-8 pt-5 1024:pt-8">
                     <div className="flex flex-col gap-1 min-w-0">
                         <div className="flex items-center gap-1.5">

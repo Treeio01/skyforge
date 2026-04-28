@@ -20,7 +20,6 @@ createInertiaApp({
     setup({ el, App, props }) {
         const root = createRoot(el);
 
-        // Hide initial loader
         const loader = document.getElementById('page-loader');
         if (loader) loader.classList.add('hidden');
 
@@ -34,10 +33,9 @@ createInertiaApp({
             </ErrorBoundary>,
         );
     },
-    progress: false, // Отключаем дефолтный прогресс-бар — у нас свой
+    progress: false, 
 });
 
-// Навигационный прелоадер
 let navigating = false;
 
 router.on('start', () => {
@@ -46,7 +44,7 @@ router.on('start', () => {
         if (navigating) {
             document.body.classList.add('navigating');
         }
-    }, 150); // Показывать только если загрузка > 150ms
+    }, 150); 
 });
 
 router.on('finish', () => {
