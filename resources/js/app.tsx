@@ -11,7 +11,7 @@ import PageTransition from '@/Components/UI/PageTransition';
 const appName = import.meta.env.VITE_APP_NAME || 'GROWSKINS';
 
 createInertiaApp({
-    title: (title) => `${title} - ${appName}`,
+    title: (title) => (title ? `${title} - ${appName}` : appName),
     resolve: (name) => {
         const pages = import.meta.glob('./Pages/**/*.tsx');
 
