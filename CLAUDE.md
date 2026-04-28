@@ -237,3 +237,14 @@ This project has domain-specific skills available. You MUST activate the relevan
 - IMPORTANT: Activate `inertia-react-development` when working with Inertia React client-side patterns.
 
 </laravel-boost-guidelines>
+
+## Online counter
+
+`stats.online` in the header is rendered as `online_real + online_fake`.
+
+- `online_real` — `User::where('last_active_at', '>=', now()->subMinutes(5))->count()`.
+- `online_fake` — random walk in `[Setting::online.min, Setting::online.max]`, drifted by `OnlineDriftJob` every `Setting::online.tick_seconds` (queue: `online`), broadcast via `OnlineUpdated` event on Reverb channel `stats`, event name `online.updated`.
+- Admin manages all params via MoonShine page «Онлайн на сайте» (`OnlineSettingsPage`). Endpoints: `POST /admin/online-settings` (save), `POST /admin/online-settings/reset` (clear cached drift state).
+- Safety net: `online:boot` artisan command runs hourly via scheduler; respawns the loop if Horizon was down.
+- State lives in Redis cache key `online.fake_state` (`{value, direction}`). Heartbeat at `online.loop_heartbeat`. If lost, re-initialized from random within range.
+
