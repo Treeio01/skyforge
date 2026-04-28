@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Admin\OnlineSettingsController;
+use App\Http\Controllers\Admin\SiteSettingsController;
 use App\Http\Controllers\DepositController;
 use App\Http\Controllers\LiveFeedController;
 use App\Http\Controllers\ProvablyFairController;
@@ -63,4 +64,8 @@ Route::post('/api/webhooks/payment', [DepositController::class, 'webhook'])->nam
 Route::middleware(['auth'])->prefix('admin')->name('moonshine.online.')->group(function () {
     Route::post('online-settings', [OnlineSettingsController::class, 'update'])->name('save');
     Route::post('online-settings/reset', [OnlineSettingsController::class, 'reset'])->name('reset');
+});
+
+Route::middleware(['auth'])->prefix('admin')->name('moonshine.site-settings.')->group(function () {
+    Route::post('site-settings', [SiteSettingsController::class, 'update'])->name('save');
 });

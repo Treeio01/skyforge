@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Layouts;
 
+use App\MoonShine\Pages\OnlineSettingsPage;
+use App\MoonShine\Pages\SiteSettingsPage;
 use App\MoonShine\Resources\Deposit\DepositResource;
 use App\MoonShine\Resources\FaqCategoryMoon\FaqCategoryMoonResource;
 use App\MoonShine\Resources\FaqItemMoon\FaqItemMoonResource;
@@ -51,7 +53,11 @@ final class SkyforgeLayout extends AppLayout
                 MenuItem::make(PromoCodeResource::class, 'Промокоды'),
             ]),
 
-            MenuItem::make(SettingResource::class, 'Настройки'),
+            MenuGroup::make('Настройки', [
+                MenuItem::make('Настройки сайта', SiteSettingsPage::class),
+                MenuItem::make('Онлайн', OnlineSettingsPage::class),
+                MenuItem::make(SettingResource::class, 'Все ключи'),
+            ]),
             MenuItem::make(UtmMarkResource::class, 'UTM-метки'),
         ];
     }
