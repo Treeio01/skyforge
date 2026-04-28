@@ -38,7 +38,7 @@ class OnlineSettingsPage extends Page
         ];
 
         return [
-            FormBuilder::make('/admin/online-settings')
+            FormBuilder::make(route('moonshine.online.save'))
                 ->fields([
                     Box::make('Накрутка', [
                         Switcher::make('Включить накрутку', 'online_enabled')
@@ -55,6 +55,10 @@ class OnlineSettingsPage extends Page
                 ])
                 ->fill($values)
                 ->submit('Сохранить')
+                ->async(),
+
+            FormBuilder::make(route('moonshine.online.reset'))
+                ->submit('Сбросить и пересчитать')
                 ->async(),
         ];
     }
