@@ -16,3 +16,7 @@ Schedule::command('skyforge:sync-rates')
 
 Schedule::command('horizon:snapshot')
     ->everyFiveMinutes();
+
+Schedule::command('online:boot')
+    ->hourly()
+    ->withoutOverlapping();
