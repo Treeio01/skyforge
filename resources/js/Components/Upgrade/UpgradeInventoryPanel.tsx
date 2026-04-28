@@ -16,6 +16,10 @@ export default function UpgradeInventoryPanel({
     panelLocked,
     onSelectInventory,
 }: UpgradeInventoryPanelProps) {
+    // Заполняем панель плейсхолдерами, чтобы при малом инвентаре сетка
+    // выглядела ровно, а не «комом» в углу. 15 — с запасом на 4×4 грид.
+    const placeholderCount = Math.max(0, 15 - inventoryItems.length);
+
     return (
         <SkinsPanel icon={<InventoryIcon />} title="Ваши скины">
             {inventoryItems.map((skin) => (
@@ -34,7 +38,9 @@ export default function UpgradeInventoryPanel({
                     }
                 />
             ))}
-            <EmptySkinCard />
+            {Array.from({ length: placeholderCount }).map((_, i) => (
+                <EmptySkinCard key={`placeholder-${i}`} />
+            ))}
         </SkinsPanel>
     );
 }
