@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\MoonShine\Pages\OnlineSettingsPage;
 use App\MoonShine\Resources\Deposit\DepositResource;
 use App\MoonShine\Resources\FaqCategoryMoon\FaqCategoryMoonResource;
 use App\MoonShine\Resources\FaqItemMoon\FaqItemMoonResource;
@@ -39,6 +40,8 @@ class MoonShineServiceProvider extends ServiceProvider
                 FaqItemMoonResource::class,
                 FaqCategoryMoonResource::class,
             ])
-            ->pages([]);
+            ->pages([
+                OnlineSettingsPage::class,
+            ]);
     }
 }
