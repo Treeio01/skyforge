@@ -46,14 +46,26 @@ class Setting extends Model
         return $value ?? $default;
     }
 
-    public static function set(string $key, mixed $value): void
+    public static function set(string $key, mixed $value, ?string $type = null): void
     {
-        static::updateOrCreate(
-            ['key' => $key],
-            ['value' => (string) $value, 'updated_at' => now()],
-        );
+        $attrs = ['value' => static::stringify($value), 'updated_at' => now()];
+
+        if ($type !== null) {
+            $attrs['type'] = $type;
+        }
+
+        static::updateOrCreate(['key' => $key], $attrs);
 
         Cache::forget("settings.{$key}");
+    }
+
+    private static function stringify(mixed $value): string
+    {
+        return match (true) {
+            is_bool($value) => $value ? '1' : '0',
+            is_array($value) => json_encode($value),
+            default => (string) $value,
+        };
     }
 
     private static function castValue(string $value, string $type): mixed
