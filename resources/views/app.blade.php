@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title inertia>{{ config('app.name', 'GROWSKINS') }}</title>
+        <title inertia>{{ \App\Models\Setting::get('seo_title') ?: config('app.name', 'GROWSKINS') }}</title>
 
         <!-- SEO -->
         <meta name="description" content="{{ \App\Models\Setting::get('seo_description', 'GROWSKINS — апгрейд скинов CS2') }}">
