@@ -60,4 +60,17 @@ final class SkyforgeLayout extends AppLayout
     {
         parent::colors($colorManager);
     }
+
+    protected function getFooterCopyright(): string
+    {
+        return \sprintf('&copy; %d GROWSKINS Admin', now()->year);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    protected function getFooterMenu(): array
+    {
+        return [];
+    }
 }
