@@ -13,12 +13,16 @@ class FaqSortController extends Controller
 {
     public function __invoke(Request $request): JsonResponse
     {
-        $data = $request->validate([
-            'data' => ['required', 'array'],
-            'data.*' => ['integer'],
+        $request->validate([
+            'data' => ['required', 'string'],
         ]);
 
-        foreach ($data['data'] as $index => $id) {
+        $ids = array_filter(
+            array_map('intval', explode(',', $request->string('data')->toString())),
+            fn (int $id) => $id > 0,
+        );
+
+        foreach (array_values($ids) as $index => $id) {
             FaqItem::whereKey($id)->update(['sort_order' => $index]);
         }
 
