@@ -3,8 +3,13 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Admin\DepositActionsController;
+use App\Http\Controllers\Admin\ExportController;
+use App\Http\Controllers\Admin\FaqBulkController;
 use App\Http\Controllers\Admin\OnlineSettingsController;
+use App\Http\Controllers\Admin\PromoCodeBulkController;
 use App\Http\Controllers\Admin\SiteSettingsController;
+use App\Http\Controllers\Admin\SkinBulkController;
+use App\Http\Controllers\Admin\UserActionsController;
 use App\Http\Controllers\Admin\WithdrawalActionsController;
 use App\Http\Controllers\DepositController;
 use App\Http\Controllers\LiveFeedController;
@@ -80,4 +85,30 @@ Route::middleware([Authenticate::class])->prefix('admin')->name('moonshine.withd
 
 Route::middleware([Authenticate::class])->prefix('admin')->name('moonshine.deposits.')->group(function () {
     Route::post('deposits/{deposit}/complete', [DepositActionsController::class, 'markCompleted'])->name('complete');
+});
+
+Route::middleware([Authenticate::class])->prefix('admin')->name('moonshine.users.')->group(function () {
+    Route::post('users/{user}/ban', [UserActionsController::class, 'ban'])->name('ban');
+    Route::post('users/{user}/unban', [UserActionsController::class, 'unban'])->name('unban');
+});
+
+Route::middleware([Authenticate::class])->prefix('admin')->name('moonshine.skins.')->group(function () {
+    Route::post('skins/bulk-activate', [SkinBulkController::class, 'activate'])->name('bulk-activate');
+    Route::post('skins/bulk-deactivate', [SkinBulkController::class, 'deactivate'])->name('bulk-deactivate');
+});
+
+Route::middleware([Authenticate::class])->prefix('admin')->name('moonshine.promo-codes.')->group(function () {
+    Route::post('promo-codes/bulk-activate', [PromoCodeBulkController::class, 'activate'])->name('bulk-activate');
+    Route::post('promo-codes/bulk-deactivate', [PromoCodeBulkController::class, 'deactivate'])->name('bulk-deactivate');
+});
+
+Route::middleware([Authenticate::class])->prefix('admin')->name('moonshine.faq.')->group(function () {
+    Route::post('faq/bulk-activate', [FaqBulkController::class, 'activate'])->name('bulk-activate');
+    Route::post('faq/bulk-deactivate', [FaqBulkController::class, 'deactivate'])->name('bulk-deactivate');
+});
+
+Route::middleware([Authenticate::class])->prefix('admin')->name('moonshine.export.')->group(function () {
+    Route::get('export/transactions', [ExportController::class, 'transactions'])->name('transactions');
+    Route::get('export/deposits', [ExportController::class, 'deposits'])->name('deposits');
+    Route::get('export/withdrawals', [ExportController::class, 'withdrawals'])->name('withdrawals');
 });

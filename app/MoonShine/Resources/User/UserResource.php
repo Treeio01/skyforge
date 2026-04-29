@@ -8,6 +8,7 @@ use App\Models\User;
 use App\MoonShine\Resources\User\Pages\UserDetailPage;
 use App\MoonShine\Resources\User\Pages\UserFormPage;
 use App\MoonShine\Resources\User\Pages\UserIndexPage;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Laravel\Resources\ModelResource;
 
@@ -32,5 +33,10 @@ class UserResource extends ModelResource
             UserFormPage::class,
             UserDetailPage::class,
         ];
+    }
+
+    protected function modifyItemQueryBuilder(Builder $builder): Builder
+    {
+        return $builder->with('utmMark');
     }
 }

@@ -90,6 +90,19 @@ class WithdrawalIndexPage extends IndexPage
     }
 
     /**
+     * @return ListOf<ActionButtonContract>
+     */
+    protected function topRightButtons(): ListOf
+    {
+        return parent::topRightButtons()
+            ->prepend(
+                ActionButton::make('Экспорт CSV', fn () => route('moonshine.export.withdrawals'))
+                    ->customAttributes(['target' => '_blank'])
+                    ->icon('arrow-down-tray'),
+            );
+    }
+
+    /**
      * @return list<FieldContract>
      */
     protected function filters(): iterable
