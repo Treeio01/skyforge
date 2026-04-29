@@ -10,6 +10,7 @@ use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\QueryTags\QueryTag;
 use MoonShine\Support\ListOf;
+use MoonShine\UI\Components\ActionButton;
 use MoonShine\UI\Components\Metrics\Wrapped\Metric;
 use MoonShine\UI\Fields\Date;
 use MoonShine\UI\Fields\ID;
@@ -45,6 +46,12 @@ class UtmMarkIndexPage extends IndexPage
             Number::make('Депозиты', 'deposits_count', formatted: fn ($item) => (int) ($item->deposits_count ?? 0)),
             Number::make('Апгрейды', 'upgrades_count', formatted: fn ($item) => (int) ($item->upgrades_count ?? 0)),
             Number::make('Выводы', 'withdrawals_count', formatted: fn ($item) => (int) ($item->withdrawals_count ?? 0)),
+            Text::make('Конверсия', formatted: function ($item) {
+                $users = (int) ($item->users_count ?? 0);
+                $deposits = (int) ($item->deposits_count ?? 0);
+
+                return $users > 0 ? round($deposits / $users * 100, 1).'%' : '—';
+            }),
             Switcher::make('Активна', 'is_active'),
             Switcher::make('Ручная', 'is_admin_created'),
             Date::make('Создана', 'created_at')->format('d.m.Y H:i')->sortable(),
@@ -56,7 +63,12 @@ class UtmMarkIndexPage extends IndexPage
      */
     protected function buttons(): ListOf
     {
-        return parent::buttons();
+        return parent::buttons()
+            ->prepend(
+                ActionButton::make('🔗 Ссылка', fn ($item) => \rtrim(\config('app.url'), '/').'/?ref='.$item->slug)
+                    ->customAttributes(['target' => '_blank', 'title' => 'Открыть реферальную ссылку'])
+                    ->icon('link'),
+            );
     }
 
     /**
@@ -64,7 +76,10 @@ class UtmMarkIndexPage extends IndexPage
      */
     protected function filters(): iterable
     {
-        return [];
+        return [
+            Switcher::make('Активна', 'is_active'),
+            Switcher::make('Ручная', 'is_admin_created'),
+        ];
     }
 
     /**
@@ -72,7 +87,12 @@ class UtmMarkIndexPage extends IndexPage
      */
     protected function queryTags(): array
     {
-        return [];
+        return [
+            QueryTag::make('Все', fn ($q) => $q),
+            QueryTag::make('Активные', fn ($q) => $q->where('is_active', true)),
+            QueryTag::make('Ручные', fn ($q) => $q->where('is_admin_created', true)),
+            QueryTag::make('С конверсией', fn ($q) => $q->has('deposits')),
+        ];
     }
 
     /**

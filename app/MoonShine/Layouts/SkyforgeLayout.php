@@ -6,15 +6,19 @@ namespace App\MoonShine\Layouts;
 
 use App\MoonShine\Pages\OnlineSettingsPage;
 use App\MoonShine\Pages\SiteSettingsPage;
+use App\MoonShine\Resources\ActivityLog\ActivityLogResource;
 use App\MoonShine\Resources\Deposit\DepositResource;
 use App\MoonShine\Resources\FaqCategoryMoon\FaqCategoryMoonResource;
 use App\MoonShine\Resources\FaqItemMoon\FaqItemMoonResource;
 use App\MoonShine\Resources\PromoCode\PromoCodeResource;
+use App\MoonShine\Resources\PromoCodeUsage\PromoCodeUsageResource;
 use App\MoonShine\Resources\Setting\SettingResource;
 use App\MoonShine\Resources\Skin\SkinResource;
+use App\MoonShine\Resources\SkinPrice\SkinPriceResource;
 use App\MoonShine\Resources\Transaction\TransactionResource;
 use App\MoonShine\Resources\Upgrade\UpgradeResource;
 use App\MoonShine\Resources\User\UserResource;
+use App\MoonShine\Resources\UserSkin\UserSkinResource;
 use App\MoonShine\Resources\UtmMark\UtmMarkResource;
 use App\MoonShine\Resources\Withdrawal\WithdrawalResource;
 use App\MoonShine\SkyforgePalette;
@@ -34,10 +38,12 @@ final class SkyforgeLayout extends AppLayout
         return [
             MenuGroup::make('Пользователи', [
                 MenuItem::make(UserResource::class, 'Пользователи'),
+                MenuItem::make(UserSkinResource::class, 'Инвентарь'),
             ]),
 
             MenuGroup::make('Игра', [
                 MenuItem::make(SkinResource::class, 'Скины'),
+                MenuItem::make(SkinPriceResource::class, 'Цены скинов'),
                 MenuItem::make(UpgradeResource::class, 'Апгрейды'),
             ]),
 
@@ -51,6 +57,7 @@ final class SkyforgeLayout extends AppLayout
                 MenuItem::make(FaqCategoryMoonResource::class, 'FAQ Категории'),
                 MenuItem::make(FaqItemMoonResource::class, 'FAQ Вопросы'),
                 MenuItem::make(PromoCodeResource::class, 'Промокоды'),
+                MenuItem::make(PromoCodeUsageResource::class, 'Использования'),
             ]),
 
             MenuGroup::make('Настройки', [
@@ -59,6 +66,7 @@ final class SkyforgeLayout extends AppLayout
                 MenuItem::make(SettingResource::class, 'Все ключи'),
             ]),
             MenuItem::make(UtmMarkResource::class, 'UTM-метки'),
+            MenuItem::make(ActivityLogResource::class, 'Лог активности'),
         ];
     }
 

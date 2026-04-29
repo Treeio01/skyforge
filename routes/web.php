@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\Admin\DepositActionsController;
 use App\Http\Controllers\Admin\ExportController;
 use App\Http\Controllers\Admin\FaqBulkController;
+use App\Http\Controllers\Admin\FaqSortController;
 use App\Http\Controllers\Admin\OnlineSettingsController;
 use App\Http\Controllers\Admin\PromoCodeBulkController;
 use App\Http\Controllers\Admin\SiteSettingsController;
@@ -105,6 +106,7 @@ Route::middleware([Authenticate::class])->prefix('admin')->name('moonshine.promo
 Route::middleware([Authenticate::class])->prefix('admin')->name('moonshine.faq.')->group(function () {
     Route::post('faq/bulk-activate', [FaqBulkController::class, 'activate'])->name('bulk-activate');
     Route::post('faq/bulk-deactivate', [FaqBulkController::class, 'deactivate'])->name('bulk-deactivate');
+    Route::post('faq/sort', FaqSortController::class)->name('sort');
 });
 
 Route::middleware([Authenticate::class])->prefix('admin')->name('moonshine.export.')->group(function () {

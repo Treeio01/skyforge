@@ -6,15 +6,19 @@ namespace App\Providers;
 
 use App\MoonShine\Pages\OnlineSettingsPage;
 use App\MoonShine\Pages\SiteSettingsPage;
+use App\MoonShine\Resources\ActivityLog\ActivityLogResource;
 use App\MoonShine\Resources\Deposit\DepositResource;
 use App\MoonShine\Resources\FaqCategoryMoon\FaqCategoryMoonResource;
 use App\MoonShine\Resources\FaqItemMoon\FaqItemMoonResource;
 use App\MoonShine\Resources\PromoCode\PromoCodeResource;
+use App\MoonShine\Resources\PromoCodeUsage\PromoCodeUsageResource;
 use App\MoonShine\Resources\Setting\SettingResource;
 use App\MoonShine\Resources\Skin\SkinResource;
+use App\MoonShine\Resources\SkinPrice\SkinPriceResource;
 use App\MoonShine\Resources\Transaction\TransactionResource;
 use App\MoonShine\Resources\Upgrade\UpgradeResource;
 use App\MoonShine\Resources\User\UserResource;
+use App\MoonShine\Resources\UserSkin\UserSkinResource;
 use App\MoonShine\Resources\UtmMark\UtmMarkResource;
 use App\MoonShine\Resources\Withdrawal\WithdrawalResource;
 use Illuminate\Support\ServiceProvider;
@@ -42,6 +46,10 @@ class MoonShineServiceProvider extends ServiceProvider
                 FaqItemMoonResource::class,
                 FaqCategoryMoonResource::class,
                 UtmMarkResource::class,
+                UserSkinResource::class,
+                PromoCodeUsageResource::class,
+                SkinPriceResource::class,
+                ActivityLogResource::class,
             ])
             ->pages([
                 SiteSettingsPage::class,

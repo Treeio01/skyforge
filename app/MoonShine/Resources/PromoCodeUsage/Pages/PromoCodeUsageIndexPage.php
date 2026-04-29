@@ -2,27 +2,26 @@
 
 declare(strict_types=1);
 
-namespace App\MoonShine\Resources\FaqItemMoon\Pages;
+namespace App\MoonShine\Resources\PromoCodeUsage\Pages;
 
-use App\MoonShine\Resources\FaqItemMoon\FaqItemMoonResource;
+use App\MoonShine\Resources\PromoCodeUsage\PromoCodeUsageResource;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\QueryTags\QueryTag;
 use MoonShine\Support\ListOf;
-use MoonShine\UI\Components\ActionButton;
 use MoonShine\UI\Components\Metrics\Wrapped\Metric;
 use MoonShine\UI\Components\Table\TableBuilder;
+use MoonShine\UI\Fields\Date;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Number;
-use MoonShine\UI\Fields\Switcher;
 use MoonShine\UI\Fields\Text;
 use Throwable;
 
 /**
- * @extends IndexPage<FaqItemMoonResource>
+ * @extends IndexPage<PromoCodeUsageResource>
  */
-class FaqItemMoonIndexPage extends IndexPage
+class PromoCodeUsageIndexPage extends IndexPage
 {
     protected bool $isLazy = true;
 
@@ -33,10 +32,11 @@ class FaqItemMoonIndexPage extends IndexPage
     {
         return [
             ID::make(),
-            Text::make('Категория', formatted: fn ($item) => $item->faqCategory?->name ?? $item->category ?? '—'),
-            Text::make('Вопрос', 'question'),
-            Number::make('Порядок', 'sort_order'),
-            Switcher::make('Активен', 'is_active'),
+            Text::make('Пользователь', formatted: fn ($item) => $item->user?->username ?? 'ID:'.$item->user_id),
+            Text::make('Промокод', formatted: fn ($item) => $item->promoCode?->code ?? 'ID:'.$item->promo_code_id),
+            Number::make('Начислено', 'amount')
+                ->modifyRawValue(fn (mixed $value) => number_format(((int) $value) / 100, 2, '.', ' ').' ₽'),
+            Date::make('Использован', 'created_at'),
         ];
     }
 
@@ -45,19 +45,7 @@ class FaqItemMoonIndexPage extends IndexPage
      */
     protected function buttons(): ListOf
     {
-        return parent::buttons()
-            ->add(
-                ActionButton::make('Активировать', fn () => route('moonshine.faq.bulk-activate'))
-                    ->method('post')
-                    ->bulk()
-                    ->withConfirm(title: 'Активировать выбранные вопросы?', button: 'Активировать')
-                    ->primary(),
-                ActionButton::make('Деактивировать', fn () => route('moonshine.faq.bulk-deactivate'))
-                    ->method('post')
-                    ->bulk()
-                    ->withConfirm(title: 'Деактивировать выбранные вопросы?', button: 'Деактивировать')
-                    ->error(),
-            );
+        return parent::buttons();
     }
 
     /**
@@ -73,7 +61,11 @@ class FaqItemMoonIndexPage extends IndexPage
      */
     protected function queryTags(): array
     {
-        return [];
+        return [
+            QueryTag::make('Все', fn ($q) => $q),
+            QueryTag::make('Сегодня', fn ($q) => $q->where('created_at', '>=', now()->startOfDay())),
+            QueryTag::make('За 7д', fn ($q) => $q->where('created_at', '>=', now()->subWeek())),
+        ];
     }
 
     /**
@@ -90,9 +82,7 @@ class FaqItemMoonIndexPage extends IndexPage
      */
     protected function modifyListComponent(ComponentContract $component): ComponentContract
     {
-        return $component instanceof TableBuilder
-            ? $component->reorderable(route('moonshine.faq.sort'), 'sort_order')
-            : $component;
+        return $component;
     }
 
     /**

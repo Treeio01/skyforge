@@ -22,6 +22,10 @@ class FaqItemMoonResource extends ModelResource
 
     protected array $with = ['faqCategory'];
 
+    protected string $sortColumn = 'sort_order';
+
+    protected string $sortDirection = 'ASC';
+
     /**
      * @return list<class-string<PageContract>>
      */
