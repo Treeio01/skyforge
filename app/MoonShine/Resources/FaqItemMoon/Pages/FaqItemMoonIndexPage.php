@@ -91,7 +91,7 @@ class FaqItemMoonIndexPage extends IndexPage
     protected function modifyListComponent(ComponentContract $component): ComponentContract
     {
         return $component instanceof TableBuilder
-            ? $component->reorderable(route('moonshine.faq.sort'), 'sort_order')
+            ? $component->reorderable(route('moonshine.faq.sort'), 'id')
             : $component;
     }
 
