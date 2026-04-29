@@ -10,6 +10,7 @@ use App\MoonShine\Resources\FaqItemMoon\Pages\FaqItemMoonFormPage;
 use App\MoonShine\Resources\FaqItemMoon\Pages\FaqItemMoonIndexPage;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Laravel\Resources\ModelResource;
+use MoonShine\Support\Enums\SortDirection;
 
 /**
  * @extends ModelResource<FaqItem, FaqItemMoonIndexPage, FaqItemMoonFormPage, FaqItemMoonDetailPage>
@@ -24,7 +25,7 @@ class FaqItemMoonResource extends ModelResource
 
     protected string $sortColumn = 'sort_order';
 
-    protected string $sortDirection = 'ASC';
+    protected SortDirection $sortDirection = SortDirection::ASC;
 
     /**
      * @return list<class-string<PageContract>>

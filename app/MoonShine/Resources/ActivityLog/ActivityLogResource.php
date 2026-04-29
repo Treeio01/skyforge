@@ -10,6 +10,7 @@ use App\MoonShine\Resources\ActivityLog\Pages\ActivityLogIndexPage;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Support\Enums\Action;
+use MoonShine\Support\Enums\SortDirection;
 use MoonShine\Support\ListOf;
 use Spatie\Activitylog\Models\Activity;
 
@@ -24,7 +25,7 @@ class ActivityLogResource extends ModelResource
 
     protected string $sortColumn = 'created_at';
 
-    protected string $sortDirection = 'DESC';
+    protected SortDirection $sortDirection = SortDirection::DESC;
 
     protected array $search = ['description', 'log_name', 'subject_type', 'causer_type'];
 
