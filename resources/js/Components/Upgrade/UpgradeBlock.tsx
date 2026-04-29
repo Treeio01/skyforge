@@ -169,7 +169,7 @@ export default function UpgradeBlock({ inventory }: UpgradeBlockProps) {
                     />
 
                     {/* Десктопные панели (>= 1024px) */}
-                    <div className="hidden z-50 1024:flex w-full 1024:flex-row 1024:items-end 1024:justify-between 1024:gap-[20px] 1024:w-full 1024:px-0 1024:pb-0">
+                    <div className="hidden z-50 1024:flex gap-1 w-full 1024:flex-row 1024:items-stretch 1024:gap-[20px] 1024:max-w-[1281px] 1024:self-center 1024:w-full 1024:px-0 1024:pb-0">
                         <UpgradeInventoryPanel
                             inventoryItems={inventoryItems}
                             selectedInventory={selectedInventory}
