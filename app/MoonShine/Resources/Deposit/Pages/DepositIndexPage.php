@@ -6,8 +6,9 @@ namespace App\MoonShine\Resources\Deposit\Pages;
 
 use App\Enums\DepositStatus;
 use App\Models\Deposit;
+use App\MoonShine\Pages\Concerns\HasExportButton;
 use App\MoonShine\Resources\Deposit\DepositResource;
-use MoonShine\Contracts\UI\ComponentContract;
+use App\Support\Admin\MoneyFormatter;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\QueryTags\QueryTag;
@@ -15,20 +16,25 @@ use MoonShine\Support\ListOf;
 use MoonShine\UI\Components\ActionButton;
 use MoonShine\UI\Components\Metrics\Wrapped\Metric;
 use MoonShine\UI\Components\Metrics\Wrapped\ValueMetric;
-use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\UI\Fields\Date;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Number;
 use MoonShine\UI\Fields\Select;
 use MoonShine\UI\Fields\Text;
-use Throwable;
 
 /**
  * @extends IndexPage<DepositResource>
  */
 class DepositIndexPage extends IndexPage
 {
+    use HasExportButton;
+
     protected bool $isLazy = true;
+
+    protected function exportRoute(): string
+    {
+        return route('moonshine.export.deposits');
+    }
 
     /**
      * @return list<FieldContract>
@@ -39,8 +45,7 @@ class DepositIndexPage extends IndexPage
             ID::make(),
             Text::make('Пользователь', formatted: fn ($item) => $item->user?->username ?? 'ID:'.$item->user_id),
             Text::make('Метод', formatted: fn ($item) => $item->method?->value ?? (string) $item->method),
-            Number::make('Сумма', 'amount')
-                ->modifyRawValue(fn (mixed $value) => number_format(((int) $value) / 100, 2, '.', ' ').' ₽'),
+            Number::make('Сумма', 'amount')->modifyRawValue(MoneyFormatter::field()),
             Text::make('Статус', formatted: fn ($item) => match ((string) ($item->status?->value ?? $item->status)) {
                 'pending' => '⏳ Ожидает',
                 'completed' => '✅ Завершён',
@@ -53,9 +58,6 @@ class DepositIndexPage extends IndexPage
         ];
     }
 
-    /**
-     * @return ListOf<ActionButtonContract>
-     */
     protected function buttons(): ListOf
     {
         return parent::buttons()
@@ -69,19 +71,6 @@ class DepositIndexPage extends IndexPage
                         button: 'Завершить',
                     )
                     ->primary(),
-            );
-    }
-
-    /**
-     * @return ListOf<ActionButtonContract>
-     */
-    protected function topRightButtons(): ListOf
-    {
-        return parent::topRightButtons()
-            ->prepend(
-                ActionButton::make('Экспорт CSV', fn () => route('moonshine.export.deposits'))
-                    ->customAttributes(['target' => '_blank'])
-                    ->icon('arrow-down-tray'),
             );
     }
 
@@ -151,63 +140,10 @@ class DepositIndexPage extends IndexPage
         $pending = Deposit::whereIn('status', [DepositStatus::Pending->value, DepositStatus::Processing->value])->count();
 
         return [
-            ValueMetric::make('Завершено сегодня')
-                ->value($todayCount)
-                ->columnSpan(3, 12),
-            ValueMetric::make('Сумма за сегодня')
-                ->value(number_format($todaySum / 100, 2, '.', ' ').' ₽')
-                ->columnSpan(3, 12),
-            ValueMetric::make('Сумма за месяц')
-                ->value(number_format($monthSum / 100, 2, '.', ' ').' ₽')
-                ->columnSpan(3, 12),
-            ValueMetric::make('Pending')
-                ->value($pending)
-                ->columnSpan(3, 12),
-        ];
-    }
-
-    /**
-     * @param  TableBuilder  $component
-     * @return TableBuilder
-     */
-    protected function modifyListComponent(ComponentContract $component): ComponentContract
-    {
-        return $component;
-    }
-
-    /**
-     * @return list<ComponentContract>
-     *
-     * @throws Throwable
-     */
-    protected function topLayer(): array
-    {
-        return [
-            ...parent::topLayer(),
-        ];
-    }
-
-    /**
-     * @return list<ComponentContract>
-     *
-     * @throws Throwable
-     */
-    protected function mainLayer(): array
-    {
-        return [
-            ...parent::mainLayer(),
-        ];
-    }
-
-    /**
-     * @return list<ComponentContract>
-     *
-     * @throws Throwable
-     */
-    protected function bottomLayer(): array
-    {
-        return [
-            ...parent::bottomLayer(),
+            ValueMetric::make('Завершено сегодня')->value($todayCount)->columnSpan(3, 12),
+            ValueMetric::make('Сумма за сегодня')->value(MoneyFormatter::format($todaySum))->columnSpan(3, 12),
+            ValueMetric::make('Сумма за месяц')->value(MoneyFormatter::format($monthSum))->columnSpan(3, 12),
+            ValueMetric::make('Pending')->value($pending)->columnSpan(3, 12),
         ];
     }
 }

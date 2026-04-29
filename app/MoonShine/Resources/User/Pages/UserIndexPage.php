@@ -7,7 +7,7 @@ namespace App\MoonShine\Resources\User\Pages;
 use App\Models\User;
 use App\Models\UtmMark;
 use App\MoonShine\Resources\User\UserResource;
-use MoonShine\Contracts\UI\ComponentContract;
+use App\Support\Admin\MoneyFormatter;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\QueryTags\QueryTag;
@@ -15,7 +15,6 @@ use MoonShine\Support\ListOf;
 use MoonShine\UI\Components\ActionButton;
 use MoonShine\UI\Components\Metrics\Wrapped\Metric;
 use MoonShine\UI\Components\Metrics\Wrapped\ValueMetric;
-use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\UI\Fields\Date;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Number;
@@ -23,7 +22,6 @@ use MoonShine\UI\Fields\Preview;
 use MoonShine\UI\Fields\Select;
 use MoonShine\UI\Fields\Switcher;
 use MoonShine\UI\Fields\Text;
-use Throwable;
 
 /**
  * @extends IndexPage<UserResource>
@@ -43,7 +41,7 @@ class UserIndexPage extends IndexPage
             Text::make('Никнейм', 'username'),
             Text::make('Steam ID', 'steam_id'),
             Number::make('Баланс', 'balance')
-                ->modifyRawValue(fn (mixed $value) => number_format(((int) $value) / 100, 2, '.', ' ').' ₽'),
+                ->modifyRawValue(MoneyFormatter::field()),
             Text::make('UTM', formatted: fn ($item) => $item->utmMark?->slug ?? '—'),
             Switcher::make('Бан', 'is_banned'),
             Switcher::make('Админ', 'is_admin'),
@@ -128,51 +126,6 @@ class UserIndexPage extends IndexPage
             ValueMetric::make('Активны 7д')->value($active7d)->columnSpan(2, 12),
             ValueMetric::make('Забанены')->value($banned)->columnSpan(2, 12),
             ValueMetric::make('Без trade URL')->value($noTradeUrl)->columnSpan(2, 12),
-        ];
-    }
-
-    /**
-     * @param  TableBuilder  $component
-     * @return TableBuilder
-     */
-    protected function modifyListComponent(ComponentContract $component): ComponentContract
-    {
-        return $component;
-    }
-
-    /**
-     * @return list<ComponentContract>
-     *
-     * @throws Throwable
-     */
-    protected function topLayer(): array
-    {
-        return [
-            ...parent::topLayer(),
-        ];
-    }
-
-    /**
-     * @return list<ComponentContract>
-     *
-     * @throws Throwable
-     */
-    protected function mainLayer(): array
-    {
-        return [
-            ...parent::mainLayer(),
-        ];
-    }
-
-    /**
-     * @return list<ComponentContract>
-     *
-     * @throws Throwable
-     */
-    protected function bottomLayer(): array
-    {
-        return [
-            ...parent::bottomLayer(),
         ];
     }
 }

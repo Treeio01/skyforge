@@ -7,11 +7,10 @@ namespace App\MoonShine\Resources\ActivityLog;
 use App\MoonShine\Resources\ActivityLog\Pages\ActivityLogDetailPage;
 use App\MoonShine\Resources\ActivityLog\Pages\ActivityLogFormPage;
 use App\MoonShine\Resources\ActivityLog\Pages\ActivityLogIndexPage;
+use App\MoonShine\Resources\Concerns\ReadOnlyActions;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Laravel\Resources\ModelResource;
-use MoonShine\Support\Enums\Action;
 use MoonShine\Support\Enums\SortDirection;
-use MoonShine\Support\ListOf;
 use Spatie\Activitylog\Models\Activity;
 
 /**
@@ -19,6 +18,8 @@ use Spatie\Activitylog\Models\Activity;
  */
 class ActivityLogResource extends ModelResource
 {
+    use ReadOnlyActions;
+
     protected string $model = Activity::class;
 
     protected string $title = 'Лог активности';
@@ -39,10 +40,5 @@ class ActivityLogResource extends ModelResource
             ActivityLogFormPage::class,
             ActivityLogDetailPage::class,
         ];
-    }
-
-    protected function activeActions(): ListOf
-    {
-        return parent::activeActions()->except(Action::CREATE, Action::UPDATE, Action::DELETE, Action::MASS_DELETE);
     }
 }

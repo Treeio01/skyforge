@@ -6,8 +6,9 @@ namespace App\MoonShine\Resources\Withdrawal\Pages;
 
 use App\Enums\WithdrawalStatus;
 use App\Models\Withdrawal;
+use App\MoonShine\Pages\Concerns\HasExportButton;
 use App\MoonShine\Resources\Withdrawal\WithdrawalResource;
-use MoonShine\Contracts\UI\ComponentContract;
+use App\Support\Admin\MoneyFormatter;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\QueryTags\QueryTag;
@@ -15,20 +16,25 @@ use MoonShine\Support\ListOf;
 use MoonShine\UI\Components\ActionButton;
 use MoonShine\UI\Components\Metrics\Wrapped\Metric;
 use MoonShine\UI\Components\Metrics\Wrapped\ValueMetric;
-use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\UI\Fields\Date;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Number;
 use MoonShine\UI\Fields\Select;
 use MoonShine\UI\Fields\Text;
-use Throwable;
 
 /**
  * @extends IndexPage<WithdrawalResource>
  */
 class WithdrawalIndexPage extends IndexPage
 {
+    use HasExportButton;
+
     protected bool $isLazy = true;
+
+    protected function exportRoute(): string
+    {
+        return route('moonshine.export.withdrawals');
+    }
 
     /**
      * @return list<FieldContract>
@@ -38,8 +44,7 @@ class WithdrawalIndexPage extends IndexPage
         return [
             ID::make(),
             Text::make('Пользователь', formatted: fn ($item) => $item->user?->username ?? 'ID:'.$item->user_id),
-            Number::make('Сумма', 'amount')
-                ->modifyRawValue(fn (mixed $value) => number_format(((int) $value) / 100, 2, '.', ' ').' ₽'),
+            Number::make('Сумма', 'amount')->modifyRawValue(MoneyFormatter::field()),
             Text::make('Статус', formatted: fn ($item) => match ((string) ($item->status?->value ?? $item->status)) {
                 'pending' => '⏳ Ожидает',
                 'processing' => '🔄 Обработка',
@@ -54,9 +59,6 @@ class WithdrawalIndexPage extends IndexPage
         ];
     }
 
-    /**
-     * @return ListOf<ActionButtonContract>
-     */
     protected function buttons(): ListOf
     {
         return parent::buttons()
@@ -86,19 +88,6 @@ class WithdrawalIndexPage extends IndexPage
                         ],
                     )
                     ->error(),
-            );
-    }
-
-    /**
-     * @return ListOf<ActionButtonContract>
-     */
-    protected function topRightButtons(): ListOf
-    {
-        return parent::topRightButtons()
-            ->prepend(
-                ActionButton::make('Экспорт CSV', fn () => route('moonshine.export.withdrawals'))
-                    ->customAttributes(['target' => '_blank'])
-                    ->icon('arrow-down-tray'),
             );
     }
 
@@ -157,60 +146,9 @@ class WithdrawalIndexPage extends IndexPage
             ->count();
 
         return [
-            ValueMetric::make('Ожидают обработки')
-                ->value($pendingCount)
-                ->columnSpan(4, 12),
-            ValueMetric::make('Сумма ожидающих')
-                ->value(number_format($pendingSum / 100, 2, '.', ' ').' ₽')
-                ->columnSpan(4, 12),
-            ValueMetric::make('Завершено сегодня')
-                ->value($completedTodayCount)
-                ->columnSpan(4, 12),
-        ];
-    }
-
-    /**
-     * @param  TableBuilder  $component
-     * @return TableBuilder
-     */
-    protected function modifyListComponent(ComponentContract $component): ComponentContract
-    {
-        return $component;
-    }
-
-    /**
-     * @return list<ComponentContract>
-     *
-     * @throws Throwable
-     */
-    protected function topLayer(): array
-    {
-        return [
-            ...parent::topLayer(),
-        ];
-    }
-
-    /**
-     * @return list<ComponentContract>
-     *
-     * @throws Throwable
-     */
-    protected function mainLayer(): array
-    {
-        return [
-            ...parent::mainLayer(),
-        ];
-    }
-
-    /**
-     * @return list<ComponentContract>
-     *
-     * @throws Throwable
-     */
-    protected function bottomLayer(): array
-    {
-        return [
-            ...parent::bottomLayer(),
+            ValueMetric::make('Ожидают обработки')->value($pendingCount)->columnSpan(4, 12),
+            ValueMetric::make('Сумма ожидающих')->value(MoneyFormatter::format($pendingSum))->columnSpan(4, 12),
+            ValueMetric::make('Завершено сегодня')->value($completedTodayCount)->columnSpan(4, 12),
         ];
     }
 }

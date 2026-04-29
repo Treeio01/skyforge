@@ -6,19 +6,17 @@ namespace App\MoonShine\Resources\UserSkin\Pages;
 
 use App\Enums\UserSkinStatus;
 use App\MoonShine\Resources\UserSkin\UserSkinResource;
-use MoonShine\Contracts\UI\ComponentContract;
+use App\Support\Admin\MoneyFormatter;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\QueryTags\QueryTag;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Components\Metrics\Wrapped\Metric;
-use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\UI\Fields\Date;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Number;
 use MoonShine\UI\Fields\Select;
 use MoonShine\UI\Fields\Text;
-use Throwable;
 
 /**
  * @extends IndexPage<UserSkinResource>
@@ -37,7 +35,7 @@ class UserSkinIndexPage extends IndexPage
             Text::make('Пользователь', formatted: fn ($item) => $item->user?->username ?? 'ID:'.$item->user_id),
             Text::make('Скин', formatted: fn ($item) => mb_substr($item->skin?->market_hash_name ?? '—', 0, 40)),
             Number::make('Цена получения', 'price_at_acquisition')
-                ->modifyRawValue(fn (mixed $value) => number_format(((int) $value) / 100, 2, '.', ' ').' ₽'),
+                ->modifyRawValue(MoneyFormatter::field()),
             Text::make('Источник', formatted: fn ($item) => match ($item->source?->value ?? $item->source) {
                 'upgrade' => 'Апгрейд',
                 'purchase' => 'Покупка',
@@ -107,50 +105,5 @@ class UserSkinIndexPage extends IndexPage
     protected function metrics(): array
     {
         return [];
-    }
-
-    /**
-     * @param  TableBuilder  $component
-     * @return TableBuilder
-     */
-    protected function modifyListComponent(ComponentContract $component): ComponentContract
-    {
-        return $component;
-    }
-
-    /**
-     * @return list<ComponentContract>
-     *
-     * @throws Throwable
-     */
-    protected function topLayer(): array
-    {
-        return [
-            ...parent::topLayer(),
-        ];
-    }
-
-    /**
-     * @return list<ComponentContract>
-     *
-     * @throws Throwable
-     */
-    protected function mainLayer(): array
-    {
-        return [
-            ...parent::mainLayer(),
-        ];
-    }
-
-    /**
-     * @return list<ComponentContract>
-     *
-     * @throws Throwable
-     */
-    protected function bottomLayer(): array
-    {
-        return [
-            ...parent::bottomLayer(),
-        ];
     }
 }

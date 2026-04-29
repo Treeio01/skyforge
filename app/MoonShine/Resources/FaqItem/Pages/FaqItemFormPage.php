@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace App\MoonShine\Resources\FaqItem\Pages;
 
 use App\MoonShine\Resources\FaqItem\FaqItemResource;
-use MoonShine\Contracts\Core\TypeCasts\DataWrapperContract;
 use MoonShine\Contracts\UI\FormBuilderContract;
 use MoonShine\Laravel\Pages\Crud\FormPage;
-use MoonShine\Support\ListOf;
 use MoonShine\UI\Components\Layout\Box;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Number;
@@ -43,21 +41,6 @@ class FaqItemFormPage extends FormPage
                 Switcher::make('Активен', 'is_active'),
             ]),
         ];
-    }
-
-    protected function rules(DataWrapperContract $item): array
-    {
-        return [];
-    }
-
-    protected function buttons(): ListOf
-    {
-        return parent::buttons();
-    }
-
-    protected function formButtons(): ListOf
-    {
-        return parent::formButtons();
     }
 
     protected function modifyFormComponent(FormBuilderContract $component): FormBuilderContract

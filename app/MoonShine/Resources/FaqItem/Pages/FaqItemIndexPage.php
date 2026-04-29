@@ -7,7 +7,6 @@ namespace App\MoonShine\Resources\FaqItem\Pages;
 use App\MoonShine\Resources\FaqItem\FaqItemResource;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
-use MoonShine\Support\ListOf;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Number;
 use MoonShine\UI\Fields\Select;
@@ -55,11 +54,6 @@ class FaqItemIndexPage extends IndexPage
                 ->nullable(),
             Switcher::make('Активен', 'is_active'),
         ];
-    }
-
-    protected function buttons(): ListOf
-    {
-        return parent::buttons();
     }
 
     protected function modifyListComponent(ComponentContract $component): ComponentContract

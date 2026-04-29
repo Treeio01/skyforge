@@ -5,20 +5,18 @@ declare(strict_types=1);
 namespace App\MoonShine\Resources\PromoCode\Pages;
 
 use App\MoonShine\Resources\PromoCode\PromoCodeResource;
-use MoonShine\Contracts\UI\ComponentContract;
+use App\Support\Admin\MoneyFormatter;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\QueryTags\QueryTag;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Components\ActionButton;
 use MoonShine\UI\Components\Metrics\Wrapped\Metric;
-use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\UI\Fields\Date;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Number;
 use MoonShine\UI\Fields\Switcher;
 use MoonShine\UI\Fields\Text;
-use Throwable;
 
 /**
  * @extends IndexPage<PromoCodeResource>
@@ -42,7 +40,7 @@ class PromoCodeIndexPage extends IndexPage
             }),
             Text::make('Сумма / %', formatted: fn ($item) => $item->type === 'deposit_bonus'
                 ? $item->amount.'%'
-                : number_format(((int) $item->amount) / 100, 2, '.', ' ').' ₽'),
+                : MoneyFormatter::format((int) $item->amount)),
             Number::make('Макс. исп.', 'max_uses'),
             Number::make('Использован', 'times_used'),
             Switcher::make('Активен', 'is_active'),
@@ -92,50 +90,5 @@ class PromoCodeIndexPage extends IndexPage
     protected function metrics(): array
     {
         return [];
-    }
-
-    /**
-     * @param  TableBuilder  $component
-     * @return TableBuilder
-     */
-    protected function modifyListComponent(ComponentContract $component): ComponentContract
-    {
-        return $component;
-    }
-
-    /**
-     * @return list<ComponentContract>
-     *
-     * @throws Throwable
-     */
-    protected function topLayer(): array
-    {
-        return [
-            ...parent::topLayer(),
-        ];
-    }
-
-    /**
-     * @return list<ComponentContract>
-     *
-     * @throws Throwable
-     */
-    protected function mainLayer(): array
-    {
-        return [
-            ...parent::mainLayer(),
-        ];
-    }
-
-    /**
-     * @return list<ComponentContract>
-     *
-     * @throws Throwable
-     */
-    protected function bottomLayer(): array
-    {
-        return [
-            ...parent::bottomLayer(),
-        ];
     }
 }

@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Deposit;
 use App\Models\Transaction;
 use App\Models\Withdrawal;
+use App\Support\Admin\MoneyFormatter;
 use Illuminate\Database\Eloquent\Builder;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -23,9 +24,9 @@ class ExportController extends Controller
                 $t->id,
                 $t->user_id,
                 $t->type?->value ?? $t->type,
-                number_format(((int) $t->amount) / 100, 2, '.', ''),
-                number_format(((int) $t->balance_before) / 100, 2, '.', ''),
-                number_format(((int) $t->balance_after) / 100, 2, '.', ''),
+                MoneyFormatter::csv((int) $t->amount),
+                MoneyFormatter::csv((int) $t->balance_before),
+                MoneyFormatter::csv((int) $t->balance_after),
                 $t->description,
                 $t->created_at?->toIso8601String(),
             ],
@@ -42,7 +43,7 @@ class ExportController extends Controller
                 $d->id,
                 $d->user_id,
                 $d->method?->value ?? $d->method,
-                number_format(((int) $d->amount) / 100, 2, '.', ''),
+                MoneyFormatter::csv((int) $d->amount),
                 $d->status?->value ?? $d->status,
                 $d->completed_at?->toIso8601String(),
                 $d->created_at?->toIso8601String(),
@@ -59,7 +60,7 @@ class ExportController extends Controller
             fn (Withdrawal $w) => [
                 $w->id,
                 $w->user_id,
-                number_format(((int) $w->amount) / 100, 2, '.', ''),
+                MoneyFormatter::csv((int) $w->amount),
                 $w->status?->value ?? $w->status,
                 $w->trade_offer_id,
                 $w->completed_at?->toIso8601String(),

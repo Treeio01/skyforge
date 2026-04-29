@@ -6,29 +6,33 @@ namespace App\MoonShine\Resources\Transaction\Pages;
 
 use App\Enums\TransactionType;
 use App\Models\Transaction;
+use App\MoonShine\Pages\Concerns\HasExportButton;
 use App\MoonShine\Resources\Transaction\TransactionResource;
-use MoonShine\Contracts\UI\ComponentContract;
+use App\Support\Admin\MoneyFormatter;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\QueryTags\QueryTag;
-use MoonShine\Support\ListOf;
-use MoonShine\UI\Components\ActionButton;
 use MoonShine\UI\Components\Metrics\Wrapped\Metric;
 use MoonShine\UI\Components\Metrics\Wrapped\ValueMetric;
-use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\UI\Fields\Date;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Number;
 use MoonShine\UI\Fields\Select;
 use MoonShine\UI\Fields\Text;
-use Throwable;
 
 /**
  * @extends IndexPage<TransactionResource>
  */
 class TransactionIndexPage extends IndexPage
 {
+    use HasExportButton;
+
     protected bool $isLazy = true;
+
+    protected function exportRoute(): string
+    {
+        return route('moonshine.export.transactions');
+    }
 
     /**
      * @return list<FieldContract>
@@ -48,35 +52,11 @@ class TransactionIndexPage extends IndexPage
                 'admin_adjustment' => 'Корректировка',
                 default => (string) ($item->type?->value ?? $item->type),
             }),
-            Number::make('Сумма', 'amount')
-                ->modifyRawValue(fn (mixed $value) => number_format(((int) $value) / 100, 2, '.', ' ').' ₽'),
-            Number::make('До', 'balance_before')
-                ->modifyRawValue(fn (mixed $value) => number_format(((int) $value) / 100, 2, '.', ' ').' ₽'),
-            Number::make('После', 'balance_after')
-                ->modifyRawValue(fn (mixed $value) => number_format(((int) $value) / 100, 2, '.', ' ').' ₽'),
+            Number::make('Сумма', 'amount')->modifyRawValue(MoneyFormatter::field()),
+            Number::make('До', 'balance_before')->modifyRawValue(MoneyFormatter::field()),
+            Number::make('После', 'balance_after')->modifyRawValue(MoneyFormatter::field()),
             Date::make('Дата', 'created_at'),
         ];
-    }
-
-    /**
-     * @return ListOf<ActionButtonContract>
-     */
-    protected function buttons(): ListOf
-    {
-        return parent::buttons();
-    }
-
-    /**
-     * @return ListOf<ActionButtonContract>
-     */
-    protected function topRightButtons(): ListOf
-    {
-        return parent::topRightButtons()
-            ->prepend(
-                ActionButton::make('Экспорт CSV', fn () => route('moonshine.export.transactions'))
-                    ->customAttributes(['target' => '_blank'])
-                    ->icon('arrow-down-tray'),
-            );
     }
 
     /**
@@ -126,60 +106,9 @@ class TransactionIndexPage extends IndexPage
 
         return [
             ValueMetric::make('Транзакций сегодня')->value($todayCount)->columnSpan(3, 12),
-            ValueMetric::make('Депозиты сегодня')
-                ->value(number_format($depositSum / 100, 2, '.', ' ').' ₽')
-                ->columnSpan(3, 12),
-            ValueMetric::make('Выводы сегодня')
-                ->value(number_format(\abs($withdrawalSum) / 100, 2, '.', ' ').' ₽')
-                ->columnSpan(3, 12),
-            ValueMetric::make('Ставки сегодня')
-                ->value(number_format(\abs($betSum) / 100, 2, '.', ' ').' ₽')
-                ->columnSpan(3, 12),
-        ];
-    }
-
-    /**
-     * @param  TableBuilder  $component
-     * @return TableBuilder
-     */
-    protected function modifyListComponent(ComponentContract $component): ComponentContract
-    {
-        return $component;
-    }
-
-    /**
-     * @return list<ComponentContract>
-     *
-     * @throws Throwable
-     */
-    protected function topLayer(): array
-    {
-        return [
-            ...parent::topLayer(),
-        ];
-    }
-
-    /**
-     * @return list<ComponentContract>
-     *
-     * @throws Throwable
-     */
-    protected function mainLayer(): array
-    {
-        return [
-            ...parent::mainLayer(),
-        ];
-    }
-
-    /**
-     * @return list<ComponentContract>
-     *
-     * @throws Throwable
-     */
-    protected function bottomLayer(): array
-    {
-        return [
-            ...parent::bottomLayer(),
+            ValueMetric::make('Депозиты сегодня')->value(MoneyFormatter::format($depositSum))->columnSpan(3, 12),
+            ValueMetric::make('Выводы сегодня')->value(MoneyFormatter::format(abs($withdrawalSum)))->columnSpan(3, 12),
+            ValueMetric::make('Ставки сегодня')->value(MoneyFormatter::format(abs($betSum)))->columnSpan(3, 12),
         ];
     }
 }

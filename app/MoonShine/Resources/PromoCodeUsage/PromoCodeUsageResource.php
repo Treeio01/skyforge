@@ -5,20 +5,21 @@ declare(strict_types=1);
 namespace App\MoonShine\Resources\PromoCodeUsage;
 
 use App\Models\PromoCodeUsage;
+use App\MoonShine\Resources\Concerns\ReadOnlyActions;
 use App\MoonShine\Resources\PromoCodeUsage\Pages\PromoCodeUsageDetailPage;
 use App\MoonShine\Resources\PromoCodeUsage\Pages\PromoCodeUsageFormPage;
 use App\MoonShine\Resources\PromoCodeUsage\Pages\PromoCodeUsageIndexPage;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Laravel\Resources\ModelResource;
-use MoonShine\Support\Enums\Action;
-use MoonShine\Support\ListOf;
 
 /**
  * @extends ModelResource<PromoCodeUsage, PromoCodeUsageIndexPage, PromoCodeUsageFormPage, PromoCodeUsageDetailPage>
  */
 class PromoCodeUsageResource extends ModelResource
 {
+    use ReadOnlyActions;
+
     protected string $model = PromoCodeUsage::class;
 
     protected string $title = 'Использования промокодов';
@@ -35,11 +36,6 @@ class PromoCodeUsageResource extends ModelResource
             PromoCodeUsageFormPage::class,
             PromoCodeUsageDetailPage::class,
         ];
-    }
-
-    protected function activeActions(): ListOf
-    {
-        return parent::activeActions()->except(Action::CREATE, Action::UPDATE, Action::DELETE, Action::MASS_DELETE);
     }
 
     protected function modifyItemQueryBuilder(Builder $builder): Builder
