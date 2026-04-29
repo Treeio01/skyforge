@@ -23,7 +23,7 @@ export default function SkinsPanel({
     };
 
     return (
-        <div className="flex flex-col overflow-hidden min-h-[361px] max-h-[500px] rounded-t-[14px] w-full max-w-[630px] bg-accent/90 relative">
+        <div className="flex flex-col overflow-hidden min-h-[180px] max-h-[calc(100dvh-452px)] rounded-t-[14px] w-full max-w-[420px] bg-accent/90 relative">
             <div
                 className={`flex bg-accent justify-between items-center ${
                     toolbar ? 'py-[6.5px] px-3.5' : 'p-3.5'
