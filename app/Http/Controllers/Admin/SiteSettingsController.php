@@ -28,6 +28,7 @@ class SiteSettingsController extends Controller
             'seo_title' => ['nullable', 'string', 'max:255'],
             'seo_description' => ['nullable', 'string', 'max:500'],
             'seo_keywords' => ['nullable', 'string', 'max:500'],
+            'favicon_url' => ['nullable', 'string', 'max:500'],
 
             'social_vk' => ['nullable', 'url', 'max:500'],
             'social_telegram' => ['nullable', 'url', 'max:500'],

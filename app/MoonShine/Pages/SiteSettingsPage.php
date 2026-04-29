@@ -47,6 +47,7 @@ class SiteSettingsPage extends Page
             'seo_title' => (string) Setting::get('seo_title', ''),
             'seo_description' => (string) Setting::get('seo_description', ''),
             'seo_keywords' => (string) Setting::get('seo_keywords', ''),
+            'favicon_url' => (string) Setting::get('favicon_url', ''),
 
             // Соц. сети
             'social_vk' => (string) Setting::get('social_vk', ''),
@@ -82,6 +83,8 @@ class SiteSettingsPage extends Page
                             ->hint('Заголовок страницы и og:title.'),
                         Textarea::make('Description', 'seo_description'),
                         Textarea::make('Keywords', 'seo_keywords'),
+                        Text::make('Favicon URL', 'favicon_url')
+                            ->hint('Абсолютный URL до .ico/.png (например /assets/img/favicon.ico).'),
                     ]),
 
                     Box::make('Социальные сети', [
