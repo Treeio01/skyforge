@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Admin\OnlineSettingsController;
 use App\Http\Controllers\Admin\SiteSettingsController;
+use App\Http\Controllers\Admin\WithdrawalActionsController;
 use App\Http\Controllers\DepositController;
 use App\Http\Controllers\LiveFeedController;
 use App\Http\Controllers\ProvablyFairController;
@@ -69,4 +70,9 @@ Route::middleware([Authenticate::class])->prefix('admin')->name('moonshine.onlin
 
 Route::middleware([Authenticate::class])->prefix('admin')->name('moonshine.site-settings.')->group(function () {
     Route::post('site-settings', [SiteSettingsController::class, 'update'])->name('save');
+});
+
+Route::middleware([Authenticate::class])->prefix('admin')->name('moonshine.withdrawals.')->group(function () {
+    Route::post('withdrawals/{withdrawal}/approve', [WithdrawalActionsController::class, 'approve'])->name('approve');
+    Route::post('withdrawals/{withdrawal}/reject', [WithdrawalActionsController::class, 'reject'])->name('reject');
 });

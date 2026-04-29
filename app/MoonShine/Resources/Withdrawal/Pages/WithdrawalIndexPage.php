@@ -4,17 +4,22 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Resources\Withdrawal\Pages;
 
+use App\Enums\WithdrawalStatus;
+use App\Models\Withdrawal;
 use App\MoonShine\Resources\Withdrawal\WithdrawalResource;
 use MoonShine\Contracts\UI\ComponentContract;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
 use MoonShine\Laravel\QueryTags\QueryTag;
 use MoonShine\Support\ListOf;
+use MoonShine\UI\Components\ActionButton;
 use MoonShine\UI\Components\Metrics\Wrapped\Metric;
+use MoonShine\UI\Components\Metrics\Wrapped\ValueMetric;
 use MoonShine\UI\Components\Table\TableBuilder;
 use MoonShine\UI\Fields\Date;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Number;
+use MoonShine\UI\Fields\Select;
 use MoonShine\UI\Fields\Text;
 use Throwable;
 
@@ -54,7 +59,34 @@ class WithdrawalIndexPage extends IndexPage
      */
     protected function buttons(): ListOf
     {
-        return parent::buttons();
+        return parent::buttons()
+            ->prepend(
+                ActionButton::make('Подтвердить', fn ($item) => route('moonshine.withdrawals.approve', $item))
+                    ->method('post')
+                    ->canSee(fn ($item) => \in_array(
+                        $item?->status?->value,
+                        [WithdrawalStatus::Pending->value, WithdrawalStatus::Processing->value],
+                        true,
+                    ))
+                    ->withConfirm(
+                        title: 'Подтвердить вывод?',
+                        content: 'Статус будет переведён в Completed.',
+                        button: 'Подтвердить',
+                    )
+                    ->primary(),
+                ActionButton::make('Отклонить', fn ($item) => route('moonshine.withdrawals.reject', $item))
+                    ->method('post')
+                    ->canSee(fn ($item) => $item?->status?->value !== WithdrawalStatus::Completed->value)
+                    ->withConfirm(
+                        title: 'Отклонить вывод?',
+                        content: 'Статус будет переведён в Cancelled.',
+                        button: 'Отклонить',
+                        fields: [
+                            Text::make('Причина отказа', 'reason'),
+                        ],
+                    )
+                    ->error(),
+            );
     }
 
     /**
@@ -62,7 +94,20 @@ class WithdrawalIndexPage extends IndexPage
      */
     protected function filters(): iterable
     {
-        return [];
+        return [
+            Select::make('Статус', 'status')
+                ->options([
+                    'pending' => 'Ожидает',
+                    'processing' => 'Обработка',
+                    'sent' => 'Отправлен',
+                    'completed' => 'Завершён',
+                    'failed' => 'Ошибка',
+                    'cancelled' => 'Отменён',
+                ])
+                ->nullable(),
+            Number::make('Сумма от (₽)', 'amount_from'),
+            Number::make('Сумма до (₽)', 'amount_to'),
+        ];
     }
 
     /**
@@ -70,7 +115,21 @@ class WithdrawalIndexPage extends IndexPage
      */
     protected function queryTags(): array
     {
-        return [];
+        return [
+            QueryTag::make('Все', fn ($q) => $q),
+            QueryTag::make(
+                'Ожидают',
+                fn ($q) => $q->whereIn('status', [WithdrawalStatus::Pending->value, WithdrawalStatus::Processing->value]),
+            ),
+            QueryTag::make(
+                'Завершены за 24ч',
+                fn ($q) => $q->where('status', WithdrawalStatus::Completed->value)->where('completed_at', '>=', now()->subDay()),
+            ),
+            QueryTag::make(
+                'Отклонены за 7д',
+                fn ($q) => $q->whereIn('status', [WithdrawalStatus::Cancelled->value, WithdrawalStatus::Failed->value])->where('updated_at', '>=', now()->subWeek()),
+            ),
+        ];
     }
 
     /**
@@ -78,7 +137,23 @@ class WithdrawalIndexPage extends IndexPage
      */
     protected function metrics(): array
     {
-        return [];
+        $pendingCount = Withdrawal::whereIn('status', [WithdrawalStatus::Pending->value, WithdrawalStatus::Processing->value])->count();
+        $pendingSum = (int) Withdrawal::whereIn('status', [WithdrawalStatus::Pending->value, WithdrawalStatus::Processing->value])->sum('amount');
+        $completedTodayCount = Withdrawal::where('status', WithdrawalStatus::Completed->value)
+            ->where('completed_at', '>=', now()->startOfDay())
+            ->count();
+
+        return [
+            ValueMetric::make('Ожидают обработки')
+                ->value($pendingCount)
+                ->columnSpan(4, 12),
+            ValueMetric::make('Сумма ожидающих')
+                ->value(number_format($pendingSum / 100, 2, '.', ' ').' ₽')
+                ->columnSpan(4, 12),
+            ValueMetric::make('Завершено сегодня')
+                ->value($completedTodayCount)
+                ->columnSpan(4, 12),
+        ];
     }
 
     /**
