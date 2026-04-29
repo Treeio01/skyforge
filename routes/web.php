@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Admin\DepositActionsController;
 use App\Http\Controllers\Admin\OnlineSettingsController;
 use App\Http\Controllers\Admin\SiteSettingsController;
 use App\Http\Controllers\Admin\WithdrawalActionsController;
@@ -75,4 +76,8 @@ Route::middleware([Authenticate::class])->prefix('admin')->name('moonshine.site-
 Route::middleware([Authenticate::class])->prefix('admin')->name('moonshine.withdrawals.')->group(function () {
     Route::post('withdrawals/{withdrawal}/approve', [WithdrawalActionsController::class, 'approve'])->name('approve');
     Route::post('withdrawals/{withdrawal}/reject', [WithdrawalActionsController::class, 'reject'])->name('reject');
+});
+
+Route::middleware([Authenticate::class])->prefix('admin')->name('moonshine.deposits.')->group(function () {
+    Route::post('deposits/{deposit}/complete', [DepositActionsController::class, 'markCompleted'])->name('complete');
 });
