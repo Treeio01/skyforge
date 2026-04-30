@@ -8,6 +8,7 @@ use App\Contracts\PaymentProviderInterface;
 use App\Contracts\TradeProviderInterface;
 use App\Events\UpgradeCompleted;
 use App\Listeners\PushToLiveFeed;
+use App\Models\Setting;
 use App\Services\StubPaymentProvider;
 use App\Services\StubTradeProvider;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -47,7 +48,14 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(UpgradeCompleted::class, PushToLiveFeed::class);
 
         RateLimiter::for('upgrade', function (Request $request) {
-            return Limit::perMinute(30)->by($request->user()?->id ?: $request->ip());
+            $cooldownSeconds = (int) Setting::get('upgrade_cooldown', 2);
+            $key = $request->user()?->id ?: $request->ip();
+
+            if ($cooldownSeconds <= 0) {
+                return Limit::none()->by($key);
+            }
+
+            return Limit::perSecond(1, $cooldownSeconds)->by($key);
         });
 
         RateLimiter::for('api', function (Request $request) {

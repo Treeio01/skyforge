@@ -14,6 +14,7 @@ import {
     deriveMultiplier,
     pickTargetForMultiplier,
     QuickMultiplier,
+    DEFAULT_UPGRADE_SETTINGS,
 } from "./upgradeCalculations";
 import { PageProps, Skin } from "@/types";
 
@@ -100,6 +101,7 @@ export interface UseUpgradeReturn {
 
 export function useUpgrade({ inventory }: UseUpgradeProps): UseUpgradeReturn {
     const { guard, isGuest } = useAuthGuard();
+    const { upgradeSettings = DEFAULT_UPGRADE_SETTINGS } = usePage<PageProps>().props;
 
     // ─── Selection ───────────────────────────────────────────
     const [selectedInventory, setSelectedInventory] = useState<SkinId | null>(
@@ -187,8 +189,9 @@ export function useUpgrade({ inventory }: UseUpgradeProps): UseUpgradeReturn {
         return calculateChance(
             inventorySkin.priceKopecks,
             targetSkin.priceKopecks,
+            upgradeSettings,
         );
-    }, [inventorySkin, targetSkin]);
+    }, [inventorySkin, targetSkin, upgradeSettings]);
 
     const canStart = useMemo(
         () =>
@@ -196,8 +199,8 @@ export function useUpgrade({ inventory }: UseUpgradeProps): UseUpgradeReturn {
             !!inventorySkin &&
             !!targetSkin &&
             targetSkin.priceKopecks > inventorySkin.priceKopecks &&
-            isChanceValid(chance),
-        [stage, inventorySkin, targetSkin, chance],
+            isChanceValid(chance, upgradeSettings),
+        [stage, inventorySkin, targetSkin, chance, upgradeSettings],
     );
 
     const videoState = stageToVideoState(stage, outcome);
@@ -256,14 +259,14 @@ export function useUpgrade({ inventory }: UseUpgradeProps): UseUpgradeReturn {
                     setSelectedTarget(entry.id);
                 }
             } catch {
-                const pick = pickTargetForMultiplier(inventorySkin, m, targetItems);
+                const pick = pickTargetForMultiplier(inventorySkin, m, targetItems, upgradeSettings);
                 if (pick) {
                     setAutoPickedTarget(pick);
                     setSelectedTarget(pick.id);
                 }
             }
         },
-        [inventorySkin, targetItems],
+        [inventorySkin, targetItems, upgradeSettings],
     );
 
     const handleSelectInventory = useCallback((id: SkinId) => {

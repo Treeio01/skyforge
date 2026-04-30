@@ -63,9 +63,19 @@ export interface SiteStats {
     total_upgrades: number;
 }
 
+export interface UpgradeSettings {
+    houseEdge: number;
+    minChance: number;
+    maxChance: number;
+    minBetAmount: number;
+    maxBetAmount: number;
+    cooldownSeconds: number;
+}
+
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
     auth: { user: User | null };
     flash: Flash;
     stats?: SiteStats;
     socials?: Record<string, string>;
+    upgradeSettings?: UpgradeSettings;
 };

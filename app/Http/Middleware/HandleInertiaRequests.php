@@ -66,6 +66,14 @@ class HandleInertiaRequests extends Middleware
                 'youtube' => Setting::get('social_youtube', ''),
                 'twitch' => Setting::get('social_twitch', ''),
             ],
+            'upgradeSettings' => [
+                'houseEdge' => (float) Setting::get('house_edge', 5.00),
+                'minChance' => (float) Setting::get('min_upgrade_chance', 1.00),
+                'maxChance' => (float) Setting::get('max_upgrade_chance', 95.00),
+                'minBetAmount' => (int) Setting::get('min_bet_amount', 100),
+                'maxBetAmount' => (int) Setting::get('max_bet_amount', 5_000_000),
+                'cooldownSeconds' => (int) Setting::get('upgrade_cooldown', 2),
+            ],
         ];
     }
 }

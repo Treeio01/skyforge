@@ -64,36 +64,51 @@ class SiteSettingsPage extends Page
                     Box::make('Состояние сайта', [
                         Switcher::make('Сайт включён', 'site_enabled')
                             ->hint('При выключении пользователи увидят страницу обслуживания.'),
-                        Switcher::make('Выводы включены', 'withdrawals_enabled'),
-                        Textarea::make('Сообщение в режиме обслуживания', 'maintenance_message'),
+                        Switcher::make('Выводы включены', 'withdrawals_enabled')
+                            ->hint('При выключении пользователи не смогут создавать новые заявки на вывод.'),
+                        Textarea::make('Сообщение в режиме обслуживания', 'maintenance_message')
+                            ->hint('Текст показывается пользователям, когда сайт выключен. Можно оставить пустым.'),
                     ]),
 
                     Box::make('Игровая логика', [
-                        Number::make('Комиссия дома (%)', 'house_edge')->step(0.1)->required(),
-                        Number::make('Минимальный шанс апгрейда (%)', 'min_upgrade_chance')->step(0.1)->required(),
-                        Number::make('Максимальный шанс апгрейда (%)', 'max_upgrade_chance')->step(0.1)->required(),
+                        Number::make('Комиссия дома (%)', 'house_edge')->step(0.1)->required()
+                            ->hint('Уменьшает расчетный шанс апгрейда: шанс = ставка / цель × (1 - комиссия / 100).'),
+                        Number::make('Минимальный шанс апгрейда (%)', 'min_upgrade_chance')->step(0.1)->required()
+                            ->hint('Нижняя граница итогового шанса после комиссии и персонального модификатора.'),
+                        Number::make('Максимальный шанс апгрейда (%)', 'max_upgrade_chance')->step(0.1)->required()
+                            ->hint('Верхняя граница итогового шанса после комиссии и персонального модификатора.'),
                         Number::make('Минимальная ставка (копейки)', 'min_bet_amount')->required()
-                            ->hint('1 ₽ = 100 копеек.'),
-                        Number::make('Максимальная ставка (копейки)', 'max_bet_amount')->required(),
-                        Number::make('Кулдаун между апгрейдами (сек)', 'upgrade_cooldown')->min(0)->required(),
+                            ->hint('Минимальная сумма ставки для апгрейда. 1 ₽ = 100 копеек.'),
+                        Number::make('Максимальная ставка (копейки)', 'max_bet_amount')->required()
+                            ->hint('Максимальная сумма ставки для апгрейда. 10000 = 100 ₽.'),
+                        Number::make('Кулдаун между апгрейдами (сек)', 'upgrade_cooldown')->min(0)->required()
+                            ->hint('Пауза между попытками апгрейда для одного пользователя. 0 отключает задержку.'),
                     ]),
 
                     Box::make('SEO', [
                         Text::make('Title', 'seo_title')
                             ->hint('Заголовок страницы и og:title.'),
-                        Textarea::make('Description', 'seo_description'),
-                        Textarea::make('Keywords', 'seo_keywords'),
+                        Textarea::make('Description', 'seo_description')
+                            ->hint('Meta description и og:description для поисковиков и предпросмотра ссылок.'),
+                        Textarea::make('Keywords', 'seo_keywords')
+                            ->hint('Meta keywords. Можно перечислять ключевые фразы через запятую.'),
                         Text::make('Favicon URL', 'favicon_url')
                             ->hint('Абсолютный URL до .ico/.png (например /assets/img/favicon.ico).'),
                     ]),
 
                     Box::make('Социальные сети', [
-                        Text::make('VK', 'social_vk'),
-                        Text::make('Telegram', 'social_telegram'),
-                        Text::make('Discord', 'social_discord'),
-                        Text::make('TikTok', 'social_tiktok'),
-                        Text::make('YouTube', 'social_youtube'),
-                        Text::make('Twitch', 'social_twitch'),
+                        Text::make('VK', 'social_vk')
+                            ->hint('Ссылка на сообщество VK. Показывается в интерфейсе сайта.'),
+                        Text::make('Telegram', 'social_telegram')
+                            ->hint('Ссылка на Telegram-канал или чат. Показывается в интерфейсе сайта.'),
+                        Text::make('Discord', 'social_discord')
+                            ->hint('Ссылка-приглашение в Discord. Показывается в интерфейсе сайта.'),
+                        Text::make('TikTok', 'social_tiktok')
+                            ->hint('Ссылка на TikTok-профиль. Показывается в интерфейсе сайта.'),
+                        Text::make('YouTube', 'social_youtube')
+                            ->hint('Ссылка на YouTube-канал. Показывается в интерфейсе сайта.'),
+                        Text::make('Twitch', 'social_twitch')
+                            ->hint('Ссылка на Twitch-канал. Показывается в интерфейсе сайта.'),
                     ]),
                 ])
                 ->fill($values)

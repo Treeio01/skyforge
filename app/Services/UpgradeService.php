@@ -61,6 +61,17 @@ class UpgradeService
                 throw new \DomainException('Сумма ставки должна быть больше нуля.');
             }
 
+            $minBetAmount = (int) Setting::get('min_bet_amount', 100);
+            $maxBetAmount = (int) Setting::get('max_bet_amount', 5_000_000);
+
+            if ($betAmount < $minBetAmount) {
+                throw new \DomainException('Сумма ставки меньше минимальной.');
+            }
+
+            if ($betAmount > $maxBetAmount) {
+                throw new \DomainException('Сумма ставки больше максимальной.');
+            }
+
             if ($betAmount >= $targetPrice) {
                 throw new \DomainException('Ставка должна быть меньше цены цели.');
             }
