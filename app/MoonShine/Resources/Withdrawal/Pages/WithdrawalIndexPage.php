@@ -64,7 +64,6 @@ class WithdrawalIndexPage extends IndexPage
         return parent::buttons()
             ->prepend(
                 ActionButton::make('Подтвердить', fn ($item) => route('moonshine.withdrawals.approve', $item))
-                    ->method('post')
                     ->canSee(fn ($item) => \in_array(
                         $item?->status?->value,
                         [WithdrawalStatus::Pending->value, WithdrawalStatus::Processing->value],
@@ -77,7 +76,6 @@ class WithdrawalIndexPage extends IndexPage
                     )
                     ->primary(),
                 ActionButton::make('Отклонить', fn ($item) => route('moonshine.withdrawals.reject', $item))
-                    ->method('post')
                     ->canSee(fn ($item) => $item?->status?->value !== WithdrawalStatus::Completed->value)
                     ->withConfirm(
                         title: 'Отклонить вывод?',

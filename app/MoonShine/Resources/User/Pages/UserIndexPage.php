@@ -58,7 +58,6 @@ class UserIndexPage extends IndexPage
         return parent::buttons()
             ->prepend(
                 ActionButton::make('Забанить', fn ($item) => route('moonshine.users.ban', $item))
-                    ->method('post')
                     ->canSee(fn ($item) => ! (bool) $item?->is_banned)
                     ->withConfirm(
                         title: 'Забанить пользователя?',
@@ -70,7 +69,6 @@ class UserIndexPage extends IndexPage
                     )
                     ->error(),
                 ActionButton::make('Разбанить', fn ($item) => route('moonshine.users.unban', $item))
-                    ->method('post')
                     ->canSee(fn ($item) => (bool) $item?->is_banned)
                     ->withConfirm(
                         title: 'Разбанить пользователя?',

@@ -47,12 +47,10 @@ class FaqItemMoonIndexPage extends IndexPage
         return parent::buttons()
             ->add(
                 ActionButton::make('Активировать', fn () => route('moonshine.faq.bulk-activate'))
-                    ->method('post')
                     ->bulk()
                     ->withConfirm(title: 'Активировать выбранные вопросы?', button: 'Активировать')
                     ->primary(),
                 ActionButton::make('Деактивировать', fn () => route('moonshine.faq.bulk-deactivate'))
-                    ->method('post')
                     ->bulk()
                     ->withConfirm(title: 'Деактивировать выбранные вопросы?', button: 'Деактивировать')
                     ->error(),

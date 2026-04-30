@@ -56,12 +56,10 @@ class PromoCodeIndexPage extends IndexPage
         return parent::buttons()
             ->add(
                 ActionButton::make('Активировать', fn () => route('moonshine.promo-codes.bulk-activate'))
-                    ->method('post')
                     ->bulk()
                     ->withConfirm(title: 'Активировать выбранные промокоды?', button: 'Активировать')
                     ->primary(),
                 ActionButton::make('Деактивировать', fn () => route('moonshine.promo-codes.bulk-deactivate'))
-                    ->method('post')
                     ->bulk()
                     ->withConfirm(title: 'Деактивировать выбранные промокоды?', button: 'Деактивировать')
                     ->error(),

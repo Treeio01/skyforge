@@ -63,7 +63,6 @@ class DepositIndexPage extends IndexPage
         return parent::buttons()
             ->prepend(
                 ActionButton::make('Завершить', fn ($item) => route('moonshine.deposits.complete', $item))
-                    ->method('post')
                     ->canSee(fn ($item) => $item?->status?->value !== DepositStatus::Completed->value)
                     ->withConfirm(
                         title: 'Пометить депозит как завершённый?',

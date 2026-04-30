@@ -51,12 +51,10 @@ class SkinIndexPage extends IndexPage
         return parent::buttons()
             ->add(
                 ActionButton::make('Активировать', fn () => route('moonshine.skins.bulk-activate'))
-                    ->method('post')
                     ->bulk()
                     ->withConfirm(title: 'Активировать выбранные скины?', button: 'Активировать')
                     ->primary(),
                 ActionButton::make('Деактивировать', fn () => route('moonshine.skins.bulk-deactivate'))
-                    ->method('post')
                     ->bulk()
                     ->withConfirm(title: 'Деактивировать выбранные скины?', button: 'Деактивировать')
                     ->error(),
