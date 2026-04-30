@@ -17,7 +17,8 @@ class FakeLiveFeedCommand extends Command
     protected $signature = 'feed:fake
         {--interval=7 : Average interval in seconds}
         {--once : Generate a finite batch and exit}
-        {--count=6 : Number of entries to generate in --once mode}';
+        {--count=6 : Number of entries to generate in --once mode}
+        {--fill=0 : Generate only enough entries to reach this total upgrade count}';
 
     protected $description = 'Generate fake live feed entries and broadcast them via WebSocket';
 
@@ -40,6 +41,7 @@ class FakeLiveFeedCommand extends Command
         $interval = max(1, (int) $this->option('interval'));
         $once = (bool) $this->option('once');
         $count = max(1, (int) $this->option('count'));
+        $fill = max(0, (int) $this->option('fill'));
 
         $skins = Skin::query()
             ->where('is_active', true)
@@ -53,6 +55,18 @@ class FakeLiveFeedCommand extends Command
             $this->error('No active skins found.');
 
             return self::FAILURE;
+        }
+
+        if ($fill > 0) {
+            $missing = max(0, $fill - Upgrade::query()->count());
+
+            for ($i = 0; $i < $missing; $i++) {
+                $this->createFakeUpgrade($skins);
+            }
+
+            $this->info("Generated {$missing} fake feed upgrades to fill {$fill} total upgrades.");
+
+            return self::SUCCESS;
         }
 
         if ($once) {

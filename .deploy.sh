@@ -90,6 +90,7 @@ maybe_systemctl_reload "$WEB_SERVICE"
 step "Warm application data"
 run_as_app_user php artisan skyforge:sync-rates --no-interaction || true
 run_as_app_user php artisan online:boot --no-interaction || true
+run_as_app_user php artisan feed:fake --fill=20 --no-interaction || true
 
 step "Status"
 maybe_supervisor status || true

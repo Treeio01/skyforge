@@ -3,7 +3,7 @@ import { FeedItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import axios from 'axios';
 import { AnimatePresence } from 'framer-motion';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useToast } from '@/Components/UI/Toast';
 import LiveFeedItem, { SkinRarity } from './LiveFeedItem';
 
@@ -17,16 +17,15 @@ export type LiveFeedEntry = {
 
 const MAX_FEED_ITEMS = 20;
 
-function makeFeedItemToEntry(counterRef: React.MutableRefObject<number>) {
-    return function feedItemToEntry(item: FeedItem): LiveFeedEntry {
-        const { weapon, name } = parseSkinName(item.target_skin_name);
-        return {
-            id: `feed-${item.id}-${++counterRef.current}`,
-            rarity: mapRarityColor(item.rarity_color),
-            weapon,
-            name,
-            image: item.target_skin_image || '',
-        };
+function feedItemToEntry(item: FeedItem): LiveFeedEntry {
+    const { weapon, name } = parseSkinName(item.target_skin_name);
+
+    return {
+        id: `feed-${item.id}`,
+        rarity: mapRarityColor(item.rarity_color),
+        weapon,
+        name,
+        image: item.target_skin_image || '',
     };
 }
 
@@ -59,12 +58,7 @@ function FeedTabButton({ active, onClick, label, icon }: FeedTabButtonProps) {
 export default function LiveFeed() {
     const [items, setItems] = useState<LiveFeedEntry[]>([]);
     const [tab, setTab] = useState<FeedTab>('all');
-    const feedCounterRef = useRef(0);
     const { toast } = useToast();
-    const feedItemToEntry = useCallback(
-        makeFeedItemToEntry(feedCounterRef),
-        [] // feedCounterRef is a stable ref
-    );
 
     // Загрузить последние апгрейды при монтировании
     useEffect(() => {
@@ -91,7 +85,10 @@ export default function LiveFeed() {
 
         channel.listen('.UpgradeCompleted', (event: FeedItem) => {
             const entry = feedItemToEntry(event);
-            setItems((prev) => [entry, ...prev].slice(0, MAX_FEED_ITEMS));
+            setItems((prev) => [
+                entry,
+                ...prev.filter((item) => item.id !== entry.id),
+            ].slice(0, MAX_FEED_ITEMS));
         });
 
         return () => {

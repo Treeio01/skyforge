@@ -12,7 +12,8 @@ class LiveFeedController extends Controller
     public function index(): JsonResponse
     {
         $feed = Upgrade::with(['user', 'targetSkin'])
-            ->latest('created_at')
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
             ->limit(20)
             ->get()
             ->map(fn (Upgrade $u) => [
