@@ -9,6 +9,7 @@ use App\MoonShine\Resources\Concerns\ReadOnlyActions;
 use App\MoonShine\Resources\SkinPrice\Pages\SkinPriceDetailPage;
 use App\MoonShine\Resources\SkinPrice\Pages\SkinPriceFormPage;
 use App\MoonShine\Resources\SkinPrice\Pages\SkinPriceIndexPage;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Laravel\Resources\ModelResource;
 
@@ -23,8 +24,6 @@ class SkinPriceResource extends ModelResource
 
     protected string $title = 'Цены скинов';
 
-    protected array $search = ['skin_id'];
-
     protected array $with = ['skin'];
 
     /**
@@ -37,5 +36,18 @@ class SkinPriceResource extends ModelResource
             SkinPriceFormPage::class,
             SkinPriceDetailPage::class,
         ];
+    }
+
+    /**
+     * @return list<string>
+     */
+    protected function search(): array
+    {
+        return ['id', 'skin_id', 'source', 'skin.market_hash_name'];
+    }
+
+    protected function modifyItemQueryBuilder(Builder $builder): Builder
+    {
+        return $builder->with($this->with);
     }
 }

@@ -8,6 +8,7 @@ use App\Models\Withdrawal;
 use App\MoonShine\Resources\Withdrawal\Pages\WithdrawalDetailPage;
 use App\MoonShine\Resources\Withdrawal\Pages\WithdrawalFormPage;
 use App\MoonShine\Resources\Withdrawal\Pages\WithdrawalIndexPage;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Laravel\Resources\ModelResource;
 
@@ -36,5 +37,18 @@ class WithdrawalResource extends ModelResource
             WithdrawalFormPage::class,
             WithdrawalDetailPage::class,
         ];
+    }
+
+    /**
+     * @return list<string>
+     */
+    protected function search(): array
+    {
+        return ['id', 'user_id', 'user_skin_id', 'skin_id', 'trade_offer_id', 'trade_offer_status', 'failure_reason', 'user.username', 'user.steam_id', 'skin.market_hash_name'];
+    }
+
+    protected function modifyItemQueryBuilder(Builder $builder): Builder
+    {
+        return $builder->with(['user', 'skin', 'userSkin']);
     }
 }

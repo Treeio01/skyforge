@@ -8,6 +8,7 @@ import ProfileChip from "./sections/ProfileChip";
 import SocialLinks from "./sections/SocialLinks";
 import { PageProps } from "@/types";
 import { useOnlineCount } from "@/hooks/useOnlineCount";
+import { useUpgradeCount } from "@/hooks/useUpgradeCount";
 
 function Logo() {
     return (
@@ -22,8 +23,8 @@ function Logo() {
 }
 
 function StatsChips() {
-    const { stats } = usePage<PageProps>().props;
     const onlineDisplay = useOnlineCount();
+    const totalUpgrades = useUpgradeCount();
 
     return (
         <div className="flex gap-[3px] items-stretch">
@@ -33,7 +34,7 @@ function StatsChips() {
             </Chip>
             <Chip className="bg-chip text-white">
                 <LevelsIcon />
-                <ChipLabel>{stats?.total_upgrades?.toLocaleString('ru-RU') ?? '0'}</ChipLabel>
+                <ChipLabel>{totalUpgrades.toLocaleString('ru-RU')}</ChipLabel>
             </Chip>
             <Chip
                 interactive

@@ -31,4 +31,12 @@ class PromoCodeResource extends ModelResource
             PromoCodeDetailPage::class,
         ];
     }
+
+    /**
+     * @return list<string>
+     */
+    protected function search(): array
+    {
+        return ['id', 'code', 'type'];
+    }
 }

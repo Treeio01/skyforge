@@ -24,8 +24,6 @@ class UserSkinResource extends ModelResource
 
     protected string $title = 'Инвентарь пользователей';
 
-    protected array $search = ['id', 'user_id'];
-
     protected array $with = ['user', 'skin'];
 
     /**
@@ -43,5 +41,13 @@ class UserSkinResource extends ModelResource
     protected function modifyItemQueryBuilder(Builder $builder): Builder
     {
         return $builder->with($this->with);
+    }
+
+    /**
+     * @return list<string>
+     */
+    protected function search(): array
+    {
+        return ['id', 'user_id', 'skin_id', 'source', 'status', 'user.username', 'user.steam_id', 'skin.market_hash_name'];
     }
 }

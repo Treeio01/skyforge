@@ -43,6 +43,14 @@ class UtmMarkResource extends ModelResource
         return $this->withAggregateCounts($builder);
     }
 
+    /**
+     * @return list<string>
+     */
+    protected function search(): array
+    {
+        return ['id', 'slug', 'name', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+    }
+
     private function withAggregateCounts(Builder $builder): Builder
     {
         return $builder->withCount(['users', 'deposits', 'upgrades', 'withdrawals']);

@@ -8,6 +8,7 @@ use App\Models\FaqItem;
 use App\MoonShine\Resources\FaqItemMoon\Pages\FaqItemMoonDetailPage;
 use App\MoonShine\Resources\FaqItemMoon\Pages\FaqItemMoonFormPage;
 use App\MoonShine\Resources\FaqItemMoon\Pages\FaqItemMoonIndexPage;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Laravel\Resources\ModelResource;
 use MoonShine\Support\Enums\SortDirection;
@@ -37,5 +38,18 @@ class FaqItemMoonResource extends ModelResource
             FaqItemMoonFormPage::class,
             FaqItemMoonDetailPage::class,
         ];
+    }
+
+    /**
+     * @return list<string>
+     */
+    protected function search(): array
+    {
+        return ['id', 'category', 'question', 'answer', 'faqCategory.name', 'faqCategory.slug'];
+    }
+
+    protected function modifyItemQueryBuilder(Builder $builder): Builder
+    {
+        return $builder->with($this->with);
     }
 }

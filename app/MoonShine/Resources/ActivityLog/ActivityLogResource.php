@@ -28,8 +28,6 @@ class ActivityLogResource extends ModelResource
 
     protected SortDirection $sortDirection = SortDirection::DESC;
 
-    protected array $search = ['description', 'log_name', 'subject_type', 'causer_type'];
-
     /**
      * @return list<class-string<PageContract>>
      */
@@ -40,5 +38,13 @@ class ActivityLogResource extends ModelResource
             ActivityLogFormPage::class,
             ActivityLogDetailPage::class,
         ];
+    }
+
+    /**
+     * @return list<string>
+     */
+    protected function search(): array
+    {
+        return ['id', 'description', 'log_name', 'subject_type', 'causer_type'];
     }
 }

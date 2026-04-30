@@ -31,4 +31,12 @@ class SettingResource extends ModelResource
             SettingDetailPage::class,
         ];
     }
+
+    /**
+     * @return list<string>
+     */
+    protected function search(): array
+    {
+        return ['id', 'key', 'value', 'description'];
+    }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use App\Models\Skin;
+use App\Services\UpgradeStatsService;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
@@ -31,7 +32,7 @@ class FakeLiveFeedCommand extends Command
         'https://avatars.steamstatic.com/1c526efa6c47a043ed96c0e7a3e8b4dce53437f3_medium.jpg',
     ];
 
-    public function handle(): int
+    public function handle(UpgradeStatsService $upgradeStats): int
     {
         $interval = max(1, (int) $this->option('interval'));
 
@@ -75,6 +76,7 @@ class FakeLiveFeedCommand extends Command
             // Сохраняем в Redis для /api/live-feed
             Redis::lpush('feed:recent', json_encode($payload));
             Redis::ltrim('feed:recent', 0, 29);
+            $upgradeStats->incrementFakeAndBroadcast();
 
             broadcast(new class($payload) implements ShouldBroadcastNow
             {

@@ -24,8 +24,6 @@ class PromoCodeUsageResource extends ModelResource
 
     protected string $title = 'Использования промокодов';
 
-    protected array $search = ['id', 'user_id', 'promo_code_id'];
-
     protected array $with = ['user', 'promoCode'];
 
     /**
@@ -43,5 +41,13 @@ class PromoCodeUsageResource extends ModelResource
     protected function modifyItemQueryBuilder(Builder $builder): Builder
     {
         return $builder->with($this->with);
+    }
+
+    /**
+     * @return list<string>
+     */
+    protected function search(): array
+    {
+        return ['id', 'user_id', 'promo_code_id', 'user.username', 'user.steam_id', 'promoCode.code'];
     }
 }

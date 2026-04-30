@@ -34,4 +34,12 @@ class FaqItemResource extends ModelResource
             FaqItemFormPage::class,
         ];
     }
+
+    /**
+     * @return list<string>
+     */
+    protected function search(): array
+    {
+        return ['id', 'category', 'question', 'answer'];
+    }
 }

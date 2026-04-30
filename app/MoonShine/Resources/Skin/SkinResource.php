@@ -21,8 +21,6 @@ class SkinResource extends ModelResource
 
     protected string $title = 'Скины';
 
-    protected array $search = ['market_hash_name', 'weapon_type', 'skin_name'];
-
     protected string $sortColumn = 'price';
 
     protected SortDirection $sortDirection = SortDirection::DESC;
@@ -37,5 +35,13 @@ class SkinResource extends ModelResource
             SkinFormPage::class,
             SkinDetailPage::class,
         ];
+    }
+
+    /**
+     * @return list<string>
+     */
+    protected function search(): array
+    {
+        return ['id', 'market_hash_name', 'weapon_type', 'skin_name'];
     }
 }

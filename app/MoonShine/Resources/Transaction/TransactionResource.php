@@ -8,6 +8,7 @@ use App\Models\Transaction;
 use App\MoonShine\Resources\Transaction\Pages\TransactionDetailPage;
 use App\MoonShine\Resources\Transaction\Pages\TransactionFormPage;
 use App\MoonShine\Resources\Transaction\Pages\TransactionIndexPage;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use MoonShine\Contracts\Core\PageContract;
 use MoonShine\Laravel\Resources\ModelResource;
 
@@ -36,5 +37,18 @@ class TransactionResource extends ModelResource
             TransactionFormPage::class,
             TransactionDetailPage::class,
         ];
+    }
+
+    /**
+     * @return list<string>
+     */
+    protected function search(): array
+    {
+        return ['id', 'user_id', 'type', 'description', 'reference_type', 'reference_id', 'user.username', 'user.steam_id'];
+    }
+
+    protected function modifyItemQueryBuilder(Builder $builder): Builder
+    {
+        return $builder->with($this->with);
     }
 }

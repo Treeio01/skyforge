@@ -6,8 +6,8 @@ namespace App\Http\Middleware;
 
 use App\Http\Resources\UserResource;
 use App\Models\Setting;
-use App\Models\Upgrade;
 use App\Models\User;
+use App\Services\UpgradeStatsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Middleware;
@@ -56,7 +56,7 @@ class HandleInertiaRequests extends Middleware
                 'online_real' => User::where('last_active_at', '>=', now()->subMinutes(5))->count(),
                 'online_fake_initial' => Cache::get('online.fake_state')['value'] ?? 0,
                 'online_enabled' => (bool) Setting::get('online.enabled', false),
-                'total_upgrades' => Upgrade::count(),
+                'total_upgrades' => app(UpgradeStatsService::class)->total(),
             ]),
             'socials' => [
                 'vk' => Setting::get('social_vk', ''),

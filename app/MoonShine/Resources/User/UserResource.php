@@ -21,8 +21,6 @@ class UserResource extends ModelResource
 
     protected string $title = 'Пользователи';
 
-    protected array $search = ['username', 'steam_id'];
-
     protected array $with = ['utmMark'];
 
     /**
@@ -40,5 +38,13 @@ class UserResource extends ModelResource
     protected function modifyItemQueryBuilder(Builder $builder): Builder
     {
         return $builder->with('utmMark');
+    }
+
+    /**
+     * @return list<string>
+     */
+    protected function search(): array
+    {
+        return ['id', 'username', 'steam_id', 'trade_url', 'utmMark.slug', 'utmMark.name'];
     }
 }

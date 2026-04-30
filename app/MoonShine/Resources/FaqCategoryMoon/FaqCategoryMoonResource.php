@@ -31,4 +31,12 @@ class FaqCategoryMoonResource extends ModelResource
             FaqCategoryMoonDetailPage::class,
         ];
     }
+
+    /**
+     * @return list<string>
+     */
+    protected function search(): array
+    {
+        return ['id', 'slug', 'name'];
+    }
 }
