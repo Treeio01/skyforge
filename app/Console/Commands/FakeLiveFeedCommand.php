@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
+use App\Enums\UpgradeResult;
+use App\Events\UpgradeCompleted;
 use App\Models\Skin;
-use App\Services\UpgradeStatsService;
-use Illuminate\Broadcasting\Channel;
+use App\Models\Upgrade;
+use App\Models\User;
 use Illuminate\Console\Command;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
-use Illuminate\Foundation\Events\Dispatchable;
-use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Collection;
 
 class FakeLiveFeedCommand extends Command
 {
-    protected $signature = 'feed:fake {--interval=7 : Average interval in seconds}';
+    protected $signature = 'feed:fake
+        {--interval=7 : Average interval in seconds}
+        {--once : Generate a finite batch and exit}
+        {--count=6 : Number of entries to generate in --once mode}';
 
     protected $description = 'Generate fake live feed entries and broadcast them via WebSocket';
 
@@ -32,11 +35,11 @@ class FakeLiveFeedCommand extends Command
         'https://avatars.steamstatic.com/1c526efa6c47a043ed96c0e7a3e8b4dce53437f3_medium.jpg',
     ];
 
-    public function handle(UpgradeStatsService $upgradeStats): int
+    public function handle(): int
     {
         $interval = max(1, (int) $this->option('interval'));
-
-        $this->info("Generating fake feed every ~{$interval}s. Press Ctrl+C to stop.");
+        $once = (bool) $this->option('once');
+        $count = max(1, (int) $this->option('count'));
 
         $skins = Skin::query()
             ->where('is_active', true)
@@ -52,56 +55,77 @@ class FakeLiveFeedCommand extends Command
             return self::FAILURE;
         }
 
-        $id = 100000;
+        if ($once) {
+            for ($i = 0; $i < $count; $i++) {
+                $this->createFakeUpgrade($skins);
+            }
+
+            $this->info("Generated {$count} fake feed upgrades.");
+
+            return self::SUCCESS;
+        }
+
+        $this->info("Generating fake feed every ~{$interval}s. Press Ctrl+C to stop.");
 
         while (true) {
-            $skin = $skins->random();
-            $isWin = rand(1, 100) <= 35;
-            $chance = round(rand(50, 9000) / 100, 2);
-
-            $payload = [
-                'id' => $id++,
-                'username' => self::FAKE_NAMES[array_rand(self::FAKE_NAMES)],
-                'avatar_url' => self::FAKE_AVATARS[array_rand(self::FAKE_AVATARS)],
-                'target_skin_name' => $skin->market_hash_name,
-                'target_skin_image' => $skin->image_path
-                    ? asset('storage/'.$skin->image_path)
-                    : null,
-                'rarity_color' => $skin->rarity_color,
-                'chance' => $chance,
-                'result' => $isWin ? 'win' : 'lose',
-                'created_at' => now()->toISOString(),
-            ];
-
-            // Сохраняем в Redis для /api/live-feed
-            Redis::lpush('feed:recent', json_encode($payload));
-            Redis::ltrim('feed:recent', 0, 29);
-            $upgradeStats->incrementFakeAndBroadcast();
-
-            broadcast(new class($payload) implements ShouldBroadcastNow
-            {
-                use Dispatchable;
-
-                public function __construct(public array $payload) {}
-
-                public function broadcastOn(): array
-                {
-                    return [new Channel('upgrades')];
-                }
-
-                public function broadcastAs(): string
-                {
-                    return 'UpgradeCompleted';
-                }
-
-                public function broadcastWith(): array
-                {
-                    return $this->payload;
-                }
-            });
+            $this->createFakeUpgrade($skins);
 
             $delay = rand(max(1, $interval - 3), $interval + 3);
             sleep($delay);
         }
+    }
+
+    /**
+     * @param  Collection<int, Skin>  $skins
+     */
+    private function createFakeUpgrade(Collection $skins): void
+    {
+        $skin = $skins->random();
+        $isWin = rand(1, 100) <= 35;
+        $chance = round(rand(50, 9000) / 100, 2);
+        $targetPrice = (int) $skin->price;
+        $betAmount = max(100, (int) round($targetPrice * ($chance / 100) / 0.95));
+        $betAmount = min($betAmount, max(100, $targetPrice - 1));
+        $user = $this->fakeUser();
+
+        $upgrade = Upgrade::create([
+            'user_id' => $user->id,
+            'target_skin_id' => $skin->id,
+            'bet_amount' => $betAmount,
+            'balance_amount' => 0,
+            'target_price' => $targetPrice,
+            'chance' => $chance,
+            'multiplier' => max(1.01, round($targetPrice / max(1, $betAmount), 2)),
+            'house_edge' => 5.00,
+            'chance_modifier' => 1.000,
+            'result' => $isWin ? UpgradeResult::Win : UpgradeResult::Lose,
+            'roll_value' => rand(0, 10_000_000) / 10_000_000,
+            'roll_hex' => bin2hex(random_bytes(8)),
+            'client_seed' => hash('sha256', 'fake-client-'.uniqid('', true)),
+            'server_seed_hash' => hash('sha256', 'fake-server-'.uniqid('', true)),
+            'server_seed_raw' => hash('sha256', 'fake-raw-'.uniqid('', true)),
+            'nonce' => random_int(1, 1_000_000),
+            'is_revealed' => true,
+            'is_fake' => true,
+            'created_at' => now(),
+        ]);
+
+        $upgrade->load(['user', 'targetSkin']);
+        UpgradeCompleted::dispatch($upgrade);
+    }
+
+    private function fakeUser(): User
+    {
+        $name = self::FAKE_NAMES[array_rand(self::FAKE_NAMES)];
+        $steamId = '9'.str_pad((string) abs(crc32($name)), 19, '0', STR_PAD_LEFT);
+
+        return User::query()->updateOrCreate(
+            ['steam_id' => $steamId],
+            [
+                'username' => $name,
+                'avatar_url' => self::FAKE_AVATARS[array_rand(self::FAKE_AVATARS)],
+                'last_active_at' => now(),
+            ],
+        );
     }
 }

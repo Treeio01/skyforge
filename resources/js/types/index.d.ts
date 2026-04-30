@@ -48,6 +48,7 @@ export interface FeedItem {
     rarity_color: string | null;
     chance: number;
     result: string;
+    is_fake?: boolean;
     created_at: string;
 }
 

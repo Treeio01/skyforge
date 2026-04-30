@@ -23,6 +23,11 @@ class UpgradeCompleted implements ShouldBroadcastNow
         return [new Channel('upgrades')];
     }
 
+    public function broadcastAs(): string
+    {
+        return 'UpgradeCompleted';
+    }
+
     /** @return array<string, mixed> */
     public function broadcastWith(): array
     {
@@ -37,6 +42,7 @@ class UpgradeCompleted implements ShouldBroadcastNow
             'rarity_color' => $this->upgrade->targetSkin->rarity_color,
             'chance' => $this->upgrade->chance,
             'result' => $this->upgrade->result->value,
+            'is_fake' => $this->upgrade->is_fake,
             'created_at' => $this->upgrade->created_at->toISOString(),
         ];
     }

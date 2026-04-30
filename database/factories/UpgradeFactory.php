@@ -40,6 +40,7 @@ class UpgradeFactory extends Factory
             'server_seed_raw' => fake()->sha1(),
             'nonce' => fake()->numberBetween(1, 1000),
             'is_revealed' => false,
+            'is_fake' => false,
             'created_at' => now(),
         ];
     }
@@ -52,5 +53,10 @@ class UpgradeFactory extends Factory
     public function lost(): static
     {
         return $this->state(['result' => UpgradeResult::Lose]);
+    }
+
+    public function fakeFeed(): static
+    {
+        return $this->state(['is_fake' => true]);
     }
 }

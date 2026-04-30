@@ -43,6 +43,7 @@ class UpgradeIndexPage extends IndexPage
             Number::make('Шанс', 'chance')
                 ->modifyRawValue(fn (mixed $value) => round((float) $value, 2).'%'),
             Text::make('Результат', formatted: fn ($item) => $item->result?->value === 'win' ? '✅ Победа' : '❌ Проигрыш'),
+            Text::make('Тип', formatted: fn ($item) => $item->is_fake ? 'Фейковый' : 'Реальный'),
             Date::make('Дата', 'created_at'),
         ];
     }
@@ -64,6 +65,9 @@ class UpgradeIndexPage extends IndexPage
             Select::make('Результат', 'result')
                 ->options(['win' => 'Победа', 'lose' => 'Проигрыш'])
                 ->nullable(),
+            Select::make('Тип', 'is_fake')
+                ->options(['0' => 'Реальный', '1' => 'Фейковый'])
+                ->nullable(),
         ];
     }
 
@@ -74,6 +78,8 @@ class UpgradeIndexPage extends IndexPage
     {
         return [
             QueryTag::make('Все', fn ($q) => $q),
+            QueryTag::make('Реальные', fn ($q) => $q->where('is_fake', false)),
+            QueryTag::make('Фейковые', fn ($q) => $q->where('is_fake', true)),
             QueryTag::make('Победы сегодня', fn ($q) => $q->where('result', UpgradeResult::Win->value)->where('created_at', '>=', now()->startOfDay())),
             QueryTag::make('Проигрыши сегодня', fn ($q) => $q->where('result', UpgradeResult::Lose->value)->where('created_at', '>=', now()->startOfDay())),
             QueryTag::make('За 7д', fn ($q) => $q->where('created_at', '>=', now()->subWeek())),

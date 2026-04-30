@@ -20,3 +20,8 @@ Schedule::command('horizon:snapshot')
 Schedule::command('online:boot')
     ->hourly()
     ->withoutOverlapping();
+
+Schedule::command('feed:fake --once --count=6')
+    ->everyMinute()
+    ->withoutOverlapping()
+    ->onOneServer();

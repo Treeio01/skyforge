@@ -8,12 +8,14 @@ use App\Enums\UpgradeResult;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 /**
  * @property-read User $user
  * @property-read Skin $targetSkin
  * @property UpgradeResult $result
- * @property \Illuminate\Support\Carbon $created_at
+ * @property Carbon $created_at
+ * @property bool $is_fake
  */
 class Upgrade extends Model
 {
@@ -41,6 +43,7 @@ class Upgrade extends Model
         'server_seed_raw',
         'nonce',
         'is_revealed',
+        'is_fake',
         'created_at',
     ];
 
@@ -58,6 +61,7 @@ class Upgrade extends Model
             'roll_value' => 'double',
             'nonce' => 'integer',
             'is_revealed' => 'boolean',
+            'is_fake' => 'boolean',
             'created_at' => 'datetime',
         ];
     }
