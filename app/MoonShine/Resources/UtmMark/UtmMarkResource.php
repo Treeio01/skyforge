@@ -33,10 +33,17 @@ class UtmMarkResource extends ModelResource
         ];
     }
 
-    /**
-     * Eager-load aggregate counts so the index page shows them without N+1.
-     */
+    protected function modifyQueryBuilder(Builder $builder): Builder
+    {
+        return $this->withAggregateCounts($builder);
+    }
+
     protected function modifyItemQueryBuilder(Builder $builder): Builder
+    {
+        return $this->withAggregateCounts($builder);
+    }
+
+    private function withAggregateCounts(Builder $builder): Builder
     {
         return $builder->withCount(['users', 'deposits', 'upgrades', 'withdrawals']);
     }

@@ -26,6 +26,8 @@ class UserSkinResource extends ModelResource
 
     protected array $search = ['id', 'user_id'];
 
+    protected array $with = ['user', 'skin'];
+
     /**
      * @return list<class-string<PageContract>>
      */
@@ -40,6 +42,6 @@ class UserSkinResource extends ModelResource
 
     protected function modifyItemQueryBuilder(Builder $builder): Builder
     {
-        return $builder->with(['user', 'skin']);
+        return $builder->with($this->with);
     }
 }

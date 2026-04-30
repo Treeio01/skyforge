@@ -26,6 +26,8 @@ class PromoCodeUsageResource extends ModelResource
 
     protected array $search = ['id', 'user_id', 'promo_code_id'];
 
+    protected array $with = ['user', 'promoCode'];
+
     /**
      * @return list<class-string<PageContract>>
      */
@@ -40,6 +42,6 @@ class PromoCodeUsageResource extends ModelResource
 
     protected function modifyItemQueryBuilder(Builder $builder): Builder
     {
-        return $builder->with(['user', 'promoCode']);
+        return $builder->with($this->with);
     }
 }

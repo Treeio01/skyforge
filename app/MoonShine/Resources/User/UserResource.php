@@ -23,6 +23,8 @@ class UserResource extends ModelResource
 
     protected array $search = ['username', 'steam_id'];
 
+    protected array $with = ['utmMark'];
+
     /**
      * @return list<class-string<PageContract>>
      */

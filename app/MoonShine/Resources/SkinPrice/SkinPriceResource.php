@@ -25,6 +25,8 @@ class SkinPriceResource extends ModelResource
 
     protected array $search = ['skin_id'];
 
+    protected array $with = ['skin'];
+
     /**
      * @return list<class-string<PageContract>>
      */
