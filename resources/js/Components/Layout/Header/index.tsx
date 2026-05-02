@@ -1,4 +1,5 @@
 import { Link, usePage } from "@inertiajs/react";
+import { useTranslation } from "react-i18next";
 import { BonusIcon, FaqIcon, GlobeIcon, LevelsIcon, MarketIcon, SteamIcon } from "@/Components/UI/Icons";
 import Button from "@/Components/UI/Button";
 import { Chip, ChipLabel, Divider } from "./primitives";
@@ -23,6 +24,7 @@ function Logo() {
 }
 
 function StatsChips() {
+    const { t } = useTranslation();
     const onlineDisplay = useOnlineCount();
     const totalUpgrades = useUpgradeCount();
 
@@ -41,7 +43,7 @@ function StatsChips() {
                 className="bg-linear-to-r from-[#FE7A02] to-[#FE4D00] text-white"
             >
                 <BonusIcon />
-                <ChipLabel>Бонусы</ChipLabel>
+                <ChipLabel>{t('header.bonuses')}</ChipLabel>
             </Chip>
         </div>
     );
@@ -67,15 +69,17 @@ function NavChip({ href, icon: Icon, label, className = '' }: { href: string; ic
 }
 
 function NavChips() {
+    const { t } = useTranslation();
     return (
         <div className="flex gap-[3px] items-stretch">
-            <NavChip href="/market" icon={MarketIcon} label="Рынок Скинов" />
-            <NavChip href="/provably-fair" icon={FaqIcon} label="FAQ" className="hidden md:flex" />
+            <NavChip href="/market" icon={MarketIcon} label={t('header.market')} />
+            <NavChip href="/provably-fair" icon={FaqIcon} label={t('header.faq')} className="hidden md:flex" />
         </div>
     );
 }
 
 export default function Header() {
+    const { t } = useTranslation();
     const { auth } = usePage<PageProps>().props;
     const user = auth.user;
 
@@ -106,7 +110,7 @@ export default function Header() {
                         onClick={() => window.dispatchEvent(new Event('show-login-modal'))}
                     >
                         <SteamIcon />
-                        <span className="text-sm text-white font-sf-display font-medium leading-[120%]">Войти</span>
+                        <span className="text-sm text-white font-sf-display font-medium leading-[120%]">{t('common.login')}</span>
                     </Button>
                 )}
             </div>

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { UpgradeTargetIcon } from "@/Components/UI/Icons";
 import { SkeletonSkinCard } from "@/Components/UI/Skeleton";
 import SkinCard, { SkinEntry } from "./SkinCard";
@@ -33,10 +34,11 @@ export default function UpgradeTargetPanel({
     onMinPriceChange,
     onSearchChange,
 }: UpgradeTargetPanelProps) {
+    const { t } = useTranslation();
     return (
         <SkinsPanel
             icon={<UpgradeTargetIcon />}
-            title="Скин апгрейда"
+            title={t('upgrade.target_skin')}
             onScrollEnd={onScrollEnd}
             toolbar={
                 <UpgradeTargetToolbar
@@ -56,10 +58,10 @@ export default function UpgradeTargetPanel({
             ) : targetItems.length === 0 ? (
                 <div className="col-span-full flex flex-col items-center justify-center min-h-[280px] gap-1.5 text-center px-6">
                     <span className="text-white/55 font-gotham font-medium text-[15px] leading-[120%]">
-                        Подходящих скинов не найдено
+                        {t('upgrade.no_match')}
                     </span>
                     <span className="text-white/30 font-sf-display text-[12px] leading-[140%] max-w-[260px]">
-                        Попробуйте сбросить фильтры или выбрать другой скин из инвентаря
+                        {t('upgrade.no_match_hint')}
                     </span>
                 </div>
             ) : (

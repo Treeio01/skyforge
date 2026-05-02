@@ -2,6 +2,7 @@ import Input from '@/Components/UI/Input';
 import { formatKopecks } from '@/utils/skinHelpers';
 import { useForm } from '@inertiajs/react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import DepositHistoryModal from './DepositHistoryModal';
 
 interface Profile {
@@ -18,6 +19,7 @@ interface ProfileSidebarProps {
 }
 
 export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
+    const { t } = useTranslation();
     const [depositHistoryVisible, setDepositHistoryVisible] = useState(false);
 
     const tradeForm = useForm({ trade_url: profile.trade_url || '' });
@@ -103,7 +105,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
                 className="flex p-3 rounded-[12px] w-full gap-[10px] flex-col"
             >
                 <span className="text-white font-gotham font-medium text-[17px] leading-[120%]">
-                    Нашли промокод?
+                    {t('promo.title')}
                 </span>
                 <div className="flex flex-col gap-1 w-full">
                     <div className="flex w-full py-3 px-3.5 rounded-[8px] border border-white/27">
@@ -111,8 +113,8 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
                             type="text"
                             value={promoForm.data.code}
                             onChange={(e) => promoForm.setData('code', e.target.value)}
-                            className="text-white/24 leading-[120%] font-sf-display text-[13px] outline-none bg-transparent w-full"
-                            placeholder="Введите промокод"
+                            className="text-white leading-[120%] font-sf-display text-[13px] outline-none bg-transparent w-full placeholder:text-white/65"
+                            placeholder={t('promo.placeholder')}
                         />
                     </div>
                     <button
@@ -125,7 +127,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
                         className="py-3 px-3.5 rounded-[8px] flex justify-center cursor-pointer disabled:opacity-50"
                     >
                         <span className="text-white font-sf-display text-[13px] leading-[120%] font-medium">
-                            {promoForm.processing ? 'Проверяем...' : 'Применить'}
+                            {promoForm.processing ? t('promo.checking') : t('promo.apply')}
                         </span>
                     </button>
                 </div>

@@ -1,5 +1,6 @@
 import { CSSProperties, useEffect, useRef, useState } from 'react';
 import { usePage } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 import type { PageProps } from '@/types';
 
 export type DefuseOutcome = 'success' | 'fail';
@@ -32,8 +33,9 @@ export default function DefuseOverlay({
     className = '',
     style,
 }: DefuseOverlayProps) {
+    const { t } = useTranslation();
     const user = usePage<PageProps>().props.auth.user;
-    const displayName = name ?? user?.username ?? 'Player';
+    const displayName = name ?? user?.username ?? t('upgrade.player_fallback');
     const ringRef = useRef<SVGCircleElement>(null);
     const timerRef = useRef<HTMLSpanElement>(null);
     const [hidden, setHidden] = useState(false);
@@ -115,8 +117,8 @@ export default function DefuseOverlay({
                 <div className="flex flex-col h-full justify-between items-end gap-4">
                     <span className="text-white font-sf-display font-bold text-[9px] 1024:text-[14px] leading-[100%]">
                         {outcome === 'success'
-                            ? `${displayName} defused the bomb.`
-                            : `${displayName} is defusing the bomb.`}
+                            ? t('upgrade.defused', { name: displayName })
+                            : t('upgrade.defusing', { name: displayName })}
                     </span>
                     <span
                         ref={timerRef}

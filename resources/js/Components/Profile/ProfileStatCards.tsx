@@ -1,6 +1,7 @@
 import { ItemBackgroundLines } from '@/Components/Upgrade/SkinCard';
 import { formatKopecks, mapRarityColor, parseSkinName } from '@/utils/skinHelpers';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface UpgradeEntry {
     id: number;
@@ -18,6 +19,7 @@ interface ProfileStatCardsProps {
 }
 
 export default function ProfileStatCards({ recentUpgrades }: ProfileStatCardsProps) {
+    const { t } = useTranslation();
     const wins = useMemo(
         () => recentUpgrades.filter((u) => u.result === 'win'),
         [recentUpgrades],
@@ -50,18 +52,18 @@ export default function ProfileStatCards({ recentUpgrades }: ProfileStatCardsPro
     return (
         <div className="flex flex-col 550:flex-row gap-3.5 550:min-h-[391px] w-full">
             <StatCard
-                label="Самый дорогой дроп"
+                label={t('profile.best_drop')}
                 bigText={bestDrop ? formatKopecks(bestDrop.target_price) : '—'}
                 upgrade={bestDrop}
                 isPrice
             />
             <StatCard
-                label="Лучший множитель"
+                label={t('profile.best_multiplier')}
                 bigText={bestMultiplier ? `X${bestMultiplier.ratio}` : '—'}
                 upgrade={bestMultiplier?.upgrade ?? null}
             />
             <StatCard
-                label="Самый низкий шанс"
+                label={t('profile.lowest_chance')}
                 bigText={lowestChanceWin ? `${Math.round(lowestChanceWin.chance)}%` : '—'}
                 upgrade={lowestChanceWin}
             />
@@ -130,10 +132,10 @@ function StatCard({
                 <img src={upgrade.target_skin_image} className="absolute left-1/2 top-1/2 -translate-1/2 w-full max-w-[224px] h-full max-h-[168px] object-contain z-10" alt="" />
             )}
             <div className="flex flex-col absolute left-1/2 bottom-[40px] -translate-x-1/2 items-center z-10 max-w-[90%]">
-                <span className="text-white font-sf-display font-medium text-[13px] leading-[104%] whitespace-nowrap">{weapon}</span>
-                <span className="text-white font-gotham text-[13px] font-extralight leading-[104%] text-center whitespace-nowrap truncate max-w-full">{name}</span>
+                <span className="text-white font-sf-display font-medium text-[13px] 1024:text-[17px] leading-[110%] whitespace-nowrap">{weapon}</span>
+                <span className="text-white font-gotham text-[13px] 1024:text-[16px] font-extralight leading-[110%] text-center whitespace-nowrap truncate max-w-full">{name}</span>
             </div>
-            <span className="text-white font-sf-display text-[13px] leading-[120%] relative z-10 mt-auto">{label}</span>
+            <span className="text-white font-sf-display text-[13px] 1024:text-[15px] leading-[120%] relative z-10 mt-auto">{label}</span>
         </div>
     );
 }

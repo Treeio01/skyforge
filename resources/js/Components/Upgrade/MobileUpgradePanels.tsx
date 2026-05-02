@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { InventoryIcon, UpgradeTargetIcon, SearchIcon } from '@/Components/UI/Icons';
 import { SkeletonSkinCard } from '@/Components/UI/Skeleton';
 import BottomSheet from '@/Components/UI/BottomSheet';
@@ -51,6 +52,7 @@ export default function MobileUpgradePanels({
     onMinPriceChange,
     onSearchChange,
 }: MobileUpgradePanelsProps) {
+    const { t } = useTranslation();
     const [sheet, setSheet] = useState<'inventory' | 'target' | null>(null);
     const [filtersOpen, setFiltersOpen] = useState(false);
 
@@ -73,7 +75,7 @@ export default function MobileUpgradePanels({
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                 <path d="M2 4h10M4 7h6M6 10h2" stroke="white" strokeOpacity="0.5" strokeWidth="1.3" strokeLinecap="round" />
             </svg>
-            <span className="text-white/50 font-sf-display text-[11px]">Фильтры</span>
+            <span className="text-white/50 font-sf-display text-[11px]">{t('common.filters')}</span>
         </button>
     );
 
@@ -83,7 +85,7 @@ export default function MobileUpgradePanels({
                 <div className="flex flex-col flex-1 overflow-hidden rounded-t-[14px] bg-accent/90">
                     <div className="flex items-center gap-[5px] bg-accent px-3.5 py-[6.5px]">
                         <InventoryIcon />
-                        <span className="text-white font-sf-display text-[13px] leading-[104%]">Ваши скины</span>
+                        <span className="text-white font-sf-display text-[13px] leading-[104%]">{t('upgrade.your_skins')}</span>
                     </div>
                     <div className="p-2.5">
                         {inventorySkin
@@ -96,7 +98,7 @@ export default function MobileUpgradePanels({
                 <div className="flex flex-col flex-1 overflow-hidden rounded-t-[14px] bg-accent/90">
                     <div className="flex items-center gap-[5px] bg-accent px-3.5 py-[6.5px]">
                         <UpgradeTargetIcon />
-                        <span className="text-white font-sf-display text-[13px] leading-[104%]">Скин апгрейда</span>
+                        <span className="text-white font-sf-display text-[13px] leading-[104%]">{t('upgrade.target_skin')}</span>
                     </div>
                     <div className="p-2.5">
                         {targetSkin
@@ -110,7 +112,7 @@ export default function MobileUpgradePanels({
             <BottomSheet
                 visible={sheet === 'inventory'}
                 onClose={() => setSheet(null)}
-                title="Ваши скины"
+                title={t('upgrade.your_skins')}
             >
                 <div className="grid gap-[4px] grid-cols-[repeat(auto-fill,minmax(130px,1fr))]">
                     {inventoryItems.map((skin) => (
@@ -129,7 +131,7 @@ export default function MobileUpgradePanels({
             <BottomSheet
                 visible={sheet === 'target'}
                 onClose={() => setSheet(null)}
-                title="Скин апгрейда"
+                title={t('upgrade.target_skin')}
                 headerRight={filterButton}
             >
                 <div
@@ -148,10 +150,10 @@ export default function MobileUpgradePanels({
                     ) : targetItems.length === 0 ? (
                         <div className="col-span-full flex flex-col items-center justify-center min-h-[260px] gap-1.5 text-center px-6">
                             <span className="text-white/55 font-gotham font-medium text-[14px] leading-[120%]">
-                                Подходящих скинов не найдено
+                                {t('upgrade.no_match')}
                             </span>
                             <span className="text-white/30 font-sf-display text-[11px] leading-[140%] max-w-[240px]">
-                                Попробуйте сбросить фильтры или выбрать другой скин из инвентаря
+                                {t('upgrade.no_match_hint')}
                             </span>
                         </div>
                     ) : (
@@ -180,7 +182,7 @@ export default function MobileUpgradePanels({
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="flex items-center justify-between">
-                            <span className="text-white font-gotham font-medium text-[16px]">Фильтры</span>
+                            <span className="text-white font-gotham font-medium text-[16px]">{t('common.filters')}</span>
                             <button
                                 type="button"
                                 onClick={() => setFiltersOpen(false)}
@@ -193,11 +195,11 @@ export default function MobileUpgradePanels({
                         </div>
 
                         <div>
-                            <label className="text-white/40 font-sf-display text-[11px] mb-1.5 block">Поиск</label>
+                            <label className="text-white/40 font-sf-display text-[11px] mb-1.5 block">{t('common.search')}</label>
                             <div className="flex items-center gap-2 px-3 py-2.5 rounded-[10px] bg-white/5 border border-white/8">
                                 <input
                                     type="text"
-                                    placeholder="Название скина"
+                                    placeholder={t('upgrade.search_placeholder')}
                                     value={search}
                                     onChange={(e) => onSearchChange(e.target.value)}
                                     className="flex-1 outline-none text-white font-sf-display text-[13px] bg-transparent placeholder:text-white/25"
@@ -207,7 +209,7 @@ export default function MobileUpgradePanels({
                         </div>
 
                         <div>
-                            <label className="text-white/40 font-sf-display text-[11px] mb-1.5 block">Минимальная цена</label>
+                            <label className="text-white/40 font-sf-display text-[11px] mb-1.5 block">{t('upgrade.min_price')}</label>
                             <div className="flex items-center gap-2 px-3 py-2.5 rounded-[10px] bg-white/5 border border-white/8">
                                 <input
                                     type="number"
@@ -222,7 +224,7 @@ export default function MobileUpgradePanels({
                         </div>
 
                         <div>
-                            <label className="text-white/40 font-sf-display text-[11px] mb-1.5 block">Сортировка по цене</label>
+                            <label className="text-white/40 font-sf-display text-[11px] mb-1.5 block">{t('upgrade.sort_by_price')}</label>
                             <div className="flex gap-2">
                                 {([null, 'asc', 'desc'] as PriceSort[]).map((v) => (
                                     <button
@@ -235,7 +237,7 @@ export default function MobileUpgradePanels({
                                                 : 'bg-white/6 text-white/40 hover:bg-white/10'
                                         }`}
                                     >
-                                        {v === null ? 'По умолч.' : v === 'asc' ? 'Дешевле' : 'Дороже'}
+                                        {v === null ? t('common.default') : v === 'asc' ? t('common.cheaper') : t('common.more_expensive')}
                                     </button>
                                 ))}
                             </div>
@@ -246,7 +248,7 @@ export default function MobileUpgradePanels({
                             onClick={() => setFiltersOpen(false)}
                             className="w-full py-3 rounded-[12px] bg-brand text-white font-sf-display text-[14px] font-medium"
                         >
-                            Применить
+                            {t('common.apply')}
                         </button>
                     </div>
                 </div>

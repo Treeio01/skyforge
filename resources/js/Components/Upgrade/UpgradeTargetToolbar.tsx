@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { ChevronDownIcon, SearchIcon } from '@/Components/UI/Icons';
 
 export type PriceSort = 'asc' | 'desc' | null;
@@ -25,6 +26,7 @@ export default function UpgradeTargetToolbar({
     search,
     onSearchChange,
 }: UpgradeTargetToolbarProps) {
+    const { t } = useTranslation();
     return (
         <div className="flex gap-2 items-center">
             <button
@@ -37,7 +39,7 @@ export default function UpgradeTargetToolbar({
                 }`}
             >
                 <span className="text-[11px] font-sf-display leading-[104%]">
-                    Цена
+                    {t('common.price')}
                 </span>
                 <span
                     className="flex transition-transform duration-300"
@@ -50,7 +52,7 @@ export default function UpgradeTargetToolbar({
                 </span>
             </button>
             <span className="text-white/30 text-[11px] font-sf-display leading-[104%]">
-                от
+                {t('common.from')}
             </span>
             <div className={`flex py-2.5 px-[11px] rounded-[8px] bg-white/4 transition-all duration-200 ring-1 ring-inset ${minPrice ? 'ring-white/15' : 'ring-transparent'} hover:bg-white/6 focus-within:bg-white/8 focus-within:ring-white/25`}>
                 <input
@@ -65,7 +67,7 @@ export default function UpgradeTargetToolbar({
             <div className={`flex py-2.5 px-[11px] items-center gap-[2px] w-full max-w-[141px] rounded-[8px] bg-white/4 transition-all duration-200 ring-1 ring-inset ${search ? 'ring-white/15' : 'ring-transparent'} hover:bg-white/6 focus-within:bg-white/8 focus-within:ring-white/25`}>
                 <input
                     type="text"
-                    placeholder="Поиск"
+                    placeholder={t('common.search')}
                     value={search}
                     onChange={(e) => onSearchChange(e.target.value)}
                     className="w-full outline-none max-w-[109px] text-white font-sf-display text-[11px] leading-[104%] placeholder:text-white/30"

@@ -1,4 +1,5 @@
 import { router } from "@inertiajs/react";
+import { useTranslation } from "react-i18next";
 import { InventoryIcon } from "@/Components/UI/Icons";
 import SkinCard, { SkinEntry } from "./SkinCard";
 import SkinsPanel from "./SkinsPanel";
@@ -30,12 +31,13 @@ export default function UpgradeInventoryPanel({
     onMinPriceChange,
     onSearchChange,
 }: UpgradeInventoryPanelProps) {
+    const { t } = useTranslation();
     const hasFilters = !!(search || minPrice || priceSort);
 
     return (
         <SkinsPanel
             icon={<InventoryIcon />}
-            title="Ваши скины"
+            title={t('upgrade.your_skins')}
             toolbar={
                 <UpgradeTargetToolbar
                     priceSort={priceSort}
@@ -51,10 +53,10 @@ export default function UpgradeInventoryPanel({
                 hasFilters ? (
                     <div className="col-span-full flex flex-col items-center justify-center min-h-[260px] gap-1.5 text-center px-6">
                         <span className="text-white/55 font-gotham font-medium text-[14px] leading-[120%]">
-                            Скинов по фильтру не найдено
+                            {t('upgrade.no_filter_match')}
                         </span>
                         <span className="text-white/30 font-sf-display text-[11px] leading-[140%] max-w-[240px]">
-                            Сбросьте фильтры или измените запрос
+                            {t('upgrade.no_filter_match_hint')}
                         </span>
                     </div>
                 ) : (
@@ -64,10 +66,10 @@ export default function UpgradeInventoryPanel({
                         </div>
                         <div className="flex flex-col gap-1">
                             <span className="text-white/55 font-gotham font-medium text-[15px] leading-[120%]">
-                                В инвентаре нет скинов
+                                {t('upgrade.empty_inventory')}
                             </span>
                             <span className="text-white/30 font-sf-display text-[12px] leading-[140%] max-w-[260px]">
-                                Пополните баланс и получите скин в Маркете или через апгрейд
+                                {t('upgrade.empty_inventory_hint')}
                             </span>
                         </div>
                     </div>

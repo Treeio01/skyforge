@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import { Skin } from "@/types";
 import { PageTitleIcon } from "@/Components/UI/Icons";
 import UpgradeResult from "./UpgradeResult";
@@ -17,6 +18,7 @@ export type { Stage, QuickMultiplier } from "./useUpgrade";
 export { MULTIPLIERS } from "./useUpgrade";
 
 export default function UpgradeBlock({ inventory }: UpgradeBlockProps) {
+    const { t } = useTranslation();
     const upgrade = useUpgrade({ inventory });
 
     const {
@@ -122,11 +124,11 @@ export default function UpgradeBlock({ inventory }: UpgradeBlockProps) {
                         <div className="flex items-center gap-1">
                             <PageTitleIcon />
                             <span className="text-white text-2xl md:text-[27px] leading-[104%] font-gotham font-medium">
-                                Апгрейд
+                                {t('upgrade.title')}
                             </span>
                         </div>
                         <span className="text-[#EFEFEF]/54 md:text-[#9C9DA9] md:text-base text-[12px] font-sf-display">
-                            Улучшайте ваши предметы в пару кликов
+                            {t('upgrade.subtitle')}
                         </span>
                     </div>
 

@@ -1,0 +1,95 @@
+{
+    "common": {
+        "login": "Войти",
+        "logout": "Выйти",
+        "apply": "Применить",
+        "cancel": "Отмена",
+        "close": "Закрыть",
+        "confirm": "Подтвердить",
+        "save": "Сохранить",
+        "loading": "Загрузка...",
+        "search": "Поиск",
+        "from": "от",
+        "price": "Цена",
+        "filters": "Фильтры",
+        "all": "Все",
+        "default": "По умолч.",
+        "cheaper": "Дешевле",
+        "more_expensive": "Дороже",
+        "online": "онлайн",
+        "back": "Назад"
+    },
+    "header": {
+        "online": "Онлайн",
+        "bonuses": "Бонусы",
+        "market": "Рынок Скинов",
+        "faq": "FAQ",
+        "deposit": "Пополнить",
+        "profile": "Профиль"
+    },
+    "footer": {
+        "tagline": "Честный апгрейд скинов CS2 с открытым алгоритмом Provably Fair.",
+        "games": "Игры",
+        "support": "Поддержка",
+        "legal": "Правовое",
+        "upgrade": "Апгрейд",
+        "market": "Маркет",
+        "provably_fair": "Честная игра",
+        "faq": "FAQ",
+        "telegram": "Telegram",
+        "discord": "Discord",
+        "feedback": "Обратная связь",
+        "terms": "Пользовательское соглашение",
+        "privacy": "Политика конфиденциальности",
+        "responsible_gaming": "Ответственная игра",
+        "copyright": "© 2026 GrowSkins. Все права защищены.",
+        "disclaimer": "Сайт не связан с Valve Corporation. CS2 — товарный знак Valve."
+    },
+    "upgrade": {
+        "title": "Апгрейд",
+        "subtitle": "Улучшайте ваши предметы в пару кликов",
+        "your_skins": "Ваши скины",
+        "target_skin": "Скин апгрейда",
+        "empty_inventory": "В инвентаре нет скинов",
+        "empty_inventory_hint": "Пополните баланс и получите скин в Маркете или через апгрейд",
+        "no_match": "Подходящих скинов не найдено",
+        "no_match_hint": "Попробуйте сбросить фильтры или выбрать другой скин из инвентаря",
+        "no_filter_match": "Скинов по фильтру не найдено",
+        "no_filter_match_hint": "Сбросьте фильтры или измените запрос",
+        "min_price": "Минимальная цена",
+        "search_placeholder": "Название скина",
+        "sort_by_price": "Сортировка по цене",
+        "defused": "{{name}} обезвредил бомбу.",
+        "defusing": "{{name}} обезвреживает бомбу...",
+        "player_fallback": "Игрок"
+    },
+    "promo": {
+        "title": "Нашли промокод?",
+        "placeholder": "Введите промокод",
+        "checking": "Проверяем...",
+        "apply": "Применить"
+    },
+    "profile": {
+        "best_drop": "Самый дорогой дроп",
+        "best_multiplier": "Лучший множитель",
+        "lowest_chance": "Самый низкий шанс"
+    },
+    "faq": {
+        "title": "FAQ",
+        "subtitle": "Часто задаваемые вопросы",
+        "sections": "Разделы",
+        "empty": "В этом разделе пока пусто",
+        "questions_one": "{{count}} вопрос",
+        "questions_few": "{{count}} вопроса",
+        "questions_many": "{{count}} вопросов"
+    },
+    "maintenance": {
+        "title": "Сайт временно на обслуживании",
+        "default_message": "Сайт временно на обслуживании. Скоро вернёмся."
+    },
+    "auth": {
+        "login_with_steam": "Войти через Steam",
+        "adult_check": "Мне исполнилось 18 лет",
+        "terms_check": "Я согласен с правилами и пользовательским соглашением"
+    }
+}

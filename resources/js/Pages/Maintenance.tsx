@@ -1,14 +1,16 @@
 import { Head } from '@inertiajs/react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 interface MaintenanceProps {
     message: string;
 }
 
 export default function Maintenance({ message }: MaintenanceProps) {
+    const { t } = useTranslation();
     return (
         <>
-            <Head title="Обслуживание" />
+            <Head title={t('maintenance.title')} />
             <div className="min-h-screen flex items-center justify-center bg-[#070A10] px-6 py-12">
                 <motion.div
                     initial={{ opacity: 0, y: 16 }}
@@ -33,10 +35,10 @@ export default function Maintenance({ message }: MaintenanceProps) {
 
                     <div className="flex flex-col gap-3">
                         <h1 className="text-white font-gotham font-medium text-2xl 1024:text-[28px] leading-[110%]">
-                            Сайт на обслуживании
+                            {t('maintenance.title')}
                         </h1>
                         <p className="text-white/55 font-sf-display text-[14px] leading-[170%]">
-                            {message}
+                            {message || t('maintenance.default_message')}
                         </p>
                     </div>
 

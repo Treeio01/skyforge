@@ -1,4 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 import type { PageProps } from '@/types';
 import {
     DiscordIcon,
@@ -24,6 +25,7 @@ const headingCls =
     'text-white/60 font-sf-display text-[11px] uppercase tracking-[0.08em]';
 
 export default function AppFooter() {
+    const { t } = useTranslation();
     const { socials } = usePage<PageProps>().props;
 
     const socialLinks = socials
@@ -36,7 +38,7 @@ export default function AppFooter() {
     return (
         <footer className="bg-[#151B27] border-t border-white/6 px-4 1024:px-8 pt-10">
             <div className="grid grid-cols-2 1024:grid-cols-4 gap-8 pt-10 pb-8">
-                {/* Бренд */}
+                {/* Brand */}
                 <div className="col-span-2 1024:col-span-1 flex flex-col gap-3">
                     <Link href="/" className="inline-block">
                         <img
@@ -46,7 +48,7 @@ export default function AppFooter() {
                         />
                     </Link>
                     <p className="text-white/30 font-sf-display text-[12px] leading-[180%] max-w-[220px]">
-                        Честный апгрейд скинов CS2 с открытым алгоритмом Provably Fair.
+                        {t('footer.tagline')}
                     </p>
                     {socialLinks.length > 0 && (
                         <div className="flex items-center gap-2 mt-1">
@@ -66,21 +68,21 @@ export default function AppFooter() {
                     )}
                 </div>
 
-                {/* Игры */}
+                {/* Games */}
                 <div className="flex flex-col gap-3">
-                    <span className={headingCls}>Игры</span>
+                    <span className={headingCls}>{t('footer.games')}</span>
                     <div className="flex flex-col gap-2.5">
-                        <Link href="/" className={linkCls} prefetch="hover">Апгрейд</Link>
-                        <Link href="/market" className={linkCls} prefetch="hover">Маркет</Link>
-                        <Link href="/provably-fair" className={linkCls} prefetch="hover">Provably Fair</Link>
+                        <Link href="/" className={linkCls} prefetch="hover">{t('footer.upgrade')}</Link>
+                        <Link href="/market" className={linkCls} prefetch="hover">{t('footer.market')}</Link>
+                        <Link href="/provably-fair" className={linkCls} prefetch="hover">{t('footer.provably_fair')}</Link>
                     </div>
                 </div>
 
-                {/* Поддержка */}
+                {/* Support */}
                 <div className="flex flex-col gap-3">
-                    <span className={headingCls}>Поддержка</span>
+                    <span className={headingCls}>{t('footer.support')}</span>
                     <div className="flex flex-col gap-2.5">
-                        <Link href="/provably-fair" className={linkCls} prefetch="hover">FAQ</Link>
+                        <Link href="/provably-fair" className={linkCls} prefetch="hover">{t('footer.faq')}</Link>
                         {socials?.telegram && (
                             <a
                                 href={socials.telegram}
@@ -88,7 +90,7 @@ export default function AppFooter() {
                                 rel="noopener noreferrer"
                                 className={linkCls}
                             >
-                                Telegram
+                                {t('footer.telegram')}
                             </a>
                         )}
                         {socials?.discord && (
@@ -98,31 +100,31 @@ export default function AppFooter() {
                                 rel="noopener noreferrer"
                                 className={linkCls}
                             >
-                                Discord
+                                {t('footer.discord')}
                             </a>
                         )}
                         <a href="mailto:support@growskins.ru" className={linkCls}>
-                            Обратная связь
+                            {t('footer.feedback')}
                         </a>
                     </div>
                 </div>
 
-                {/* Правовое */}
+                {/* Legal */}
                 <div className="flex flex-col gap-3">
-                    <span className={headingCls}>Правовое</span>
+                    <span className={headingCls}>{t('footer.legal')}</span>
                     <div className="flex flex-col gap-2.5">
-                        <a href="/terms" className={linkCls}>Пользовательское соглашение</a>
-                        <a href="/privacy" className={linkCls}>Политика конфиденциальности</a>
-                        <a href="/responsible-gaming" className={linkCls}>Ответственная игра</a>
+                        <a href="/terms" className={linkCls}>{t('footer.terms')}</a>
+                        <a href="/privacy" className={linkCls}>{t('footer.privacy')}</a>
+                        <a href="/responsible-gaming" className={linkCls}>{t('footer.responsible_gaming')}</a>
                     </div>
                 </div>
             </div>
 
-            {/* Нижняя строка */}
+            {/* Bottom row */}
             <div className="flex flex-col xs:flex-row items-center justify-between gap-3 py-5 border-t border-white/4">
-                <span className="text-white/20 font-sf-display text-[12px]">© 2026 GrowSkins. Все права защищены.</span>
+                <span className="text-white/20 font-sf-display text-[12px]">{t('footer.copyright')}</span>
                 <span className="text-white/15 font-sf-display text-[11px] text-center">
-                    Сайт не связан с Valve Corporation. CS2 — товарный знак Valve.
+                    {t('footer.disclaimer')}
                 </span>
             </div>
         </footer>

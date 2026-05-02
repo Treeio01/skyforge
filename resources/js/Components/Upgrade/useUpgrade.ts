@@ -133,12 +133,15 @@ export function useUpgrade({ inventory }: UseUpgradeProps): UseUpgradeReturn {
     };
 
     // ─── Inventory snapshot (frozen during animation) ──────────
-    // Inertia replaces `inventory` immediately after the upgrade request,
-    // which would let the user see the won/lost item before the animation
-    // finishes. Hold onto the previous snapshot until stage returns to "idle".
+    // Inertia replaces `inventory` reactively as soon as the upgrade response
+    // returns — usually BEFORE onSuccess fires setStage("closing"). At that
+    // moment stage is still "idle", so a naive guard would let the new skin
+    // pop into the panel before the animation plays. submittingRef freezes
+    // the snapshot from the click moment until handleReset() runs.
+    const submittingRef = useRef(false);
     const [stableInventory, setStableInventory] = useState(inventory);
     useEffect(() => {
-        if (stage === "idle") setStableInventory(inventory);
+        if (stage === "idle" && !submittingRef.current) setStableInventory(inventory);
     }, [inventory, stage]);
 
     // ─── Derived ─────────────────────────────────────────────
@@ -323,6 +326,7 @@ export function useUpgrade({ inventory }: UseUpgradeProps): UseUpgradeReturn {
     // ─── Flow ────────────────────────────────────────────────
     const handleReset = useCallback(() => {
         clearTimers();
+        submittingRef.current = false;
         setStage("idle");
         setOutcome(null);
         setResultSkin(null);
@@ -336,6 +340,7 @@ export function useUpgrade({ inventory }: UseUpgradeProps): UseUpgradeReturn {
         if (!canStart || !inventorySkin || !targetSkin) return;
 
         setResultSkin(targetSkin);
+        submittingRef.current = true;
 
         router.post(
             "/upgrade",
@@ -357,6 +362,7 @@ export function useUpgrade({ inventory }: UseUpgradeProps): UseUpgradeReturn {
                 },
                 onError: (errors) => {
                     console.error('[UPGRADE] onError:', errors);
+                    submittingRef.current = false;
                     setStage("idle");
                 },
             },

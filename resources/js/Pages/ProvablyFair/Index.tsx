@@ -3,6 +3,7 @@ import PageShell from "@/Components/Layout/PageShell";
 import { FaqIcon } from "@/Components/UI/Icons";
 import { usePage } from "@inertiajs/react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { PageProps } from "@/types";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -193,6 +194,7 @@ function AccordionItem({
 }
 
 export default function ProvablyFairIndex() {
+    const { t, i18n } = useTranslation();
     const { faq, categories: dbCategories } = usePage<PageProps<FaqPageProps>>().props;
 
     const CATEGORIES = dbCategories && dbCategories.length > 0
@@ -203,17 +205,19 @@ export default function ProvablyFairIndex() {
 
     const hasFaqData = faq && Object.keys(faq).length > 0;
     const items = hasFaqData ? (faq[category] ?? []) : (FAQ_DATA[category] ?? []);
-    const currentLabel = CATEGORIES.find((c) => c.id === category)?.label ?? 'FAQ';
-    const subtitle = `${items.length} ${items.length === 1 ? 'вопрос' : items.length < 5 ? 'вопроса' : 'вопросов'}`;
+    const currentLabel = CATEGORIES.find((c) => c.id === category)?.label ?? t('faq.title');
+    const subtitle = i18n.language === 'ru'
+        ? `${items.length} ${items.length === 1 ? 'вопрос' : items.length < 5 ? 'вопроса' : 'вопросов'}`
+        : `${items.length} ${items.length === 1 ? 'question' : 'questions'}`;
 
     return (
         <AppLayout>
-            <PageShell icon={<FaqIcon />} title="FAQ" subtitle="Часто задаваемые вопросы">
+            <PageShell icon={<FaqIcon />} title={t('faq.title')} subtitle={t('faq.subtitle')}>
                 <div className="flex flex-1 min-h-0 gap-6 1024:gap-8">
                     {/* Сайдбар категорий */}
                     <div className="hidden 1024:flex flex-col w-[240px] shrink-0 gap-1 self-start sticky top-6 p-2 rounded-[14px] bg-[#0E131C]">
                         <span className="text-white/35 font-sf-display text-[11px] uppercase tracking-[0.08em] px-3 pt-1.5 pb-2">
-                            Разделы
+                            {t('faq.sections')}
                         </span>
                         {CATEGORIES.map((cat) => {
                             const isActive = category === cat.id;
@@ -287,7 +291,7 @@ export default function ProvablyFairIndex() {
                                 ))}
                                 {items.length === 0 && (
                                     <div className="flex items-center justify-center py-12">
-                                        <span className="text-white/30 font-sf-display text-[13px]">В этом разделе пока пусто</span>
+                                        <span className="text-white/30 font-sf-display text-[13px]">{t('faq.empty')}</span>
                                     </div>
                                 )}
                             </div>

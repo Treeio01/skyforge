@@ -1,0 +1,94 @@
+{
+    "common": {
+        "login": "Log in",
+        "logout": "Log out",
+        "apply": "Apply",
+        "cancel": "Cancel",
+        "close": "Close",
+        "confirm": "Confirm",
+        "save": "Save",
+        "loading": "Loading...",
+        "search": "Search",
+        "from": "from",
+        "price": "Price",
+        "filters": "Filters",
+        "all": "All",
+        "default": "Default",
+        "cheaper": "Cheaper",
+        "more_expensive": "Pricier",
+        "online": "online",
+        "back": "Back"
+    },
+    "header": {
+        "online": "Online",
+        "bonuses": "Bonuses",
+        "market": "Market",
+        "faq": "FAQ",
+        "deposit": "Top up",
+        "profile": "Profile"
+    },
+    "footer": {
+        "tagline": "Fair CS2 skin upgrade with open Provably Fair algorithm.",
+        "games": "Games",
+        "support": "Support",
+        "legal": "Legal",
+        "upgrade": "Upgrade",
+        "market": "Market",
+        "provably_fair": "Provably Fair",
+        "faq": "FAQ",
+        "telegram": "Telegram",
+        "discord": "Discord",
+        "feedback": "Feedback",
+        "terms": "Terms of Service",
+        "privacy": "Privacy Policy",
+        "responsible_gaming": "Responsible Gaming",
+        "copyright": "© 2026 GrowSkins. All rights reserved.",
+        "disclaimer": "Not affiliated with Valve Corporation. CS2 is a trademark of Valve."
+    },
+    "upgrade": {
+        "title": "Upgrade",
+        "subtitle": "Upgrade your items in a few clicks",
+        "your_skins": "Your skins",
+        "target_skin": "Target skin",
+        "empty_inventory": "Your inventory is empty",
+        "empty_inventory_hint": "Top up the balance and get a skin in Market or via upgrade",
+        "no_match": "No matching skins found",
+        "no_match_hint": "Try resetting filters or pick another skin from inventory",
+        "no_filter_match": "No skins match the filter",
+        "no_filter_match_hint": "Reset filters or change the query",
+        "min_price": "Minimum price",
+        "search_placeholder": "Skin name",
+        "sort_by_price": "Sort by price",
+        "defused": "{{name}} defused the bomb.",
+        "defusing": "{{name}} is defusing the bomb...",
+        "player_fallback": "Player"
+    },
+    "promo": {
+        "title": "Got a promo code?",
+        "placeholder": "Enter promo code",
+        "checking": "Checking...",
+        "apply": "Apply"
+    },
+    "profile": {
+        "best_drop": "Most expensive drop",
+        "best_multiplier": "Best multiplier",
+        "lowest_chance": "Lowest chance"
+    },
+    "faq": {
+        "title": "FAQ",
+        "subtitle": "Frequently asked questions",
+        "sections": "Sections",
+        "empty": "This section is empty",
+        "questions_one": "{{count}} question",
+        "questions_other": "{{count}} questions"
+    },
+    "maintenance": {
+        "title": "Site is under maintenance",
+        "default_message": "The site is temporarily under maintenance. We'll be right back."
+    },
+    "auth": {
+        "login_with_steam": "Log in with Steam",
+        "adult_check": "I am 18 or older",
+        "terms_check": "I agree to the rules and terms of service"
+    }
+}
