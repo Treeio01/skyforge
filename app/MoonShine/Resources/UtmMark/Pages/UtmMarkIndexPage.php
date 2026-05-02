@@ -101,9 +101,12 @@ class UtmMarkIndexPage extends IndexPage
     {
         $total = UtmMark::query()->count();
         $active = UtmMark::query()->where('is_active', true)->count();
-        $usersFromUtm = User::query()->whereNotNull('utm_mark_id')->count();
+        $usersFromUtm = User::query()
+            ->where('is_bot', false)
+            ->whereNotNull('utm_mark_id')
+            ->count();
         $depositingUsers = Deposit::query()
-            ->whereHas('user', fn ($q) => $q->whereNotNull('utm_mark_id'))
+            ->whereHas('user', fn ($q) => $q->where('is_bot', false)->whereNotNull('utm_mark_id'))
             ->where('status', 'completed')
             ->distinct('user_id')
             ->count('user_id');

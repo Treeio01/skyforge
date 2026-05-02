@@ -91,7 +91,10 @@ class UpgradeIndexPage extends IndexPage
      */
     protected function metrics(): array
     {
-        $todayQuery = Upgrade::query()->where('created_at', '>=', now()->startOfDay());
+        // Reflect real player behaviour — exclude bot-generated fake feed.
+        $todayQuery = Upgrade::query()
+            ->where('is_fake', false)
+            ->where('created_at', '>=', now()->startOfDay());
         $todayCount = (clone $todayQuery)->count();
         $todayWins = (clone $todayQuery)->where('result', UpgradeResult::Win->value)->count();
         $todayBet = (int) (clone $todayQuery)->sum('bet_amount');

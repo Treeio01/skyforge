@@ -46,6 +46,7 @@ class UserIndexPage extends IndexPage
             Text::make('UTM', formatted: fn ($item) => $item->utmMark?->slug ?? '—'),
             Switcher::make('Бан', 'is_banned'),
             Switcher::make('Админ', 'is_admin'),
+            Switcher::make('Бот', 'is_bot'),
             Date::make('Активность', 'last_active_at'),
             Date::make('Регистрация', 'created_at'),
         ];
@@ -85,6 +86,7 @@ class UserIndexPage extends IndexPage
         return [
             Switcher::make('Бан', 'is_banned'),
             Switcher::make('Админ', 'is_admin'),
+            Switcher::make('Бот', 'is_bot'),
             Select::make('UTM-метка', 'utm_mark_id')
                 ->options(UtmMark::query()->orderBy('slug')->pluck('slug', 'id')->all())
                 ->nullable(),
@@ -96,15 +98,17 @@ class UserIndexPage extends IndexPage
      */
     protected function queryTags(): array
     {
+        // Default tag hides bots so admin metrics/lists reflect real players.
         return [
-            QueryTag::make('Все', fn ($q) => $q),
-            QueryTag::make('Активные 7д', fn ($q) => $q->where('last_active_at', '>=', now()->subWeek())),
-            QueryTag::make('Забаненные', fn ($q) => $q->where('is_banned', true)),
-            QueryTag::make('Без trade URL', fn ($q) => $q->whereNull('trade_url')),
-            QueryTag::make('Админы', fn ($q) => $q->where('is_admin', true)),
-            QueryTag::make('Стримеры', fn ($q) => $q->where('chance_modifier', '>', 1)),
-            QueryTag::make('Подозрительные', fn ($q) => $q->where('chance_modifier', '<', 1)),
-            QueryTag::make('Custom edge', fn ($q) => $q->whereNotNull('house_edge_override')),
+            QueryTag::make('Все', fn ($q) => $q->where('is_bot', false))->default(),
+            QueryTag::make('Активные 7д', fn ($q) => $q->where('is_bot', false)->where('last_active_at', '>=', now()->subWeek())),
+            QueryTag::make('Забаненные', fn ($q) => $q->where('is_bot', false)->where('is_banned', true)),
+            QueryTag::make('Без trade URL', fn ($q) => $q->where('is_bot', false)->whereNull('trade_url')),
+            QueryTag::make('Админы', fn ($q) => $q->where('is_bot', false)->where('is_admin', true)),
+            QueryTag::make('Стримеры', fn ($q) => $q->where('is_bot', false)->where('chance_modifier', '>', 1)),
+            QueryTag::make('Подозрительные', fn ($q) => $q->where('is_bot', false)->where('chance_modifier', '<', 1)),
+            QueryTag::make('Custom edge', fn ($q) => $q->where('is_bot', false)->whereNotNull('house_edge_override')),
+            QueryTag::make('Боты', fn ($q) => $q->where('is_bot', true)),
         ];
     }
 
@@ -113,11 +117,12 @@ class UserIndexPage extends IndexPage
      */
     protected function metrics(): array
     {
-        $total = User::query()->count();
-        $active24h = User::query()->where('last_active_at', '>=', now()->subDay())->count();
-        $active7d = User::query()->where('last_active_at', '>=', now()->subWeek())->count();
-        $banned = User::query()->where('is_banned', true)->count();
-        $noTradeUrl = User::query()->whereNull('trade_url')->count();
+        $base = User::query()->where('is_bot', false);
+        $total = (clone $base)->count();
+        $active24h = (clone $base)->where('last_active_at', '>=', now()->subDay())->count();
+        $active7d = (clone $base)->where('last_active_at', '>=', now()->subWeek())->count();
+        $banned = (clone $base)->where('is_banned', true)->count();
+        $noTradeUrl = (clone $base)->whereNull('trade_url')->count();
 
         return [
             ValueMetric::make('Всего')->value($total)->columnSpan(3, 12),

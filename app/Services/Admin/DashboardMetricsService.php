@@ -19,28 +19,32 @@ final class DashboardMetricsService
      */
     public function summary(): array
     {
+        // Real users only — bots from feed:fake distort every metric.
+        $users = User::query()->where('is_bot', false);
+        $upgrades = Upgrade::query()->where('is_fake', false);
+
         return [
-            'totalUsers' => User::count(),
-            'activeUsers' => User::where('last_active_at', '>=', now()->subDay())->count(),
-            'bannedUsers' => User::where('is_banned', true)->count(),
-            'totalBalance' => (int) User::sum('balance'),
+            'totalUsers' => (clone $users)->count(),
+            'activeUsers' => (clone $users)->where('last_active_at', '>=', now()->subDay())->count(),
+            'bannedUsers' => (clone $users)->where('is_banned', true)->count(),
+            'totalBalance' => (int) (clone $users)->sum('balance'),
 
             'totalSkins' => Skin::where('is_active', true)->count(),
             'totalUserSkins' => UserSkin::where('status', 'available')->count(),
 
-            'totalUpgrades' => $total = Upgrade::count(),
-            'wins' => $wins = Upgrade::where('result', 'win')->count(),
-            'losses' => Upgrade::where('result', 'lose')->count(),
+            'totalUpgrades' => $total = (clone $upgrades)->count(),
+            'wins' => $wins = (clone $upgrades)->where('result', 'win')->count(),
+            'losses' => (clone $upgrades)->where('result', 'lose')->count(),
             'winRate' => $total > 0 ? round($wins / $total * 100, 1) : 0,
 
-            'totalBet' => (int) Upgrade::sum('bet_amount'),
-            'totalWon' => (int) Upgrade::where('result', 'win')->sum('target_price'),
+            'totalBet' => (int) (clone $upgrades)->sum('bet_amount'),
+            'totalWon' => (int) (clone $upgrades)->where('result', 'win')->sum('target_price'),
 
             'totalDeposited' => (int) Deposit::where('status', 'completed')->sum('amount'),
             'pendingDeposits' => Deposit::where('status', 'pending')->count(),
 
-            'todayUpgrades' => Upgrade::whereDate('created_at', today())->count(),
-            'todayBet' => (int) Upgrade::whereDate('created_at', today())->sum('bet_amount'),
+            'todayUpgrades' => (clone $upgrades)->whereDate('created_at', today())->count(),
+            'todayBet' => (int) (clone $upgrades)->whereDate('created_at', today())->sum('bet_amount'),
         ];
     }
 
@@ -59,6 +63,7 @@ final class DashboardMetricsService
             ->pluck('total', 'day');
 
         $upgradeRows = Upgrade::query()
+            ->where('is_fake', false)
             ->where('created_at', '>=', now()->subDays(13)->startOfDay())
             ->selectRaw('DATE(created_at) as day, result, COUNT(*) as cnt')
             ->groupBy('day', 'result')

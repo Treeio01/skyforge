@@ -139,6 +139,7 @@ class FakeLiveFeedCommand extends Command
                 'username' => $name,
                 'avatar_url' => self::FAKE_AVATARS[array_rand(self::FAKE_AVATARS)],
                 'last_active_at' => now(),
+                'is_bot' => true,
             ],
         );
     }
