@@ -5,163 +5,97 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Actions\Balance\DebitBalanceAction;
+use App\Actions\Inventory\AddSkinToInventoryAction;
+use App\Actions\Inventory\MarkSkinsBurnedAction;
 use App\Actions\Upgrade\CalculateChanceAction;
+use App\Actions\Upgrade\CreateUpgradeRecordAction;
 use App\Actions\Upgrade\GenerateRollAction;
+use App\Actions\Upgrade\IncrementSeedNonceAction;
+use App\Actions\Upgrade\LockBetSkinsAction;
+use App\Actions\Upgrade\RecordUpgradeItemsAction;
+use App\Actions\Upgrade\ValidateUpgradeBetAction;
+use App\Data\Upgrade\CreateUpgradeData;
 use App\DTOs\UpgradeResultDTO;
 use App\Enums\TransactionType;
 use App\Enums\UpgradeResult;
 use App\Enums\UserSkinSource;
-use App\Enums\UserSkinStatus;
 use App\Events\UpgradeCompleted;
-use App\Models\ProvablyFairSeed;
 use App\Models\Setting;
 use App\Models\Skin;
-use App\Models\Upgrade;
-use App\Models\UpgradeItem;
 use App\Models\User;
 use App\Models\UserSkin;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class UpgradeService
 {
     public function __construct(
+        private LockBetSkinsAction $lockBetSkins,
+        private ValidateUpgradeBetAction $validateBet,
         private CalculateChanceAction $calculateChance,
+        private IncrementSeedNonceAction $bumpNonce,
         private GenerateRollAction $generateRoll,
+        private CreateUpgradeRecordAction $createUpgrade,
+        private RecordUpgradeItemsAction $recordItems,
         private DebitBalanceAction $debitBalance,
+        private MarkSkinsBurnedAction $burnSkins,
+        private AddSkinToInventoryAction $addSkin,
     ) {}
 
-    /**
-     * @param  array<int>  $userSkinIds
-     */
-    public function execute(User $user, array $userSkinIds, int $balanceAmount, int $targetSkinId): UpgradeResultDTO
+    public function execute(User $user, CreateUpgradeData $data): UpgradeResultDTO
     {
-        return DB::transaction(function () use ($user, $userSkinIds, $balanceAmount, $targetSkinId) {
+        return DB::transaction(function () use ($user, $data) {
             $user = User::lockForUpdate()->findOrFail($user->id);
 
-            // Lock and validate bet skins
-            $betSkins = UserSkin::lockForUpdate()
-                ->whereIn('id', $userSkinIds)
-                ->where('user_id', $user->id)
-                ->where('status', UserSkinStatus::Available)
-                ->with('skin')
-                ->get();
+            $betSkins = $this->lockBetSkins->execute($user, $data->user_skin_ids);
+            $targetSkin = Skin::findOrFail($data->target_skin_id);
 
-            if ($betSkins->count() !== count($userSkinIds)) {
-                throw new \DomainException('Некоторые скины недоступны для апгрейда.');
-            }
+            $betAmount = $this->computeBetAmount($betSkins, $data->balance_amount);
+            $this->validateBet->execute($betAmount, (int) $targetSkin->price);
 
-            // Fetch target skin price from DB
-            $targetSkin = Skin::findOrFail($targetSkinId);
-            $targetPrice = $targetSkin->price;
-
-            // Calculate total bet — use current market price of each skin so
-            // duplicate inventory items always weigh the same as the front-end
-            // displays. Falls back to price_at_acquisition only if a skin's
-            // current price is missing (price=0).
-            $skinsTotal = (int) $betSkins->sum(
-                fn (UserSkin $us) => $us->skin?->price > 0 ? $us->skin->price : $us->price_at_acquisition,
-            );
-            $betAmount = $skinsTotal + $balanceAmount;
-
-            if ($betAmount <= 0) {
-                throw new \DomainException('Сумма ставки должна быть больше нуля.');
-            }
-
-            $minBetAmount = (int) Setting::get('min_bet_amount', 100);
-            $maxBetAmount = (int) Setting::get('max_bet_amount', 5_000_000);
-
-            if ($betAmount < $minBetAmount) {
-                throw new \DomainException('Сумма ставки меньше минимальной.');
-            }
-
-            if ($betAmount > $maxBetAmount) {
-                throw new \DomainException('Сумма ставки больше максимальной.');
-            }
-
-            if ($betAmount >= $targetPrice) {
-                throw new \DomainException('Ставка должна быть меньше цены цели.');
-            }
-
-            // Debit balance portion
-            if ($balanceAmount > 0) {
-                $this->debitBalance->execute($user, $balanceAmount, TransactionType::UpgradeBet);
+            if ($data->balance_amount > 0) {
+                $this->debitBalance->execute($user, $data->balance_amount, TransactionType::UpgradeBet);
                 $user->refresh();
             }
 
-            // Burn bet skins
-            $betSkins->each(fn (UserSkin $s) => $s->update(['status' => UserSkinStatus::Burned]));
+            $this->burnSkins->execute($betSkins);
 
-            // Calculate chance
-            $effectiveHouseEdge = $user->house_edge_override !== null
-                ? (float) $user->house_edge_override
-                : (float) (Setting::get('house_edge', 5.00));
-
-            $chanceResult = $this->calculateChance->execute(
+            $chance = $this->calculateChance->execute(
                 betAmount: $betAmount,
-                targetPrice: $targetPrice,
-                houseEdge: $effectiveHouseEdge,
+                targetPrice: (int) $targetSkin->price,
+                houseEdge: $this->effectiveHouseEdge($user),
                 chanceModifier: (float) $user->chance_modifier,
-                minChance: (float) (Setting::get('min_upgrade_chance', 1.00)),
-                maxChance: (float) (Setting::get('max_upgrade_chance', 95.00)),
+                minChance: (float) Setting::get('min_upgrade_chance', 1.00),
+                maxChance: (float) Setting::get('max_upgrade_chance', 95.00),
             );
 
-            // Generate roll
-            /** @var ProvablyFairSeed $seedPair */
-            $seedPair = $user->activeSeedPair ?? throw new \DomainException('Нет активной пары сидов. Обновите страницу.');
-            $seedPair->increment('nonce');
-
-            $roll = $this->generateRoll->execute(
-                $seedPair->server_seed,
-                $seedPair->client_seed,
-                $seedPair->nonce,
-            );
-
-            // Determine result
-            $isWin = $roll->value < ($chanceResult->chance / 100);
+            $seed = $this->bumpNonce->execute($user);
+            $roll = $this->generateRoll->execute($seed->server_seed, $seed->client_seed, $seed->nonce);
+            $isWin = $roll->value < ($chance->chance / 100);
             $result = $isWin ? UpgradeResult::Win : UpgradeResult::Lose;
 
-            // Create upgrade record
-            $upgrade = Upgrade::create([
-                'user_id' => $user->id,
-                'target_skin_id' => $targetSkinId,
-                'bet_amount' => $betAmount,
-                'balance_amount' => $balanceAmount,
-                'target_price' => $targetPrice,
-                'chance' => $chanceResult->chance,
-                'multiplier' => $chanceResult->multiplier,
-                'house_edge' => $chanceResult->houseEdge,
-                'chance_modifier' => $user->chance_modifier,
-                'result' => $result,
-                'roll_value' => $roll->value,
-                'roll_hex' => $roll->hex,
-                'client_seed' => $seedPair->client_seed,
-                'server_seed_hash' => hash('sha256', $seedPair->server_seed),
-                'server_seed_raw' => $seedPair->server_seed,
-                'nonce' => $seedPair->nonce,
-                'is_revealed' => false,
-                'created_at' => now(),
-            ]);
+            $upgrade = $this->createUpgrade->execute(
+                user: $user,
+                targetSkinId: $data->target_skin_id,
+                targetPrice: (int) $targetSkin->price,
+                betAmount: $betAmount,
+                balanceAmount: $data->balance_amount,
+                chance: $chance,
+                roll: $roll,
+                seed: $seed,
+                result: $result,
+            );
 
-            // Create upgrade items
-            foreach ($betSkins as $betSkin) {
-                UpgradeItem::create([
-                    'upgrade_id' => $upgrade->id,
-                    'user_skin_id' => $betSkin->id,
-                    'skin_id' => $betSkin->skin_id,
-                    'price' => $betSkin->price_at_acquisition,
-                ]);
-            }
+            $this->recordItems->execute($upgrade, $betSkins);
 
-            // Award target skin on win
             if ($isWin) {
-                UserSkin::create([
-                    'user_id' => $user->id,
-                    'skin_id' => $targetSkinId,
-                    'price_at_acquisition' => $targetPrice,
-                    'source' => UserSkinSource::UpgradeWin,
-                    'source_id' => $upgrade->id,
-                    'status' => UserSkinStatus::Available,
-                ]);
+                $this->addSkin->execute(
+                    user: $user,
+                    skin: $targetSkin,
+                    source: UserSkinSource::UpgradeWin,
+                    priceAtAcquisition: (int) $targetSkin->price,
+                    sourceId: $upgrade->id,
+                );
             }
 
             $upgrade->load(['user', 'targetSkin']);
@@ -169,5 +103,22 @@ class UpgradeService
 
             return new UpgradeResultDTO(upgrade: $upgrade);
         });
+    }
+
+    /** @param Collection<int, UserSkin> $betSkins */
+    private function computeBetAmount(Collection $betSkins, int $balanceAmount): int
+    {
+        $skinsTotal = (int) $betSkins->sum(
+            fn (UserSkin $us) => $us->skin?->price > 0 ? (int) $us->skin->price : (int) $us->price_at_acquisition,
+        );
+
+        return $skinsTotal + $balanceAmount;
+    }
+
+    private function effectiveHouseEdge(User $user): float
+    {
+        return $user->house_edge_override !== null
+            ? (float) $user->house_edge_override
+            : (float) Setting::get('house_edge', 5.00);
     }
 }

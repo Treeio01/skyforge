@@ -12,13 +12,19 @@ use App\Models\UserSkin;
 
 class AddSkinToInventoryAction
 {
-    public function execute(User $user, Skin $skin, UserSkinSource $source, ?int $priceAtAcquisition = null): UserSkin
-    {
+    public function execute(
+        User $user,
+        Skin $skin,
+        UserSkinSource $source,
+        ?int $priceAtAcquisition = null,
+        ?int $sourceId = null,
+    ): UserSkin {
         return UserSkin::create([
             'user_id' => $user->id,
             'skin_id' => $skin->id,
             'price_at_acquisition' => $priceAtAcquisition ?? (int) $skin->price,
             'source' => $source,
+            'source_id' => $sourceId,
             'status' => UserSkinStatus::Available,
         ]);
     }

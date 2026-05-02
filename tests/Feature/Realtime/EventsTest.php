@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Actions\Balance\CreditBalanceAction;
 use App\Actions\Deposit\CompleteDepositAction;
 use App\Actions\ProvablyFair\GenerateSeedPairAction;
+use App\Data\Upgrade\CreateUpgradeData;
 use App\Enums\DepositStatus;
 use App\Enums\TransactionType;
 use App\Events\BalanceUpdated;
@@ -58,12 +59,11 @@ it('dispatches UpgradeCompleted on upgrade', function () {
     ]);
     $target = Skin::factory()->create(['price' => 50000]);
 
-    app(UpgradeService::class)->execute(
-        user: $user,
-        userSkinIds: [$userSkin->id],
-        balanceAmount: 0,
-        targetSkinId: $target->id,
-    );
+    app(UpgradeService::class)->execute($user, new CreateUpgradeData(
+        user_skin_ids: [$userSkin->id],
+        balance_amount: 0,
+        target_skin_id: $target->id,
+    ));
 
     Event::assertDispatched(UpgradeCompleted::class);
 });

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\UpgradeResult;
+use App\Observers\UpgradeObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -17,6 +19,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon $created_at
  * @property bool $is_fake
  */
+#[ObservedBy(UpgradeObserver::class)]
 class Upgrade extends Model
 {
     public $timestamps = false;

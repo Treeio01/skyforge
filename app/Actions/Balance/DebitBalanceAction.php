@@ -37,9 +37,7 @@ class DebitBalanceAction
 
             $user->balance = $balanceAfter;
 
-            if ($type === TransactionType::UpgradeBet) {
-                $user->total_upgraded += $amount;
-            } elseif ($type === TransactionType::Withdrawal) {
+            if ($type === TransactionType::Withdrawal) {
                 $user->total_withdrawn += $amount;
             }
 

@@ -33,8 +33,6 @@ class CreditBalanceAction
 
             if ($type === TransactionType::Deposit) {
                 $user->total_deposited += $amount;
-            } elseif ($type === TransactionType::UpgradeWin) {
-                $user->total_won += $amount;
             }
 
             $user->save();

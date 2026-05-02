@@ -48,6 +48,12 @@ class UserProfileService
     }
 
     /** @return array<int, array<string, mixed>> */
+    public function inventoryFor(User $user, Request $request): array
+    {
+        return $this->mapInventory($user, $request);
+    }
+
+    /** @return array<int, array<string, mixed>> */
     private function mapInventory(User $user, Request $request): array
     {
         return $user->userSkins()

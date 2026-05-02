@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Actions\ProvablyFair\GenerateSeedPairAction;
+use App\Data\Upgrade\CreateUpgradeData;
 use App\Enums\UpgradeResult;
 use App\Enums\UserSkinStatus;
 use App\Exceptions\InsufficientBalanceException;
@@ -34,12 +35,11 @@ function setupUpgradeScenario(int $betSkinPrice = 10000, int $targetPrice = 5000
 it('completes upgrade with win result', function () {
     [$user, $userSkin, $targetSkin] = setupUpgradeScenario(10000, 10100);
 
-    $result = app(UpgradeService::class)->execute(
-        user: $user,
-        userSkinIds: [$userSkin->id],
-        balanceAmount: 0,
-        targetSkinId: $targetSkin->id,
-    );
+    $result = app(UpgradeService::class)->execute($user, new CreateUpgradeData(
+        user_skin_ids: [$userSkin->id],
+        balance_amount: 0,
+        target_skin_id: $targetSkin->id,
+    ));
 
     expect($result->upgrade)->not->toBeNull();
     expect($result->upgrade->result)->toBeIn([UpgradeResult::Win, UpgradeResult::Lose]);
@@ -52,12 +52,11 @@ it('creates target skin in inventory on win', function () {
     // Use very high chance to make win likely — bet ~= target
     [$user, $userSkin, $targetSkin] = setupUpgradeScenario(95000, 100000);
 
-    $result = app(UpgradeService::class)->execute(
-        user: $user,
-        userSkinIds: [$userSkin->id],
-        balanceAmount: 0,
-        targetSkinId: $targetSkin->id,
-    );
+    $result = app(UpgradeService::class)->execute($user, new CreateUpgradeData(
+        user_skin_ids: [$userSkin->id],
+        balance_amount: 0,
+        target_skin_id: $targetSkin->id,
+    ));
 
     if ($result->upgrade->result === UpgradeResult::Win) {
         $wonSkin = UserSkin::where('user_id', $user->id)
@@ -76,12 +75,11 @@ it('debits balance amount from user', function () {
         extraBalance: 5000,
     );
 
-    app(UpgradeService::class)->execute(
-        user: $user,
-        userSkinIds: [$userSkin->id],
-        balanceAmount: 5000,
-        targetSkinId: $targetSkin->id,
-    );
+    app(UpgradeService::class)->execute($user, new CreateUpgradeData(
+        user_skin_ids: [$userSkin->id],
+        balance_amount: 5000,
+        target_skin_id: $targetSkin->id,
+    ));
 
     expect($user->refresh()->balance)->toBe(0);
 });
@@ -93,12 +91,11 @@ it('rejects upgrade with insufficient balance', function () {
         extraBalance: 0,
     );
 
-    app(UpgradeService::class)->execute(
-        user: $user,
-        userSkinIds: [$userSkin->id],
-        balanceAmount: 5000,
-        targetSkinId: $targetSkin->id,
-    );
+    app(UpgradeService::class)->execute($user, new CreateUpgradeData(
+        user_skin_ids: [$userSkin->id],
+        balance_amount: 5000,
+        target_skin_id: $targetSkin->id,
+    ));
 })->throws(InsufficientBalanceException::class);
 
 it('rejects upgrade when skin is not available', function () {
@@ -106,12 +103,11 @@ it('rejects upgrade when skin is not available', function () {
 
     $userSkin->update(['status' => UserSkinStatus::Burned]);
 
-    app(UpgradeService::class)->execute(
-        user: $user,
-        userSkinIds: [$userSkin->id],
-        balanceAmount: 0,
-        targetSkinId: $targetSkin->id,
-    );
+    app(UpgradeService::class)->execute($user, new CreateUpgradeData(
+        user_skin_ids: [$userSkin->id],
+        balance_amount: 0,
+        target_skin_id: $targetSkin->id,
+    ));
 })->throws(DomainException::class);
 
 it('rejects upgrade when target is cheaper than bet', function () {
@@ -120,23 +116,21 @@ it('rejects upgrade when target is cheaper than bet', function () {
         targetPrice: 50000,
     );
 
-    app(UpgradeService::class)->execute(
-        user: $user,
-        userSkinIds: [$userSkin->id],
-        balanceAmount: 0,
-        targetSkinId: $targetSkin->id,
-    );
+    app(UpgradeService::class)->execute($user, new CreateUpgradeData(
+        user_skin_ids: [$userSkin->id],
+        balance_amount: 0,
+        target_skin_id: $targetSkin->id,
+    ));
 })->throws(DomainException::class);
 
 it('records provably fair data on upgrade', function () {
     [$user, $userSkin, $targetSkin] = setupUpgradeScenario(10000, 50000);
 
-    $result = app(UpgradeService::class)->execute(
-        user: $user,
-        userSkinIds: [$userSkin->id],
-        balanceAmount: 0,
-        targetSkinId: $targetSkin->id,
-    );
+    $result = app(UpgradeService::class)->execute($user, new CreateUpgradeData(
+        user_skin_ids: [$userSkin->id],
+        balance_amount: 0,
+        target_skin_id: $targetSkin->id,
+    ));
 
     $upgrade = $result->upgrade;
     expect($upgrade->client_seed)->not->toBeEmpty();
@@ -151,12 +145,11 @@ it('increments seed nonce after upgrade', function () {
 
     $nonceBefore = $user->activeSeedPair->nonce;
 
-    app(UpgradeService::class)->execute(
-        user: $user,
-        userSkinIds: [$userSkin->id],
-        balanceAmount: 0,
-        targetSkinId: $targetSkin->id,
-    );
+    app(UpgradeService::class)->execute($user, new CreateUpgradeData(
+        user_skin_ids: [$userSkin->id],
+        balance_amount: 0,
+        target_skin_id: $targetSkin->id,
+    ));
 
     expect($user->activeSeedPair->refresh()->nonce)->toBe($nonceBefore + 1);
 });
