@@ -4,26 +4,20 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Actions\Withdrawal\CreateWithdrawalAction;
-use App\Jobs\ProcessWithdrawalJob;
+use App\Data\Withdrawal\CreateWithdrawalData;
+use App\Services\WithdrawalService;
+use DomainException;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 
 class WithdrawalController extends Controller
 {
-    public function store(Request $request, CreateWithdrawalAction $action): RedirectResponse
+    public function store(CreateWithdrawalData $data, WithdrawalService $service): RedirectResponse
     {
-        $validated = $request->validate([
-            'user_skin_id' => ['required', 'integer', 'exists:user_skins,id'],
-        ]);
-
         try {
-            $withdrawal = $action->execute($request->user(), $validated['user_skin_id']);
-        } catch (\DomainException $e) {
+            $service->create(request()->user(), $data);
+        } catch (DomainException $e) {
             return back()->with('error', $e->getMessage());
         }
-
-        ProcessWithdrawalJob::dispatch($withdrawal);
 
         return back()->with('success', 'Вывод создан. Trade offer будет отправлен.');
     }

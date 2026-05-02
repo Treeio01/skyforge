@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\WithdrawalStatus;
+use App\Observers\WithdrawalObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property-read Skin $skin
  * @property-read UserSkin $userSkin
  */
+#[ObservedBy(WithdrawalObserver::class)]
 class Withdrawal extends Model
 {
     use HasFactory;

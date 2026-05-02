@@ -75,7 +75,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/withdrawal', [WithdrawalController::class, 'store'])
         ->name('withdrawal.store')
-        ->middleware(EnsureTradeUrlSet::class);
+        ->middleware([EnsureTradeUrlSet::class, 'throttle:withdraw']);
 
     Route::get('/provably-fair', [ProvablyFairController::class, 'index'])->name('provably-fair');
     Route::post('/provably-fair/client-seed', [ProvablyFairController::class, 'updateClientSeed'])->name('provably-fair.client-seed');

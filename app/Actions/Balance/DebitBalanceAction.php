@@ -36,11 +36,6 @@ class DebitBalanceAction
             $balanceAfter = $balanceBefore - $amount;
 
             $user->balance = $balanceAfter;
-
-            if ($type === TransactionType::Withdrawal) {
-                $user->total_withdrawn += $amount;
-            }
-
             $user->save();
 
             $tx = $this->createTransaction->execute(
