@@ -65,7 +65,9 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/deposit', [DepositController::class, 'create'])->name('deposit.create');
     Route::get('/deposit/config', [DepositController::class, 'config'])->name('deposit.config');
-    Route::post('/deposit', [DepositController::class, 'store'])->name('deposit.store');
+    Route::post('/deposit', [DepositController::class, 'store'])
+        ->middleware('throttle:deposit')
+        ->name('deposit.store');
 
     Route::post('/upgrade', [UpgradeController::class, 'store'])
         ->name('upgrade.store')

@@ -6,6 +6,8 @@ namespace App\Models;
 
 use App\Enums\DepositMethod;
 use App\Enums\DepositStatus;
+use App\Observers\DepositObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $user_id
  * @property DepositStatus $status
  */
+#[ObservedBy(DepositObserver::class)]
 class Deposit extends Model
 {
     use HasFactory;
