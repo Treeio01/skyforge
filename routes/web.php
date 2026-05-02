@@ -45,11 +45,17 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [UserController::class, 'show'])->name('profile');
-    Route::put('/profile/trade-url', [UserController::class, 'updateTradeUrl'])->name('profile.trade-url');
+    Route::put('/profile/trade-url', [UserController::class, 'updateTradeUrl'])
+        ->middleware('throttle:tradeUrl')
+        ->name('profile.trade-url');
     Route::get('/profile/history', [UserController::class, 'history'])->name('profile.history');
-    Route::post('/profile/sell-skins', [UserController::class, 'sellSkins'])->name('profile.sell-skins');
+    Route::post('/profile/sell-skins', [UserController::class, 'sellSkins'])
+        ->middleware('throttle:sellSkins')
+        ->name('profile.sell-skins');
     Route::get('/profile/deposits', [UserController::class, 'deposits'])->name('profile.deposits');
-    Route::post('/profile/promo', [UserController::class, 'redeemPromo'])->name('profile.promo');
+    Route::post('/profile/promo', [UserController::class, 'redeemPromo'])
+        ->middleware('throttle:promo')
+        ->name('profile.promo');
 
     Route::get('/deposit', [DepositController::class, 'create'])->name('deposit.create');
     Route::get('/deposit/config', [DepositController::class, 'config'])->name('deposit.config');
