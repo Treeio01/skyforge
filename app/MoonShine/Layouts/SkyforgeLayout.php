@@ -67,7 +67,7 @@ final class SkyforgeLayout extends AppLayout
             ]),
             MenuItem::make(UtmMarkResource::class, 'UTM-метки'),
             MenuItem::make(ActivityLogResource::class, 'Лог активности'),
-            MenuItem::make('Horizon (очереди)', '/admin/horizon')->target('_blank'),
+            MenuItem::make('Horizon (очереди)', '/admin/horizon')->blank(),
         ];
     }
 
