@@ -30,6 +30,12 @@ export default function UpgradeBlock({ inventory }: UpgradeBlockProps) {
         setMinPrice,
         search,
         setSearch,
+        invPriceSort,
+        setInvPriceSort,
+        invMinPrice,
+        setInvMinPrice,
+        invSearch,
+        setInvSearch,
         multiplier,
         activeQuick,
         stage,
@@ -160,6 +166,12 @@ export default function UpgradeBlock({ inventory }: UpgradeBlockProps) {
                             selectedInventory={selectedInventory}
                             panelLocked={panelLocked}
                             onSelectInventory={handleSelectInventory}
+                            priceSort={invPriceSort}
+                            minPrice={invMinPrice}
+                            search={invSearch}
+                            onPriceSortChange={setInvPriceSort}
+                            onMinPriceChange={setInvMinPrice}
+                            onSearchChange={setInvSearch}
                         />
 
                         <UpgradeTargetPanel

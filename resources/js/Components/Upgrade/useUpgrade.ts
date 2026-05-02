@@ -51,13 +51,21 @@ export interface UseUpgradeReturn {
     handleSelectInventory: (id: SkinId) => void;
     handleSelectTarget: (id: SkinId) => void;
 
-    // Filter state
+    // Filter state (target)
     priceSort: PriceSort;
     setPriceSort: (v: PriceSort) => void;
     minPrice: string;
     setMinPrice: (v: string) => void;
     search: string;
     setSearch: (v: string) => void;
+
+    // Filter state (inventory, client-side)
+    invPriceSort: PriceSort;
+    setInvPriceSort: (v: PriceSort) => void;
+    invMinPrice: string;
+    setInvMinPrice: (v: string) => void;
+    invSearch: string;
+    setInvSearch: (v: string) => void;
 
     // Game state
     multiplier: number | null;
@@ -106,6 +114,11 @@ export function useUpgrade({ inventory }: UseUpgradeProps): UseUpgradeReturn {
     const [minPrice, setMinPrice] = useState("");
     const [search, setSearch] = useState("");
 
+    // Filters for inventory (client-side, all items already loaded)
+    const [invPriceSort, setInvPriceSort] = useState<PriceSort>(null);
+    const [invMinPrice, setInvMinPrice] = useState("");
+    const [invSearch, setInvSearch] = useState("");
+
     // ─── Game state ──────────────────────────────────────────
     const [multiplier, setMultiplier] = useState<number | null>(null);
     const [activeQuick, setActiveQuick] = useState<QuickMultiplier | null>(null);
@@ -129,14 +142,37 @@ export function useUpgrade({ inventory }: UseUpgradeProps): UseUpgradeReturn {
     }, [inventory, stage]);
 
     // ─── Derived ─────────────────────────────────────────────
-    const inventoryItems = useMemo(
+    const allInventoryItems = useMemo(
         () => stableInventory.map(inventoryItemToEntry),
         [stableInventory],
     );
 
+    const inventoryItems = useMemo(() => {
+        const term = invSearch.trim().toLowerCase();
+        const minParsed = parseFloat(invMinPrice);
+        const minKop = !isNaN(minParsed) && minParsed > 0 ? Math.round(minParsed * 100) : 0;
+
+        let list = allInventoryItems;
+        if (term || minKop) {
+            list = list.filter((s) => {
+                if (minKop && s.priceKopecks < minKop) return false;
+                if (term && !`${s.weapon} ${s.name}`.toLowerCase().includes(term)) return false;
+                return true;
+            });
+        }
+        if (invPriceSort) {
+            list = [...list].sort((a, b) =>
+                invPriceSort === 'asc'
+                    ? a.priceKopecks - b.priceKopecks
+                    : b.priceKopecks - a.priceKopecks,
+            );
+        }
+        return list;
+    }, [allInventoryItems, invSearch, invMinPrice, invPriceSort]);
+
     const inventorySkin = useMemo(
-        () => inventoryItems.find((s) => s.id === selectedInventory) ?? null,
-        [inventoryItems, selectedInventory],
+        () => allInventoryItems.find((s) => s.id === selectedInventory) ?? null,
+        [allInventoryItems, selectedInventory],
     );
 
     // ─── Target skins from API ───────────────────────────────
@@ -380,13 +416,21 @@ export function useUpgrade({ inventory }: UseUpgradeProps): UseUpgradeReturn {
         handleSelectInventory,
         handleSelectTarget,
 
-        // Filter state
+        // Filter state (target)
         priceSort,
         setPriceSort,
         minPrice,
         setMinPrice,
         search,
         setSearch,
+
+        // Filter state (inventory)
+        invPriceSort,
+        setInvPriceSort,
+        invMinPrice,
+        setInvMinPrice,
+        invSearch,
+        setInvSearch,
 
         // Game state
         multiplier,
