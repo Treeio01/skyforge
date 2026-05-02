@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 export function ChipButton({
     children,
@@ -40,12 +41,13 @@ export function AmountBlock({
     currencySymbol: string;
     bonus: { code: string; percent: number } | null;
 }) {
+    const { t } = useTranslation();
     return (
         <div className="flex flex-col gap-2">
             <div className="flex gap-2.5">
                 <div className="flex flex-col gap-6 flex-1 w-0 min-w-0 p-3.5 rounded-[12px] bg-white/1">
                     <span className="text-white font-inter text-[11px] leading-[100%]">
-                        Сумма пополнения
+                        {t('deposit.amount_label')}
                     </span>
                     <div className="flex items-end gap-1">
                         <input
@@ -60,14 +62,14 @@ export function AmountBlock({
                             className="bg-transparent outline-none text-white font-sf-compact text-[40px] font-thin leading-[100%] w-full min-w-0"
                         />
                         <span className="text-white/24 whitespace-nowrap font-sf-display text-[9px] leading-[100%] pb-1">
-                            Мин. {minAmount} {currencySymbol}
+                            {t('deposit.min_amount_label', { amount: minAmount, currency: currencySymbol })}
                         </span>
                     </div>
                 </div>
 
                 <div className="flex flex-col gap-6 flex-1 w-0 min-w-0 p-3.5 rounded-[12px] bg-white/1">
                     <span className="text-[#40404A] font-inter text-[11px] leading-[100%]">
-                        Будет начислено
+                        {t('deposit.credited')}
                     </span>
                     <div className="flex items-end gap-1 overflow-hidden">
                         <span className="text-[#0055FF] font-sf-compact text-[40px] font-thin leading-[100%] truncate">
@@ -82,7 +84,7 @@ export function AmountBlock({
             {bonus && (
                 <div className="flex items-center gap-1.5 px-3 py-2 rounded-[8px] bg-[#00BF6C]/10 border border-[#00BF6C]/20">
                     <span className="text-[#00BF6C] font-sf-display text-[12px] leading-[120%]">
-                        +{bonus.percent}% бонус к пополнению
+                        {t('deposit.bonus_percent', { percent: bonus.percent })}
                     </span>
                     <span className="text-[#00BF6C]/50 font-sf-display text-[10px] leading-[120%]">
                         {bonus.code}

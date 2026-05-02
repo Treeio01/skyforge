@@ -1,6 +1,8 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { createContext, useContext, useState, useCallback, useEffect, useRef, ReactNode } from 'react';
 import { router } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
+import i18n from '@/i18n';
 
 type ToastType = 'success' | 'error' | 'info';
 
@@ -67,7 +69,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         const removeInvalid = router.on('invalid', (event) => {
             const status = event.detail.response?.status;
             if (status && status >= 500) {
-                addToastRef.current?.('error', 'Произошла ошибка сервера. Попробуйте позже.');
+                addToastRef.current?.('error', i18n.t('common.server_error'));
             }
         });
 
@@ -121,6 +123,7 @@ const ACCENT: Record<ToastType, { border: string; icon: string; bg: string }> = 
 };
 
 function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: number) => void }) {
+    const { t } = useTranslation();
     const [state, setState] = useState<'enter' | 'visible' | 'exit'>('enter');
     const accent = ACCENT[toast.type];
 
@@ -158,7 +161,7 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: (id: number)
             </div>
             <div className="flex flex-col gap-0.5 min-w-0">
                 <span className="text-white font-sf-display text-[13px] font-medium leading-[130%]">
-                    {toast.type === 'success' ? 'Успешно' : toast.type === 'error' ? 'Ошибка' : 'Информация'}
+                    {toast.type === 'success' ? t('common.toast_success') : toast.type === 'error' ? t('common.toast_error') : t('common.toast_info')}
                 </span>
                 <span className="text-white/50 font-sf-display text-[12px] leading-[140%] break-words">
                     {toast.message}

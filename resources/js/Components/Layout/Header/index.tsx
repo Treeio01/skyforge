@@ -24,19 +24,20 @@ function Logo() {
 }
 
 function StatsChips() {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const onlineDisplay = useOnlineCount();
     const totalUpgrades = useUpgradeCount();
+    const numberLocale = i18n.language === 'en' ? 'en-US' : 'ru-RU';
 
     return (
         <div className="flex gap-[3px] items-stretch">
             <Chip className="bg-chip text-white">
                 <GlobeIcon />
-                <ChipLabel>{onlineDisplay.toLocaleString('ru-RU')}</ChipLabel>
+                <ChipLabel>{onlineDisplay.toLocaleString(numberLocale)}</ChipLabel>
             </Chip>
             <Chip className="bg-chip text-white">
                 <LevelsIcon />
-                <ChipLabel>{totalUpgrades.toLocaleString('ru-RU')}</ChipLabel>
+                <ChipLabel>{totalUpgrades.toLocaleString(numberLocale)}</ChipLabel>
             </Chip>
             <Chip
                 interactive

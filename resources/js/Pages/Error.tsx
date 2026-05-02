@@ -1,19 +1,13 @@
 import { Head, Link } from '@inertiajs/react';
-
-const statusMessages: Record<number, string> = {
-    403: 'Доступ запрещён',
-    404: 'Страница не найдена',
-    419: 'Сессия истекла',
-    500: 'Ошибка сервера',
-    503: 'Технические работы',
-};
+import { useTranslation } from 'react-i18next';
 
 interface ErrorPageProps {
     status: number;
 }
 
 export default function Error({ status }: ErrorPageProps) {
-    const message = statusMessages[status] ?? 'Произошла ошибка';
+    const { t } = useTranslation();
+    const message = t(`errors.${status}`, { defaultValue: t('common.error_generic') });
 
     return (
         <>
@@ -26,7 +20,7 @@ export default function Error({ status }: ErrorPageProps) {
                     href="/"
                     className="mt-8 inline-flex items-center rounded-lg bg-accent px-6 py-3 text-base font-bold text-[#0a0a0a] hover:bg-accent-hover transition-colors"
                 >
-                    На главную
+                    {t('common.to_home')}
                 </Link>
             </div>
         </>

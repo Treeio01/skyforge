@@ -2,6 +2,7 @@ import SkinCard, { ItemBackgroundLines } from '@/Components/Upgrade/SkinCard';
 import { formatKopecks, mapRarityColor, parseSkinName, inventoryItemToEntry } from '@/utils/skinHelpers';
 import { Skin } from '@/types';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type Tab = 'inventory' | 'history' | 'upgrades';
 
@@ -38,15 +39,16 @@ interface ProfileTabsProps {
 export default function ProfileTabs({
     inventory, recentUpgrades, selectedSkins, onToggleSkin, onSellAll, onSellSelected,
 }: ProfileTabsProps) {
+    const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState<Tab>('inventory');
 
     return (
         <div className="flex p-4 1024:p-6 flex-col w-full gap-3 bg-[#11161F] rounded-[14px]">
             <div className="flex w-full items-center justify-between">
                 <div className="flex items-center gap-1">
-                    <TabButton active={activeTab === 'inventory'} onClick={() => setActiveTab('inventory')} icon={<InventoryTabIcon active={activeTab === 'inventory'} />} label="Инвентарь" />
-                    <TabButton active={activeTab === 'history'} onClick={() => setActiveTab('history')} icon={<HistoryTabIcon active={activeTab === 'history'} />} label="История" />
-                    <TabButton active={activeTab === 'upgrades'} onClick={() => setActiveTab('upgrades')} icon={<UpgradesTabIcon active={activeTab === 'upgrades'} />} label="Апгрейды" />
+                    <TabButton active={activeTab === 'inventory'} onClick={() => setActiveTab('inventory')} icon={<InventoryTabIcon active={activeTab === 'inventory'} />} label={t('profile.tab_inventory')} />
+                    <TabButton active={activeTab === 'history'} onClick={() => setActiveTab('history')} icon={<HistoryTabIcon active={activeTab === 'history'} />} label={t('profile.tab_history_short')} />
+                    <TabButton active={activeTab === 'upgrades'} onClick={() => setActiveTab('upgrades')} icon={<UpgradesTabIcon active={activeTab === 'upgrades'} />} label={t('profile.tab_upgrades')} />
                 </div>
                 {activeTab === 'inventory' && (
                     <div className="flex gap-1.5">
@@ -57,7 +59,7 @@ export default function ProfileTabs({
                             >
                                 <SellIcon fill="currentColor" />
                                 <span className="font-sf-display text-[13px] font-light leading-[120%] hidden 550:inline">
-                                    Продать ({selectedSkins.size})
+                                    {t('profile.sell_count', { count: selectedSkins.size })}
                                 </span>
                             </button>
                         )}
@@ -67,7 +69,7 @@ export default function ProfileTabs({
                         >
                             <SellIcon fill="currentColor" />
                             <span className="font-sf-display text-[13px] font-light leading-[120%] hidden 550:inline">
-                                Продать все
+                                {t('profile.sell_all')}
                             </span>
                         </button>
                     </div>
@@ -77,7 +79,7 @@ export default function ProfileTabs({
             <div className={activeTab === 'upgrades' ? 'flex flex-wrap gap-2 justify-center' : 'grid grid-cols-[repeat(auto-fill,minmax(130px,1fr))] 1024:grid-cols-[repeat(auto-fill,minmax(140px,1fr))] gap-[4px]'}>
                 {activeTab === 'inventory' && (
                     inventory.length === 0 ? (
-                        <EmptyState text="Нет скинов" />
+                        <EmptyState text={t('profile.empty_no_skins')} />
                     ) : (
                         inventory.map((item) => {
                             const entry = inventoryItemToEntry(item);
@@ -97,7 +99,7 @@ export default function ProfileTabs({
 
                 {activeTab === 'history' && (
                     recentUpgrades.length === 0 ? (
-                        <EmptyState text="Нет истории" />
+                        <EmptyState text={t('profile.empty_no_history')} />
                     ) : (
                         recentUpgrades.map((u) => (
                             <div key={u.id} className={u.result === 'lose' ? 'opacity-50' : ''}>
@@ -117,7 +119,7 @@ export default function ProfileTabs({
 
                 {activeTab === 'upgrades' && (
                     recentUpgrades.length === 0 ? (
-                        <EmptyState text="Нет апгрейдов" />
+                        <EmptyState text={t('profile.empty_no_upgrades')} />
                     ) : (
                         recentUpgrades.map((u) => (
                             <UpgradeHistoryCard key={u.id} upgrade={u} />

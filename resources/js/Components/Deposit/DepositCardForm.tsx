@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
     CURRENCIES,
     SBP_SYSTEMS,
@@ -85,15 +86,15 @@ export default function DepositCardForm({
     processing,
     onSubmit,
 }: DepositCardFormProps) {
+    const { t } = useTranslation();
     const minAmount = MIN_AMOUNTS[currency];
     const currencySymbol = CURRENCY_SYMBOLS[currency];
 
     return (
         <>
-            {/* Валюта */}
             <div className="flex flex-col gap-2">
                 <span className="text-white/40 font-sf-display text-[12px] leading-[120%]">
-                    Выберите валюту пополнения
+                    {t('deposit.select_currency')}
                 </span>
                 <div className="flex gap-1 flex-wrap">
                     {CURRENCIES.map((c) => (
@@ -151,9 +152,8 @@ export default function DepositCardForm({
                 bonus={bonus}
             />
 
-            {/* Кнопка */}
             <Button loading={processing} onClick={onSubmit} size="lg" className="w-full">
-                Пополнить
+                {t('deposit.submit')}
             </Button>
         </>
     );

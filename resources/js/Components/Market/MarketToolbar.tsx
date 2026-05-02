@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { formatKopecks } from "@/utils/skinHelpers";
 import type { SortOption } from "./useMarket";
 import { SORT_OPTIONS } from "./useMarket";
@@ -26,19 +27,18 @@ const MarketToolbar = memo(function MarketToolbar({
     onOpenCart,
     buying = false,
 }: MarketToolbarProps) {
+    const { t } = useTranslation();
     return (
         <div className="w-full flex flex-col xs:flex-row xs:items-center gap-2 min-w-0">
-            {/* Поиск */}
             <div className="w-full xs:w-[160px] 1024:w-[240px]">
                 <Input
                     type="text"
                     value={search}
                     onChange={(e) => onSearchChange(e.target.value)}
-                    placeholder="Поиск"
+                    placeholder={t('common.search')}
                 />
             </div>
 
-            {/* Кнопка фильтров */}
             <button
                 onClick={onOpenFilters}
                 className="flex items-center justify-center h-10 px-3.5 rounded-[10px] bg-[#161B26] hover:bg-[#1B2230] active:bg-[#232B3D] gap-1.5 cursor-pointer transition-colors duration-200 text-white/70 hover:text-white shrink-0"
@@ -46,14 +46,13 @@ const MarketToolbar = memo(function MarketToolbar({
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
                     <path d="M2.33301 3.5H11.6663M3.49967 7H10.4997M4.66634 10.5H9.33301" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.4" />
                 </svg>
-                <span className="font-sf-display text-[12px] leading-[100%] hidden xs:inline">Фильтры</span>
+                <span className="font-sf-display text-[12px] leading-[100%] hidden xs:inline">{t('common.filters')}</span>
             </button>
 
-            {/* Отменить выделенное */}
             <button
                 onClick={onClearSelected}
                 disabled={selectedCount === 0}
-                title="Отменить выделение"
+                title={t('market.clear_selection')}
                 className="flex items-center justify-center h-10 w-10 rounded-[10px] bg-[#161B26] hover:bg-[#1B2230] cursor-pointer transition-colors duration-200 text-white/55 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-[#161B26] disabled:hover:text-white/55 shrink-0"
             >
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -69,7 +68,7 @@ const MarketToolbar = memo(function MarketToolbar({
             >
                 <div className="flex items-start flex-col">
                     <span className="text-[10px] leading-[120%] text-white">
-                        {selectedCount > 0 ? `${selectedCount} шт.` : '0 шт.'}
+                        {t('common.items_short', { count: selectedCount })}
                     </span>
                     <span className="font-sf-display text-sm leading-[120%] text-white font-medium whitespace-nowrap">
                         {formatKopecks(totalSelected)}
@@ -104,11 +103,11 @@ export function FilterControls({
     onClose,
     onApply,
 }: FilterControlsProps) {
+    const { t } = useTranslation();
     return (
         <div className="flex flex-col gap-6">
-            {/* Цена */}
             <div className="flex flex-col gap-2">
-                <span className="text-white/40 font-sf-display text-[11px] uppercase tracking-[0.08em]">Цена</span>
+                <span className="text-white/40 font-sf-display text-[11px] uppercase tracking-[0.08em]">{t('common.price')}</span>
                 <div className="grid grid-cols-2 gap-2">
                     <Input
                         type="number"
@@ -116,7 +115,7 @@ export function FilterControls({
                         value={minPrice}
                         onChange={(e) => onMinPriceChange(e.target.value)}
                         placeholder="0"
-                        prefix="от"
+                        prefix={t('common.from')}
                     />
                     <Input
                         type="number"
@@ -124,14 +123,13 @@ export function FilterControls({
                         value={maxPrice}
                         onChange={(e) => onMaxPriceChange(e.target.value)}
                         placeholder="∞"
-                        prefix="до"
+                        prefix={t('common.to')}
                     />
                 </div>
             </div>
 
-            {/* Сортировка */}
             <div className="flex flex-col gap-2">
-                <span className="text-white/40 font-sf-display text-[11px] uppercase tracking-[0.08em]">Сортировка</span>
+                <span className="text-white/40 font-sf-display text-[11px] uppercase tracking-[0.08em]">{t('common.sort')}</span>
                 <div className="grid grid-cols-2 gap-2">
                     {SORT_OPTIONS.map((opt) => {
                         const isActive = sortOption === opt.value;
@@ -159,13 +157,13 @@ export function FilterControls({
                     style={{ background: 'radial-gradient(80.57% 100% at 50% 100%, #4F86F5 0%, #05F 100%)' }}
                     className="flex items-center justify-center w-full h-12 rounded-[12px] cursor-pointer hover:brightness-110 active:scale-[0.98] transition-all duration-150"
                 >
-                    <span className="text-white font-sf-display text-[13px] font-medium">Применить</span>
+                    <span className="text-white font-sf-display text-[13px] font-medium">{t('common.apply')}</span>
                 </button>
                 <button
                     onClick={onClose}
                     className="flex items-center justify-center w-full h-10 rounded-[10px] bg-[#161B26] hover:bg-[#1B2230] cursor-pointer transition-colors duration-200"
                 >
-                    <span className="text-white/65 font-sf-display text-[12px]">Закрыть</span>
+                    <span className="text-white/65 font-sf-display text-[12px]">{t('common.close')}</span>
                 </button>
             </div>
         </div>

@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { CRYPTO_NETWORKS, type CryptoNetwork } from "./depositConstants";
 import { ChipButton, AmountBlock } from "./depositShared";
 import Button from "@/Components/UI/Button";
@@ -26,6 +27,7 @@ export default function DepositCryptoForm({
     onSubmit,
     canDeposit,
 }: DepositCryptoFormProps) {
+    const { t } = useTranslation();
     const activeNetwork =
         CRYPTO_NETWORKS.find((n) => n.value === network) ??
         CRYPTO_NETWORKS[0];
@@ -61,7 +63,7 @@ export default function DepositCryptoForm({
                 disabled={!canDeposit}
                 className="w-full mt-3"
             >
-                Пополнить
+                {t('deposit.submit')}
             </Button>
         </>
     );

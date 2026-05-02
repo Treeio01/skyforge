@@ -1,6 +1,7 @@
 import Modal from '@/Components/UI/Modal';
 import { formatKopecks } from '@/utils/skinHelpers';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 
 interface Deposit {
@@ -17,6 +18,7 @@ interface DepositHistoryModalProps {
 }
 
 export default function DepositHistoryModal({ visible, onClose }: DepositHistoryModalProps) {
+    const { t, i18n } = useTranslation();
     const [deposits, setDeposits] = useState<Deposit[]>([]);
     const [loading, setLoading] = useState(false);
     const [loaded, setLoaded] = useState(false);
@@ -35,31 +37,32 @@ export default function DepositHistoryModal({ visible, onClose }: DepositHistory
 
     const formatDate = (iso: string) => {
         const d = new Date(iso);
-        return d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' })
-            + ' ' + d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+        const localeTag = i18n.language === 'en' ? 'en-US' : 'ru-RU';
+        return d.toLocaleDateString(localeTag, { day: '2-digit', month: '2-digit', year: 'numeric' })
+            + ' ' + d.toLocaleTimeString(localeTag, { hour: '2-digit', minute: '2-digit' });
     };
 
     return (
         <Modal visible={visible} onClose={onClose} maxWidth="max-w-[460px]">
             <div className="flex flex-col gap-1">
                 <span className="text-white font-gotham font-medium text-xl leading-[100%]">
-                    История пополнений
+                    {t('deposit.history_title')}
                 </span>
                 <p className="font-sf-display text-[13px] leading-[140%] text-white/40">
-                    Все пополнения вашего баланса
+                    {t('deposit.history_subtitle')}
                 </p>
             </div>
 
             <div className="flex flex-col gap-1 max-h-[400px] overflow-y-auto custom-scrollbar">
                 {loading && (
                     <div className="flex items-center justify-center h-[80px]">
-                        <span className="text-white/20 font-sf-display text-[13px] animate-pulse">Загрузка...</span>
+                        <span className="text-white/20 font-sf-display text-[13px] animate-pulse">{t('common.loading')}</span>
                     </div>
                 )}
 
                 {!loading && deposits.length === 0 && (
                     <div className="flex items-center justify-center h-[80px]">
-                        <span className="text-white/20 font-sf-display text-[13px]">Нет пополнений</span>
+                        <span className="text-white/20 font-sf-display text-[13px]">{t('deposit.no_deposits')}</span>
                     </div>
                 )}
 
@@ -81,7 +84,7 @@ export default function DepositHistoryModal({ visible, onClose }: DepositHistory
                                 <path d="M6 1L2 5H5V11H7V5H10L6 1Z" fill="#00BF6C" />
                             </svg>
                             <span className="text-[#00BF6C] font-sf-display text-[11px] leading-[120%]">
-                                Пополнение
+                                {t('deposit.deposit_label')}
                             </span>
                         </div>
                     </div>

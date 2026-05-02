@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { SkinEntry } from './SkinCard';
 import SkinCardPreview from './SkinCardPreview';
 
@@ -11,7 +12,6 @@ interface UpgradeResultProps {
 }
 
 type VariantStyles = {
-    title: string;
     titleColor: string;
     accentStripe: string;
     tagBg: string;
@@ -24,7 +24,6 @@ type VariantStyles = {
 
 const VARIANTS: Record<UpgradeResultVariant, VariantStyles> = {
     win: {
-        title: 'ПОБЕДА',
         titleColor: '#97C9FA',
         accentStripe: '#97C9FA',
         tagBg: '#97C9FA',
@@ -35,7 +34,6 @@ const VARIANTS: Record<UpgradeResultVariant, VariantStyles> = {
         gradientRgb: '51, 59, 70', // #333B46
     },
     lose: {
-        title: 'ПРОИГРЫШ',
         titleColor: '#DB4538',
         accentStripe: '#DB4538',
         tagBg: '#EABF55',
@@ -47,19 +45,18 @@ const VARIANTS: Record<UpgradeResultVariant, VariantStyles> = {
     },
 };
 
-const DEFAULT_DESCRIPTION: Record<UpgradeResultVariant, string> = {
-    win: 'Поздравляем! Ваш апгрейд удался!',
-    lose: 'Ничего, в другой раз повезет! Наверное...',
-};
-
 export default function UpgradeResult({
     variant,
     skin,
     description,
     className = '',
 }: UpgradeResultProps) {
+    const { t } = useTranslation();
     const v = VARIANTS[variant];
-    const text = description ?? DEFAULT_DESCRIPTION[variant];
+    const title = variant === 'win' ? t('upgrade.result_win_label') : t('upgrade.result_lose_label');
+    const text = description ?? (variant === 'win'
+        ? t('upgrade.result_win_description')
+        : t('upgrade.result_lose_description'));
 
     return (
         <div className={`relative w-full h-full ${className}`}>
@@ -85,11 +82,8 @@ export default function UpgradeResult({
                                 className="font-bold font-montserrat text-[39px] 1024:text-[42px] leading-[100%] text-center"
                                 style={{ color: v.titleColor }}
                             >
-                                {v.title}
+                                {title}
                             </h1>
-                            <span className="font-medium text-[13px] leading-[100%] text-white/29 font-sf-display">
-                                This's random text
-                            </span>
                         </div>
                     </div>
                     <div

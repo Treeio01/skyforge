@@ -10,14 +10,25 @@
         "loading": "Loading...",
         "search": "Search",
         "from": "from",
+        "to": "to",
         "price": "Price",
         "filters": "Filters",
         "all": "All",
+        "top": "Top",
         "default": "Default",
         "cheaper": "Cheaper",
         "more_expensive": "Pricier",
         "online": "online",
-        "back": "Back"
+        "back": "Back",
+        "sort": "Sort",
+        "items_short": "{{count}} pcs.",
+        "currency_rub": "₽",
+        "to_home": "Go home",
+        "error_generic": "Something went wrong",
+        "server_error": "Server error. Please try again later.",
+        "toast_success": "Success",
+        "toast_error": "Error",
+        "toast_info": "Info"
     },
     "header": {
         "online": "Online",
@@ -25,7 +36,10 @@
         "market": "Market",
         "faq": "FAQ",
         "deposit": "Top up",
-        "profile": "Profile"
+        "profile": "Profile",
+        "sound": "Sound",
+        "sound_on": "On",
+        "sound_off": "Off"
     },
     "footer": {
         "tagline": "Fair CS2 skin upgrade with open Provably Fair algorithm.",
@@ -61,7 +75,16 @@
         "sort_by_price": "Sort by price",
         "defused": "{{name}} defused the bomb.",
         "defusing": "{{name}} is defusing the bomb...",
-        "player_fallback": "Player"
+        "player_fallback": "Player",
+        "win_title": "You won!",
+        "lose_title": "You lost",
+        "result_win_label": "WIN",
+        "result_lose_label": "LOSS",
+        "result_win_description": "Congrats! Your upgrade worked out!",
+        "result_lose_description": "Maybe next time. Probably..."
+    },
+    "feed": {
+        "load_error": "Failed to load the upgrade feed"
     },
     "promo": {
         "title": "Got a promo code?",
@@ -72,7 +95,96 @@
     "profile": {
         "best_drop": "Most expensive drop",
         "best_multiplier": "Best multiplier",
-        "lowest_chance": "Lowest chance"
+        "lowest_chance": "Lowest chance",
+        "balance": "Balance",
+        "tab_inventory": "Inventory",
+        "tab_history_short": "History",
+        "tab_upgrades": "Upgrades",
+        "tab_history": "Upgrade history",
+        "tab_deposits": "Deposits",
+        "tab_settings": "Settings",
+        "sell_count": "Sell ({{count}})",
+        "sell_all": "Sell all",
+        "empty_no_skins": "No skins",
+        "empty_no_history": "No history",
+        "empty_no_upgrades": "No upgrades",
+        "trade_url_label": "Your Trade URL",
+        "trade_url_hint": "Trade URL is required to receive skins on withdrawal",
+        "trade_url_save": "Save",
+        "no_inventory": "Inventory is empty",
+        "no_inventory_hint": "Buy a skin in the market or win one via upgrade",
+        "no_history": "No upgrades yet",
+        "no_deposits": "No deposits",
+        "sell": "Sell",
+        "withdraw": "Withdraw",
+        "sell_modal_title": "Sell skin",
+        "sell_all_question": "Sell all skins?",
+        "sell_count_question": "Sell {{count}} skins?",
+        "sell_all_hint": "All your skins will be sold at current prices. Funds will be added to your balance.",
+        "sell_count_hint": "Selected skins ({{count}} pcs.) will be sold. Funds will be added to your balance.",
+        "sell_button": "Sell",
+        "sell_modal_confirm": "Get {{amount}}",
+        "sell_modal_cancel": "Cancel",
+        "selling": "Selling..."
+    },
+    "market": {
+        "title": "Skin market",
+        "subtitle": "Sort and filters",
+        "cart": "Cart",
+        "cart_empty": "Cart is empty",
+        "cart_empty_hint": "Pick skins on the grid",
+        "buy": "Buy",
+        "buying": "Purchasing...",
+        "clear_cart": "Clear cart",
+        "clear_selection": "Clear selection",
+        "no_skins": "No skins found",
+        "no_skins_hint": "Try changing filters or search"
+    },
+    "deposit": {
+        "title": "Top up balance",
+        "method_card": "Card",
+        "method_crypto": "Crypto",
+        "method_skins": "Skins",
+        "method_select": "Choose method",
+        "amount": "Amount",
+        "min_amount": "Minimum {{amount}}",
+        "submit": "Top up",
+        "processing": "Processing...",
+        "modal_title": "Top up balance",
+        "load_error": "Loading error.",
+        "refresh": "Refresh",
+        "support_note": "If 30 minutes have passed after payment and the balance hasn't been credited, contact our support.",
+        "skins_note": "Due to new Steam Trade Protection rules, the deposit will be credited in 8 days. In some cases it may be credited instantly.",
+        "continue": "Continue",
+        "select_currency": "Select deposit currency",
+        "amount_label": "Top-up amount",
+        "min_amount_label": "Min. {{amount}} {{currency}}",
+        "credited": "Will be credited",
+        "bonus_percent": "+{{percent}}% deposit bonus",
+        "history_title": "Deposit history",
+        "history_subtitle": "All deposits to your balance",
+        "deposit_label": "Deposit",
+        "history_empty": "No deposits yet",
+        "no_deposits": "No deposits",
+        "status_pending": "Pending",
+        "status_completed": "Completed",
+        "status_failed": "Failed"
+    },
+    "auth": {
+        "welcome": "Welcome!",
+        "login_with_steam": "Log in with Steam",
+        "login_subtitle": "Sign in with Steam to start",
+        "adult_check": "I confirm I am 18 or older",
+        "terms_check": "I accept the rules and terms of service"
+    },
+    "errors": {
+        "403": "Access denied",
+        "404": "Page not found",
+        "419": "Session expired",
+        "500": "Server error",
+        "503": "Maintenance",
+        "boundary": "Something went wrong",
+        "boundary_hint": "Try refreshing the page"
     },
     "faq": {
         "title": "FAQ",
@@ -82,13 +194,12 @@
         "questions_one": "{{count}} question",
         "questions_other": "{{count}} questions"
     },
+    "feed_tabs": {
+        "all": "All",
+        "top": "Top"
+    },
     "maintenance": {
         "title": "Site is under maintenance",
         "default_message": "The site is temporarily under maintenance. We'll be right back."
-    },
-    "auth": {
-        "login_with_steam": "Log in with Steam",
-        "adult_check": "I am 18 or older",
-        "terms_check": "I agree to the rules and terms of service"
     }
 }

@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import type { DepositMethod } from "./depositConstants";
 import { ChipButton } from "./depositShared";
 
@@ -93,12 +94,6 @@ const SkinsIcon = () => (
     </svg>
 );
 
-const METHODS: { label: string; value: DepositMethod; icon: React.ReactNode }[] = [
-    { label: "Карты", value: "card", icon: <CardIcon /> },
-    { label: "Crypto", value: "crypto", icon: <CryptoIcon /> },
-    { label: "Skins", value: "skins", icon: <SkinsIcon /> },
-];
-
 interface DepositMethodSelectorProps {
     method: DepositMethod;
     onChange: (m: DepositMethod) => void;
@@ -108,10 +103,17 @@ export default function DepositMethodSelector({
     method,
     onChange,
 }: DepositMethodSelectorProps) {
+    const { t } = useTranslation();
+    const METHODS: { label: string; value: DepositMethod; icon: React.ReactNode }[] = [
+        { label: t('deposit.method_card'), value: "card", icon: <CardIcon /> },
+        { label: t('deposit.method_crypto'), value: "crypto", icon: <CryptoIcon /> },
+        { label: t('deposit.method_skins'), value: "skins", icon: <SkinsIcon /> },
+    ];
+
     return (
         <div className="flex flex-col gap-1.5">
             <span className="text-[#40404A] font-inter text-[14px] leading-[100%]">
-                Выберите метод
+                {t('deposit.method_select')}
             </span>
             <div className="flex gap-1">
                 {METHODS.map((m) => (

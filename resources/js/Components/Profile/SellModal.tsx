@@ -1,6 +1,7 @@
 import Button from '@/Components/UI/Button';
 import Modal from '@/Components/UI/Modal';
 import { useForm } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 
 interface SellModalProps {
     visible: boolean;
@@ -11,6 +12,7 @@ interface SellModalProps {
 }
 
 export default function SellModal({ visible, onClose, mode, selectedIds, onSuccess }: SellModalProps) {
+    const { t } = useTranslation();
     const form = useForm({
         mode,
         ids: mode === 'selected' ? Array.from(selectedIds) : [] as number[],
@@ -30,12 +32,14 @@ export default function SellModal({ visible, onClose, mode, selectedIds, onSucce
         <Modal visible={visible} onClose={onClose}>
             <div className="flex flex-col gap-1">
                 <span className="text-white font-gotham font-medium text-xl leading-[100%]">
-                    {mode === 'all' ? 'Продать все скины?' : `Продать ${selectedIds.size} скинов?`}
+                    {mode === 'all'
+                        ? t('profile.sell_all_question')
+                        : t('profile.sell_count_question', { count: selectedIds.size })}
                 </span>
                 <p className="font-sf-display text-[13px] leading-[140%] text-white/40">
                     {mode === 'all'
-                        ? 'Все ваши скины будут проданы по текущим ценам. Средства поступят на баланс.'
-                        : `Выбранные скины (${selectedIds.size} шт.) будут проданы. Средства поступят на баланс.`}
+                        ? t('profile.sell_all_hint')
+                        : t('profile.sell_count_hint', { count: selectedIds.size })}
                 </p>
             </div>
             <div className="flex gap-2">
@@ -45,13 +49,13 @@ export default function SellModal({ visible, onClose, mode, selectedIds, onSucce
                     onClick={handleSell}
                     className="flex-1"
                 >
-                    Продать
+                    {t('profile.sell_button')}
                 </Button>
                 <button
                     onClick={onClose}
                     className="flex-1 py-3 rounded-[10px] bg-white/5 hover:bg-white/10 text-white/60 font-sf-display text-[13px] font-medium cursor-pointer transition-colors"
                 >
-                    Отменить
+                    {t('profile.sell_modal_cancel')}
                 </button>
             </div>
         </Modal>

@@ -1,4 +1,5 @@
 import React, { memo, useRef, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import SkinCard from "@/Components/Upgrade/SkinCard";
 import { apiSkinToEntry } from "@/utils/skinHelpers";
@@ -41,6 +42,7 @@ interface SkinGridProps {
 }
 
 export default memo(function SkinGrid({ items, selected, onToggle, loading, hasMore, containerRef, onScroll }: SkinGridProps) {
+    const { t } = useTranslation();
     const internalRef = useRef<HTMLDivElement>(null);
     const parentRef = containerRef ?? internalRef;
     const columns = useColumns(parentRef);
@@ -72,8 +74,8 @@ export default memo(function SkinGrid({ items, selected, onToggle, loading, hasM
                 </div>
             ) : items.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 gap-2">
-                    <span className="text-white/40 font-sf-display text-[14px]">Скины не найдены</span>
-                    <span className="text-white/20 font-sf-display text-[12px]">Попробуйте изменить фильтры или поиск</span>
+                    <span className="text-white/40 font-sf-display text-[14px]">{t('market.no_skins')}</span>
+                    <span className="text-white/20 font-sf-display text-[12px]">{t('market.no_skins_hint')}</span>
                 </div>
             ) : (
                 <>

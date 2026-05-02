@@ -5,6 +5,7 @@ import ProfileStatCards from '@/Components/Profile/ProfileStatCards';
 import ProfileTabs from '@/Components/Profile/ProfileTabs';
 import SellModal from '@/Components/Profile/SellModal';
 import { usePage } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 import { PageProps, Skin } from '@/types';
 import { useState } from 'react';
 
@@ -40,6 +41,7 @@ interface ProfilePageProps extends Record<string, unknown> {
 }
 
 export default function Show() {
+    const { t } = useTranslation();
     const { profile, inventory, recentUpgrades } = usePage<PageProps<ProfilePageProps>>().props;
 
     const [sellModalVisible, setSellModalVisible] = useState(false);
@@ -57,7 +59,7 @@ export default function Show() {
 
     return (
         <AppLayout>
-            <PageShell title="Профиль" subtitle={profile.username}>
+            <PageShell title={t('header.profile')} subtitle={profile.username}>
                 <div className="flex flex-col gap-4 1024:gap-6 w-full">
                     <div className="flex flex-col 1024:flex-row gap-4 1024:gap-6 items-stretch w-full p-4 1024:p-6 rounded-[14px] bg-[#11161F]">
                         <ProfileSidebar profile={profile} />

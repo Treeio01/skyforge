@@ -10,14 +10,25 @@
         "loading": "Загрузка...",
         "search": "Поиск",
         "from": "от",
+        "to": "до",
         "price": "Цена",
         "filters": "Фильтры",
         "all": "Все",
+        "top": "Топ",
         "default": "По умолч.",
         "cheaper": "Дешевле",
         "more_expensive": "Дороже",
         "online": "онлайн",
-        "back": "Назад"
+        "back": "Назад",
+        "sort": "Сортировка",
+        "items_short": "{{count}} шт.",
+        "currency_rub": "₽",
+        "to_home": "На главную",
+        "error_generic": "Произошла ошибка",
+        "server_error": "Произошла ошибка сервера. Попробуйте позже.",
+        "toast_success": "Успешно",
+        "toast_error": "Ошибка",
+        "toast_info": "Информация"
     },
     "header": {
         "online": "Онлайн",
@@ -25,7 +36,10 @@
         "market": "Рынок Скинов",
         "faq": "FAQ",
         "deposit": "Пополнить",
-        "profile": "Профиль"
+        "profile": "Профиль",
+        "sound": "Звук",
+        "sound_on": "Вкл",
+        "sound_off": "Выкл"
     },
     "footer": {
         "tagline": "Честный апгрейд скинов CS2 с открытым алгоритмом Provably Fair.",
@@ -61,7 +75,16 @@
         "sort_by_price": "Сортировка по цене",
         "defused": "{{name}} обезвредил бомбу.",
         "defusing": "{{name}} обезвреживает бомбу...",
-        "player_fallback": "Игрок"
+        "player_fallback": "Игрок",
+        "win_title": "Вы выиграли!",
+        "lose_title": "Вы проиграли",
+        "result_win_label": "ПОБЕДА",
+        "result_lose_label": "ПРОИГРЫШ",
+        "result_win_description": "Поздравляем! Ваш апгрейд удался!",
+        "result_lose_description": "Ничего, в другой раз повезёт! Наверное..."
+    },
+    "feed": {
+        "load_error": "Не удалось загрузить ленту апгрейдов"
     },
     "promo": {
         "title": "Нашли промокод?",
@@ -72,7 +95,96 @@
     "profile": {
         "best_drop": "Самый дорогой дроп",
         "best_multiplier": "Лучший множитель",
-        "lowest_chance": "Самый низкий шанс"
+        "lowest_chance": "Самый низкий шанс",
+        "balance": "Баланс",
+        "tab_inventory": "Инвентарь",
+        "tab_history_short": "История",
+        "tab_upgrades": "Апгрейды",
+        "tab_history": "История апгрейдов",
+        "tab_deposits": "Пополнения",
+        "tab_settings": "Настройки",
+        "sell_count": "Продать ({{count}})",
+        "sell_all": "Продать все",
+        "empty_no_skins": "Нет скинов",
+        "empty_no_history": "Нет истории",
+        "empty_no_upgrades": "Нет апгрейдов",
+        "trade_url_label": "Ваш Trade URL",
+        "trade_url_hint": "Trade URL нужен чтобы получать выводимые скины",
+        "trade_url_save": "Сохранить",
+        "no_inventory": "В инвентаре пока пусто",
+        "no_inventory_hint": "Купите скин в маркете или выиграйте через апгрейд",
+        "no_history": "Апгрейдов пока не было",
+        "no_deposits": "Нет пополнений",
+        "sell": "Продать",
+        "withdraw": "Вывести",
+        "sell_modal_title": "Продать скин",
+        "sell_all_question": "Продать все скины?",
+        "sell_count_question": "Продать {{count}} скинов?",
+        "sell_all_hint": "Все ваши скины будут проданы по текущим ценам. Средства поступят на баланс.",
+        "sell_count_hint": "Выбранные скины ({{count}} шт.) будут проданы. Средства поступят на баланс.",
+        "sell_button": "Продать",
+        "sell_modal_confirm": "Получить {{amount}}",
+        "sell_modal_cancel": "Отменить",
+        "selling": "Продажа..."
+    },
+    "market": {
+        "title": "Рынок скинов",
+        "subtitle": "Сортировка и фильтры",
+        "cart": "Корзина",
+        "cart_empty": "Корзина пуста",
+        "cart_empty_hint": "Выберите скины в гриде",
+        "buy": "Приобрести",
+        "buying": "Покупка...",
+        "clear_cart": "Очистить корзину",
+        "clear_selection": "Отменить выделение",
+        "no_skins": "Скины не найдены",
+        "no_skins_hint": "Попробуйте изменить фильтры или поиск"
+    },
+    "deposit": {
+        "title": "Пополнить баланс",
+        "method_card": "Карта",
+        "method_crypto": "Крипта",
+        "method_skins": "Скины",
+        "method_select": "Выберите метод",
+        "amount": "Сумма",
+        "min_amount": "Минимум {{amount}}",
+        "submit": "Пополнить",
+        "processing": "Обработка...",
+        "modal_title": "Пополнение баланса",
+        "load_error": "Ошибка загрузки.",
+        "refresh": "Обновить",
+        "support_note": "Если после оплаты прошло более 30 минут, а баланс на сайте не пополнился, то напишите нам в техподдержку",
+        "skins_note": "Из-за новых правил Steam Trade Protection депозит будет зачислен через 8 дней. В определённых случаях депозит может быть зачислен моментально.",
+        "continue": "Продолжить",
+        "select_currency": "Выберите валюту пополнения",
+        "amount_label": "Сумма пополнения",
+        "min_amount_label": "Мин. {{amount}} {{currency}}",
+        "credited": "Будет начислено",
+        "bonus_percent": "+{{percent}}% бонус к пополнению",
+        "history_title": "История пополнений",
+        "history_subtitle": "Все пополнения вашего баланса",
+        "deposit_label": "Пополнение",
+        "history_empty": "Пополнений ещё не было",
+        "no_deposits": "Нет пополнений",
+        "status_pending": "В обработке",
+        "status_completed": "Зачислено",
+        "status_failed": "Ошибка"
+    },
+    "auth": {
+        "welcome": "Добро пожаловать!",
+        "login_with_steam": "Войти через Steam",
+        "login_subtitle": "Войдите через Steam чтобы начать",
+        "adult_check": "Я подтверждаю, что мне больше 18 лет",
+        "terms_check": "Я принимаю правила и условия использования сайта"
+    },
+    "errors": {
+        "403": "Доступ запрещён",
+        "404": "Страница не найдена",
+        "419": "Сессия истекла",
+        "500": "Ошибка сервера",
+        "503": "Технические работы",
+        "boundary": "Что-то пошло не так",
+        "boundary_hint": "Попробуйте обновить страницу"
     },
     "faq": {
         "title": "FAQ",
@@ -83,13 +195,12 @@
         "questions_few": "{{count}} вопроса",
         "questions_many": "{{count}} вопросов"
     },
+    "feed_tabs": {
+        "all": "Все",
+        "top": "Топ"
+    },
     "maintenance": {
         "title": "Сайт временно на обслуживании",
         "default_message": "Сайт временно на обслуживании. Скоро вернёмся."
-    },
-    "auth": {
-        "login_with_steam": "Войти через Steam",
-        "adult_check": "Мне исполнилось 18 лет",
-        "terms_check": "Я согласен с правилами и пользовательским соглашением"
     }
 }

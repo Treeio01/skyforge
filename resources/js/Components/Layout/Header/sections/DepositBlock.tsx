@@ -1,4 +1,5 @@
 import { usePage } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 import { PageProps } from '@/types';
 import { WalletIcon } from '@/Components/UI/Icons';
 import { ChipLabel } from '../primitives';
@@ -6,11 +7,12 @@ import DepositModal from '@/Components/Deposit/DepositModal';
 import { useState } from 'react';
 
 export default function DepositBlock() {
+    const { i18n } = useTranslation();
     const user = usePage<PageProps>().props.auth.user;
     const [depositVisible, setDepositVisible] = useState(false);
 
     const balanceRubles = user
-        ? (user.balance / 100).toLocaleString('ru-RU')
+        ? (user.balance / 100).toLocaleString(i18n.language === 'en' ? 'en-US' : 'ru-RU')
         : '0';
 
     return (

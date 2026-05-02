@@ -8,8 +8,10 @@ import SkinGrid from "@/Components/Market/SkinGrid";
 import { useMarket } from "@/Components/Market/useMarket";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { formatKopecks } from "@/utils/skinHelpers";
+import { useTranslation } from "react-i18next";
 
 export default function MarketIndex() {
+    const { t } = useTranslation();
     const { guard } = useAuthGuard();
     const market = useMarket();
 
@@ -17,8 +19,8 @@ export default function MarketIndex() {
         <AppLayout>
             <PageShell
                 icon={<MarketIcon />}
-                title="Рынок скинов"
-                subtitle="Сортировка и фильтры"
+                title={t('market.title')}
+                subtitle={t('market.subtitle')}
                 toolbar={
                     <MarketToolbar
                         search={market.search}
@@ -49,8 +51,8 @@ export default function MarketIndex() {
             <Modal visible={market.cartOpen} onClose={() => market.setCartOpen(false)} maxWidth="max-w-[560px]">
                 <div className="flex items-center justify-between">
                     <div className="flex items-baseline gap-2">
-                        <span className="text-white font-gotham font-medium text-xl leading-[100%]">Корзина</span>
-                        <span className="text-white/40 font-sf-display text-[13px]">{market.selected.size} шт.</span>
+                        <span className="text-white font-gotham font-medium text-xl leading-[100%]">{t('market.cart')}</span>
+                        <span className="text-white/40 font-sf-display text-[13px]">{t('common.items_short', { count: market.selected.size })}</span>
                     </div>
                     <button
                         onClick={() => market.setCartOpen(false)}
@@ -80,8 +82,8 @@ export default function MarketIndex() {
                     </div>
                 ) : (
                     <div className="flex flex-col items-center justify-center py-10 gap-1.5 rounded-[12px] bg-[#11161F]">
-                        <span className="text-white/40 font-sf-display text-[13px]">Корзина пуста</span>
-                        <span className="text-white/20 font-sf-display text-[11px]">Выберите скины в гриде</span>
+                        <span className="text-white/40 font-sf-display text-[13px]">{t('market.cart_empty')}</span>
+                        <span className="text-white/20 font-sf-display text-[11px]">{t('market.cart_empty_hint')}</span>
                     </div>
                 )}
 
@@ -97,7 +99,7 @@ export default function MarketIndex() {
                         }`}
                     >
                         <span className="text-white font-sf-display text-[15px] font-medium leading-[120%]">
-                            {market.buying ? 'Покупка...' : `${formatKopecks(market.totalSelected)} · Приобрести`}
+                            {market.buying ? t('market.buying') : `${formatKopecks(market.totalSelected)} · ${t('market.buy')}`}
                         </span>
                     </button>
                     {market.selected.size > 0 && (
@@ -105,7 +107,7 @@ export default function MarketIndex() {
                             onClick={() => { market.clearSelected(); market.setCartOpen(false); }}
                             className="w-full py-2.5 rounded-[12px] bg-white/5 hover:bg-white/10 cursor-pointer transition-colors duration-150"
                         >
-                            <span className="text-white/60 font-sf-display text-[12px]">Очистить корзину</span>
+                            <span className="text-white/60 font-sf-display text-[12px]">{t('market.clear_cart')}</span>
                         </button>
                     )}
                 </div>
@@ -114,7 +116,7 @@ export default function MarketIndex() {
             {/* Модалка фильтров */}
             <Modal visible={market.filtersOpen} onClose={() => market.setFiltersOpen(false)} maxWidth="max-w-[400px]">
                 <div className="flex items-center justify-between">
-                    <span className="text-white font-gotham font-medium text-xl leading-[100%]">Фильтры</span>
+                    <span className="text-white font-gotham font-medium text-xl leading-[100%]">{t('common.filters')}</span>
                     <button
                         onClick={() => market.setFiltersOpen(false)}
                         className="flex items-center justify-center w-8 h-8 rounded-[8px] bg-white/5 hover:bg-white/10 cursor-pointer transition-colors"

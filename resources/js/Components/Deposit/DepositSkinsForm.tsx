@@ -1,7 +1,9 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import Button from "@/Components/UI/Button";
 
 export default function DepositSkinsForm() {
+    const { t } = useTranslation();
     const handleContinue = () => {
         window.open("https://skinsback.com", "_blank", "noopener,noreferrer");
     };
@@ -68,14 +70,12 @@ export default function DepositSkinsForm() {
             </div>
             <div className="flex px-6 py-3 rounded-[14px] bg-[#3D2D1A]/40 ">
                 <p className="text-[#E6935B] font-sf-display text-[11px] leading-[100%] text-center font-light">
-                    Из-за новых правил Steam Trade Protection депозит будет
-                    зачислен через 8 дней. В определенных случаях депозит может
-                    быть зачислен моментально.
+                    {t('deposit.skins_note')}
                 </p>
             </div>
 
             <Button onClick={handleContinue} size="lg" className="w-full mt-2">
-                Продолжить
+                {t('deposit.continue')}
             </Button>
         </div>
     );

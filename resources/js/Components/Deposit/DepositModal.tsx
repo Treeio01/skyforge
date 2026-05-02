@@ -1,6 +1,7 @@
 import Modal from "@/Components/UI/Modal";
 import React, { useMemo } from "react";
 import { router } from "@inertiajs/react";
+import { useTranslation } from "react-i18next";
 import { useDeposit } from "./useDeposit";
 import { CRYPTO_NETWORKS, MIN_AMOUNTS, CURRENCY_SYMBOLS } from "./depositConstants";
 import DepositMethodSelector from "./DepositMethodSelector";
@@ -15,6 +16,7 @@ interface DepositModalProps {
 }
 
 export default function DepositModal({ visible, onClose }: DepositModalProps) {
+    const { t } = useTranslation();
     const deposit = useDeposit(visible);
     const {
         method,
@@ -83,7 +85,7 @@ export default function DepositModal({ visible, onClose }: DepositModalProps) {
     return (
         <Modal visible={visible} onClose={onClose} maxWidth="max-w-[490px]">
             <span className="text-white font-gotham font-medium text-xl leading-[100%]">
-                Пополнение баланса
+                {t('deposit.modal_title')}
             </span>
 
             <DepositMethodSelector method={method} onChange={setMethod} />
@@ -94,9 +96,9 @@ export default function DepositModal({ visible, onClose }: DepositModalProps) {
 
             {configError && (
                 <div className="text-center text-danger text-sm py-4">
-                    Ошибка загрузки.{" "}
+                    {t('deposit.load_error')}{" "}
                     <button onClick={() => window.location.reload()} className="underline">
-                        Обновить
+                        {t('deposit.refresh')}
                     </button>
                 </div>
             )}
@@ -139,8 +141,7 @@ export default function DepositModal({ visible, onClose }: DepositModalProps) {
             )}
 
             <p className="text-white/12 font-sf-display font-medium text-[10px] leading-[120%] text-center">
-                Если после оплаты прошло более 30 минут, а баланс на сайте не
-                пополнился, то напишите нам в техподдержку
+                {t('deposit.support_note')}
             </p>
         </Modal>
     );

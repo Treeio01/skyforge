@@ -4,6 +4,7 @@ import { Link } from '@inertiajs/react';
 import axios from 'axios';
 import { AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useToast } from '@/Components/UI/Toast';
 import LiveFeedItem, { SkinRarity } from './LiveFeedItem';
 
@@ -56,6 +57,7 @@ function FeedTabButton({ active, onClick, label, icon }: FeedTabButtonProps) {
 }
 
 export default function LiveFeed() {
+    const { t } = useTranslation();
     const [items, setItems] = useState<LiveFeedEntry[]>([]);
     const [tab, setTab] = useState<FeedTab>('all');
     const { toast } = useToast();
@@ -71,7 +73,7 @@ export default function LiveFeed() {
             })
             .catch((err) => {
                 if (!axios.isCancel(err)) {
-                    toast('error', 'Не удалось загрузить ленту апгрейдов');
+                    toast('error', t('feed.load_error'));
                 }
             });
         return () => controller.abort();
@@ -111,7 +113,7 @@ export default function LiveFeed() {
                 <FeedTabButton
                     active={tab === 'all'}
                     onClick={() => setTab('all')}
-                    label="Все"
+                    label={t('feed_tabs.all')}
                     icon={
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -126,7 +128,7 @@ export default function LiveFeed() {
                 <FeedTabButton
                     active={tab === 'top'}
                     onClick={() => setTab('top')}
-                    label="Топ"
+                    label={t('feed_tabs.top')}
                     icon={
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 12 12" fill="none">
                             <path

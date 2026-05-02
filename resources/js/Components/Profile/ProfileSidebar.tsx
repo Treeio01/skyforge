@@ -83,7 +83,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
                             className="gap-[2px] w-full flex justify-center rounded-[8px] py-3 px-3.5 cursor-pointer"
                         >
                             <span className="text-white font-sf-display text-[13px] font-medium leading-[120%]">
-                                Сохранить
+                                {t('profile.trade_url_save')}
                             </span>
                         </button>
                     </form>
@@ -91,7 +91,7 @@ export default function ProfileSidebar({ profile }: ProfileSidebarProps) {
                         onClick={() => setDepositHistoryVisible(true)}
                         className="font-medium text-[10px] leading-[120%] font-sf-display text-[#2F3644] hover:text-[#4E89FF] transition-colors cursor-pointer"
                     >
-                        История пополнений
+                        {t('deposit.history_title')}
                     </button>
                 </div>
             </div>

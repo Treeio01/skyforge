@@ -126,6 +126,25 @@ export function FlagRuIcon() {
     );
 }
 
+export function FlagEnIcon() {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <g clipPath="url(#flag-en-icon)">
+                <rect width="12" height="12" rx="2" fill="#012169" />
+                <path d="M0 0L12 12M12 0L0 12" stroke="#FFFFFF" strokeWidth="2" />
+                <path d="M0 0L12 12M12 0L0 12" stroke="#C8102E" strokeWidth="1" />
+                <path d="M6 0V12M0 6H12" stroke="#FFFFFF" strokeWidth="3" />
+                <path d="M6 0V12M0 6H12" stroke="#C8102E" strokeWidth="1.5" />
+            </g>
+            <defs>
+                <clipPath id="flag-en-icon">
+                    <rect width="12" height="12" rx="2" fill="white" />
+                </clipPath>
+            </defs>
+        </svg>
+    );
+}
+
 export function WalletIcon() {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
