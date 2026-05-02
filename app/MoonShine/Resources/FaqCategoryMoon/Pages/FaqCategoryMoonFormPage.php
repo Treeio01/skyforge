@@ -28,7 +28,9 @@ class FaqCategoryMoonFormPage extends FormPage
             Box::make([
                 ID::make(),
                 Text::make('Slug', 'slug')->required()->hint('Латиница, например: provably, upgrade, deposit'),
-                Text::make('Название', 'name')->required(),
+                Text::make('Название (RU)', 'name')->required(),
+                Text::make('Name (EN)', 'name_en')
+                    ->hint('Перевод на английский. Если пусто — для en-локали покажется русское название.'),
                 Number::make('Порядок', 'sort_order')->hint('Меньше = выше'),
                 Switcher::make('Активна', 'is_active'),
             ]),

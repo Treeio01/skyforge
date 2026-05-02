@@ -33,8 +33,12 @@ class FaqItemMoonFormPage extends FormPage
                 Select::make('Категория', 'faq_category_id')
                     ->options(FaqCategory::pluck('name', 'id')->toArray())
                     ->required(),
-                Text::make('Вопрос', 'question')->required(),
-                Textarea::make('Ответ', 'answer')->required(),
+                Text::make('Вопрос (RU)', 'question')->required(),
+                Textarea::make('Ответ (RU)', 'answer')->required(),
+                Text::make('Question (EN)', 'question_en')
+                    ->hint('Перевод на английский. Если пусто — для en-локали покажется русская версия.'),
+                Textarea::make('Answer (EN)', 'answer_en')
+                    ->hint('Перевод на английский. Если пусто — fallback на русскую версию.'),
                 Number::make('Порядок', 'sort_order')->hint('Меньше = выше'),
                 Switcher::make('Активен', 'is_active'),
             ]),

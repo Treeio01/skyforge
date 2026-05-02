@@ -34,6 +34,7 @@ class FaqItemMoonIndexPage extends IndexPage
             ID::make(),
             Text::make('Категория', formatted: fn ($item) => $item->faqCategory?->name ?? $item->category ?? '—'),
             Text::make('Вопрос', 'question'),
+            Text::make('EN', formatted: fn ($item) => filled($item->question_en) && filled($item->answer_en) ? '✓' : '—'),
             Number::make('Порядок', 'sort_order'),
             Switcher::make('Активен', 'is_active'),
         ];

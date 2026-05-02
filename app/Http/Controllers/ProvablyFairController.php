@@ -22,8 +22,10 @@ class ProvablyFairController extends Controller
 
         $categories = FaqCategory::active()
             ->orderBy('sort_order')
-            ->get(['id', 'slug', 'name']);
+            ->get(['id', 'slug', 'name', 'name_en']);
 
+        // Pass both languages so the React side can pick by i18n.language.
+        // Fallbacks to RU when the EN translation is missing.
         $faqItems = FaqItem::active()
             ->with('faqCategory')
             ->orderBy('sort_order')
@@ -32,6 +34,8 @@ class ProvablyFairController extends Controller
             ->map(fn ($items) => $items->map(fn ($item) => [
                 'question' => $item->question,
                 'answer' => $item->answer,
+                'question_en' => $item->question_en,
+                'answer_en' => $item->answer_en,
             ])->values());
 
         return Inertia::render('ProvablyFair/Index', [

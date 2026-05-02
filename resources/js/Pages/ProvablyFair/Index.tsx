@@ -8,8 +8,13 @@ import { PageProps } from "@/types";
 import { AnimatePresence, motion } from "framer-motion";
 
 interface FaqPageProps extends Record<string, unknown> {
-    categories: Array<{ id: number; slug: string; name: string }>;
-    faq: Record<string, Array<{ question: string; answer: string }>>;
+    categories: Array<{ id: number; slug: string; name: string; name_en?: string | null }>;
+    faq: Record<string, Array<{
+        question: string;
+        answer: string;
+        question_en?: string | null;
+        answer_en?: string | null;
+    }>>;
 }
 
 const FALLBACK_CATEGORIES = [
@@ -21,7 +26,7 @@ const FALLBACK_CATEGORIES = [
     { id: "other", label: "Другое" },
 ];
 
-const FAQ_DATA: Record<string, Array<{ question: string; answer: string }>> = {
+const FAQ_DATA: Record<string, Array<{ question: string; answer: string; question_en?: string | null; answer_en?: string | null }>> = {
     provably: [
         {
             question:
@@ -197,14 +202,23 @@ export default function ProvablyFairIndex() {
     const { t, i18n } = useTranslation();
     const { faq, categories: dbCategories } = usePage<PageProps<FaqPageProps>>().props;
 
+    const isEn = i18n.language === 'en';
+
     const CATEGORIES = dbCategories && dbCategories.length > 0
-        ? dbCategories.map((c) => ({ id: c.slug, label: c.name }))
+        ? dbCategories.map((c) => ({
+              id: c.slug,
+              label: isEn && c.name_en ? c.name_en : c.name,
+          }))
         : FALLBACK_CATEGORIES;
 
     const [category, setCategory] = useState(CATEGORIES[0]?.id ?? "provably");
 
     const hasFaqData = faq && Object.keys(faq).length > 0;
-    const items = hasFaqData ? (faq[category] ?? []) : (FAQ_DATA[category] ?? []);
+    const rawItems = hasFaqData ? (faq[category] ?? []) : (FAQ_DATA[category] ?? []);
+    const items = rawItems.map((item) => ({
+        question: isEn && item.question_en ? item.question_en : item.question,
+        answer: isEn && item.answer_en ? item.answer_en : item.answer,
+    }));
     const currentLabel = CATEGORIES.find((c) => c.id === category)?.label ?? t('faq.title');
     const subtitle = i18n.language === 'ru'
         ? `${items.length} ${items.length === 1 ? 'вопрос' : items.length < 5 ? 'вопроса' : 'вопросов'}`
