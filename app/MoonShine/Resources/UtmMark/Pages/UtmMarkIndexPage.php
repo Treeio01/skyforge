@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Resources\UtmMark\Pages;
 
+use App\Models\Deposit;
+use App\Models\User;
+use App\Models\UtmMark;
 use App\MoonShine\Resources\UtmMark\UtmMarkResource;
 use MoonShine\Contracts\UI\FieldContract;
 use MoonShine\Laravel\Pages\Crud\IndexPage;
@@ -11,6 +14,7 @@ use MoonShine\Laravel\QueryTags\QueryTag;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Components\ActionButton;
 use MoonShine\UI\Components\Metrics\Wrapped\Metric;
+use MoonShine\UI\Components\Metrics\Wrapped\ValueMetric;
 use MoonShine\UI\Fields\Date;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Number;
@@ -56,9 +60,6 @@ class UtmMarkIndexPage extends IndexPage
         ];
     }
 
-    /**
-     * @return ListOf<ActionButtonContract>
-     */
     protected function buttons(): ListOf
     {
         return parent::buttons()
@@ -98,6 +99,23 @@ class UtmMarkIndexPage extends IndexPage
      */
     protected function metrics(): array
     {
-        return [];
+        $total = UtmMark::query()->count();
+        $active = UtmMark::query()->where('is_active', true)->count();
+        $usersFromUtm = User::query()->whereNotNull('utm_mark_id')->count();
+        $depositingUsers = Deposit::query()
+            ->whereHas('user', fn ($q) => $q->whereNotNull('utm_mark_id'))
+            ->where('status', 'completed')
+            ->distinct('user_id')
+            ->count('user_id');
+        $conversion = $usersFromUtm > 0
+            ? round($depositingUsers / $usersFromUtm * 100, 1).'%'
+            : '—';
+
+        return [
+            ValueMetric::make('Всего меток')->value($total)->columnSpan(3, 12),
+            ValueMetric::make('Активных')->value($active)->columnSpan(3, 12),
+            ValueMetric::make('Юзеров с UTM')->value($usersFromUtm)->columnSpan(3, 12),
+            ValueMetric::make('Конверсия в депозит')->value($conversion)->columnSpan(3, 12),
+        ];
     }
 }

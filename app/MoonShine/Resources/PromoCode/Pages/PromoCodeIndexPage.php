@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Resources\PromoCode\Pages;
 
+use App\Models\PromoCode;
+use App\Models\PromoCodeUsage;
 use App\MoonShine\Resources\PromoCode\PromoCodeResource;
 use App\Support\Admin\MoneyFormatter;
 use MoonShine\Contracts\UI\FieldContract;
@@ -12,6 +14,7 @@ use MoonShine\Laravel\QueryTags\QueryTag;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Components\ActionButton;
 use MoonShine\UI\Components\Metrics\Wrapped\Metric;
+use MoonShine\UI\Components\Metrics\Wrapped\ValueMetric;
 use MoonShine\UI\Fields\Date;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Number;
@@ -48,9 +51,6 @@ class PromoCodeIndexPage extends IndexPage
         ];
     }
 
-    /**
-     * @return ListOf<ActionButtonContract>
-     */
     protected function buttons(): ListOf
     {
         return parent::buttons()
@@ -79,7 +79,12 @@ class PromoCodeIndexPage extends IndexPage
      */
     protected function queryTags(): array
     {
-        return [];
+        return [
+            QueryTag::make('Все', fn ($q) => $q),
+            QueryTag::make('Активные', fn ($q) => $q->where('is_active', true)),
+            QueryTag::make('Истёкшие', fn ($q) => $q->whereNotNull('expires_at')->where('expires_at', '<', now())),
+            QueryTag::make('Исчерпаны', fn ($q) => $q->whereColumn('times_used', '>=', 'max_uses')->whereNotNull('max_uses')),
+        ];
     }
 
     /**
@@ -87,6 +92,21 @@ class PromoCodeIndexPage extends IndexPage
      */
     protected function metrics(): array
     {
-        return [];
+        $total = PromoCode::query()->count();
+        $active = PromoCode::query()
+            ->where('is_active', true)
+            ->where(fn ($q) => $q->whereNull('expires_at')->orWhere('expires_at', '>', now()))
+            ->count();
+        $totalUses = (int) PromoCodeUsage::query()->count();
+        $balanceGiven = (int) PromoCodeUsage::query()
+            ->whereHas('promoCode', fn ($q) => $q->where('type', 'balance'))
+            ->sum('amount');
+
+        return [
+            ValueMetric::make('Всего')->value($total)->columnSpan(3, 12),
+            ValueMetric::make('Активных')->value($active)->columnSpan(3, 12),
+            ValueMetric::make('Использований')->value($totalUses)->columnSpan(3, 12),
+            ValueMetric::make('Бонус выдан')->value(MoneyFormatter::format($balanceGiven))->columnSpan(3, 12),
+        ];
     }
 }

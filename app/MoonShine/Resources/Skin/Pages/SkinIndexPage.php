@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\MoonShine\Resources\Skin\Pages;
 
 use App\Enums\SkinCategory;
+use App\Models\Skin;
 use App\MoonShine\Resources\Skin\SkinResource;
 use App\Support\Admin\MoneyFormatter;
 use MoonShine\Contracts\UI\FieldContract;
@@ -13,6 +14,7 @@ use MoonShine\Laravel\QueryTags\QueryTag;
 use MoonShine\Support\ListOf;
 use MoonShine\UI\Components\ActionButton;
 use MoonShine\UI\Components\Metrics\Wrapped\Metric;
+use MoonShine\UI\Components\Metrics\Wrapped\ValueMetric;
 use MoonShine\UI\Fields\ID;
 use MoonShine\UI\Fields\Number;
 use MoonShine\UI\Fields\Select;
@@ -43,9 +45,6 @@ class SkinIndexPage extends IndexPage
         ];
     }
 
-    /**
-     * @return ListOf<ActionButtonContract>
-     */
     protected function buttons(): ListOf
     {
         return parent::buttons()
@@ -82,7 +81,12 @@ class SkinIndexPage extends IndexPage
      */
     protected function queryTags(): array
     {
-        return [];
+        return [
+            QueryTag::make('Все', fn ($q) => $q),
+            QueryTag::make('Активные', fn ($q) => $q->where('is_active', true)),
+            QueryTag::make('Без image', fn ($q) => $q->whereNull('image_path')),
+            QueryTag::make('Без цены', fn ($q) => $q->where(fn ($w) => $w->whereNull('price')->orWhere('price', 0))),
+        ];
     }
 
     /**
@@ -90,6 +94,21 @@ class SkinIndexPage extends IndexPage
      */
     protected function metrics(): array
     {
-        return [];
+        $total = Skin::query()->count();
+        $active = Skin::query()->where('is_active', true)->count();
+        $forUpgrade = Skin::query()
+            ->where('is_active', true)
+            ->where('is_available_for_upgrade', true)
+            ->count();
+        $noImage = Skin::query()->whereNull('image_path')->count();
+        $avgPrice = (int) Skin::query()->where('is_active', true)->avg('price');
+
+        return [
+            ValueMetric::make('Всего')->value($total)->columnSpan(3, 12),
+            ValueMetric::make('Активных')->value($active)->columnSpan(3, 12),
+            ValueMetric::make('В апгрейде')->value($forUpgrade)->columnSpan(2, 12),
+            ValueMetric::make('Средняя цена')->value(MoneyFormatter::format($avgPrice))->columnSpan(2, 12),
+            ValueMetric::make('Без image')->value($noImage)->columnSpan(2, 12),
+        ];
     }
 }
