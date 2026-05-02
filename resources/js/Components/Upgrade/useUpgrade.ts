@@ -226,6 +226,8 @@ export function useUpgrade({ inventory }: UseUpgradeProps): UseUpgradeReturn {
             !!inventorySkin &&
             !!targetSkin &&
             targetSkin.priceKopecks > inventorySkin.priceKopecks &&
+            inventorySkin.priceKopecks >= upgradeSettings.minBetAmount &&
+            inventorySkin.priceKopecks <= upgradeSettings.maxBetAmount &&
             isChanceValid(chance, upgradeSettings),
         [stage, inventorySkin, targetSkin, chance, upgradeSettings],
     );
@@ -356,6 +358,15 @@ export function useUpgrade({ inventory }: UseUpgradeProps): UseUpgradeReturn {
                 preserveScroll: true,
                 onSuccess: (page) => {
                     const flash = (page.props as PageProps).flash;
+                    // Server returned a domain error (not a game loss) — bail
+                    // out without animating. ToastProvider shows the error
+                    // toast based on flash.error automatically.
+                    if (flash?.error && !flash?.success) {
+                        submittingRef.current = false;
+                        setStage("idle");
+                        setResultSkin(null);
+                        return;
+                    }
                     const isWin = !!flash?.success;
                     setOutcome(isWin ? "success" : "fail");
                     setStage("closing");
@@ -364,6 +375,7 @@ export function useUpgrade({ inventory }: UseUpgradeProps): UseUpgradeReturn {
                     console.error('[UPGRADE] onError:', errors);
                     submittingRef.current = false;
                     setStage("idle");
+                    setResultSkin(null);
                 },
             },
         );

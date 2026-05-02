@@ -21,7 +21,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'min_bet_amount' => (int) env('SKYFORGE_MIN_BET', 100),          // 1 RUB in kopecks
-    'max_bet_amount' => (int) env('SKYFORGE_MAX_BET', 5_000_000),    // 50K RUB in kopecks
+    'max_bet_amount' => (int) env('SKYFORGE_MAX_BET', 100_000_000),  // 1M RUB in kopecks
     'min_upgrade_chance' => (float) env('SKYFORGE_MIN_CHANCE', 1.00),
     'max_upgrade_chance' => (float) env('SKYFORGE_MAX_CHANCE', 95.00),
     'upgrade_cooldown' => (int) env('SKYFORGE_UPGRADE_COOLDOWN', 2), // seconds

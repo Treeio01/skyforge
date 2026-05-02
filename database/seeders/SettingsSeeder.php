@@ -15,7 +15,7 @@ class SettingsSeeder extends Seeder
             // Game
             ['key' => 'house_edge', 'value' => '5.00', 'type' => 'float', 'description' => 'Комиссия казино (%)'],
             ['key' => 'min_bet_amount', 'value' => '100', 'type' => 'integer', 'description' => 'Минимальная ставка (копейки)'],
-            ['key' => 'max_bet_amount', 'value' => '5000000', 'type' => 'integer', 'description' => 'Максимальная ставка (копейки)'],
+            ['key' => 'max_bet_amount', 'value' => '100000000', 'type' => 'integer', 'description' => 'Максимальная ставка (копейки)'],
             ['key' => 'min_upgrade_chance', 'value' => '1.00', 'type' => 'float', 'description' => 'Минимальный шанс апгрейда (%)'],
             ['key' => 'max_upgrade_chance', 'value' => '95.00', 'type' => 'float', 'description' => 'Максимальный шанс апгрейда (%)'],
             ['key' => 'upgrade_cooldown', 'value' => '2', 'type' => 'integer', 'description' => 'Кулдаун между апгрейдами (сек)'],
