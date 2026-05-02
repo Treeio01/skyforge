@@ -67,14 +67,18 @@ export function inventoryItemToEntry(item: {
     price_at_acquisition: number;
 }): SkinEntry {
     const { weapon, name } = parseSkinName(item.skin.market_hash_name);
+    // Display the current market price, not price_at_acquisition — otherwise
+    // identical skins acquired at different times appear with mismatched prices,
+    // and the bet/target chance calculation looks confusing to the user.
+    const currentPrice = item.skin.price > 0 ? item.skin.price : item.price_at_acquisition;
 
     return {
         id: item.id,
         rarity: mapRarityColor(item.skin.rarity_color),
         weapon,
         name,
-        price: formatKopecks(item.price_at_acquisition),
-        priceKopecks: item.price_at_acquisition,
+        price: formatKopecks(currentPrice),
+        priceKopecks: currentPrice,
         image: item.skin.image_url ?? '',
         backendSkinId: item.skin.id,
         backendUserSkinId: item.id,

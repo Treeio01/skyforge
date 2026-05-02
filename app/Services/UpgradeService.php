@@ -43,6 +43,7 @@ class UpgradeService
                 ->whereIn('id', $userSkinIds)
                 ->where('user_id', $user->id)
                 ->where('status', UserSkinStatus::Available)
+                ->with('skin')
                 ->get();
 
             if ($betSkins->count() !== count($userSkinIds)) {
@@ -53,8 +54,13 @@ class UpgradeService
             $targetSkin = Skin::findOrFail($targetSkinId);
             $targetPrice = $targetSkin->price;
 
-            // Calculate total bet
-            $skinsTotal = $betSkins->sum('price_at_acquisition');
+            // Calculate total bet — use current market price of each skin so
+            // duplicate inventory items always weigh the same as the front-end
+            // displays. Falls back to price_at_acquisition only if a skin's
+            // current price is missing (price=0).
+            $skinsTotal = (int) $betSkins->sum(
+                fn (UserSkin $us) => $us->skin?->price > 0 ? $us->skin->price : $us->price_at_acquisition,
+            );
             $betAmount = $skinsTotal + $balanceAmount;
 
             if ($betAmount <= 0) {
