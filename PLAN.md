@@ -870,3 +870,83 @@ interface TradeProviderInterface {
 | **WebSocket не тянет нагрузку** | Низкая (на старте) | Reverb ок до ~1000 conn, потом переезд на Soketi/Centrifugo |
 | **Потеря 31K картинок при деплое** | Средняя | Local disk → S3/MinIO позже, `SKYFORGE_SKINS_DISK` уже абстрагирован |
 | **Невалидная Provably Fair** | Низкая (баг) | Детерминированные тесты с фикс. seeds, пользователь может проверить |
+
+---
+
+## Фаза 11: Backend Refactor (SOLID/KISS/DRY)
+
+**Дата старта:** 2026-04-30. **Спека:** `docs/superpowers/specs/2026-04-30-backend-refactor-design.md`.
+
+Цель: тонкие контроллеры (≤3 строки тела), `spatie/laravel-data` вместо FormRequest, атомарные Actions, Services-оркестраторы, 7 Observers, throttling на все public endpoints. Подход — вертикальные срезы (1 PR = 1 домен).
+
+### Шаг 11.1: Setup (PR #1)
+
+- [ ] `composer require spatie/laravel-data`
+- [ ] `AppServiceProvider::boot()`: named `RateLimiter::for()` для `promo` (5/min + 30/hour), `deposit` (10/min), `withdraw` (5/min), `tradeUrl` (5/min), `sellSkins` (30/min), `auth` (10/min IP), `seed` (10/min), `api` (60/min IP), `feed` (30/min IP)
+- [ ] `TransactionObserver` зарегистрирован — immutability ledger (`updating`/`deleting` → throw)
+- [ ] Характеризационные тесты на финансы в `tests/Feature/Characterization/`: concurrent_upgrade, concurrent_withdrawal, duplicate_deposit_webhook_idempotency, provably_fair_determinism
+
+### Шаг 11.2: User domain (PR #2)
+
+- [ ] Actions: `UpdateTradeUrlAction`, `SellSkinsAction`, `CalculateSellPriceAction`, `RemoveSkinFromInventoryAction`, `CreditBalanceAction` (если нет), `ValidatePromoCodeAction`, `ApplyPromoBonusAction`, `RecordPromoUsageAction`
+- [ ] Services: `MarketService::sellSkins()`, `PromoCodeService::redeem()`
+- [ ] Data: `UpdateTradeUrlData` (regex Steam), `SellSkinsData`, `RedeemPromoData`
+- [ ] `UserObserver`: `creating` (capture IP/UTM), `updating` (ban → invalidate sessions)
+- [ ] `UserController` тонкий: `show()`, `updateTradeUrl()`, `sellSkins()`, `deposits()`, `redeemPromo()`, `history()`
+- [ ] Throttle: `tradeUrl`, `sellSkins`, `promo` middleware на route
+
+### Шаг 11.3: Skin/Market domain (PR #3)
+
+- [ ] Actions: `BuySkinAction`, `AddSkinToInventoryAction`, `DebitBalanceAction` (если нет)
+- [ ] Service: `MarketService::buy()`
+- [ ] Data: `IndexSkinsData`, `SearchSkinsData`, `BuySkinData`
+- [ ] `SkinPriceObserver`: `created` → invalidate market cache
+- [ ] `UserSkinObserver`: `created` → activity log
+- [ ] `SkinController` тонкий
+- [ ] Throttle: `api` на index/search/buy
+
+### Шаг 11.4: Deposit domain (PR #4)
+
+- [ ] Actions: `VerifyWebhookSignatureAction` (новый); `CreateDepositAction`, `CompleteDepositAction` (есть, проверить ответственность)
+- [ ] Service: `DepositService::initiate()`, `DepositService::handleWebhook()`
+- [ ] Data: `CreateDepositData` (с лимитами per-day), `WebhookData`
+- [ ] `DepositObserver`: `creating` (block if user banned), `updated` (pending→completed bumps `total_deposited`)
+- [ ] `DepositController` тонкий
+- [ ] Throttle: `deposit` на store, без throttle на webhook
+
+### Шаг 11.5: Upgrade domain (PR #5)
+
+- [ ] `UpgradeService` разбить на: `CalculateChanceAction`, `RollUpgradeAction`, `ApplyUpgradeResultAction`
+- [ ] Data: `CreateUpgradeData`
+- [ ] `UpgradeObserver`: `created` → bump `total_upgraded` + (win → `total_won`)
+- [ ] `UpgradeController` тонкий
+- [ ] Throttle: текущий `upgrade` лимит сохраняется
+
+### Шаг 11.6: Withdrawal domain (PR #6)
+
+- [ ] `CreateWithdrawalAction` разбить на: `ValidateWithdrawableAmountAction`, `LockSkinFromInventoryAction`, `CreateWithdrawalRecordAction`, `DispatchTradeOfferJob`
+- [ ] Service: `WithdrawalService::create()`
+- [ ] Data: `CreateWithdrawalData`
+- [ ] `WithdrawalObserver`: `updated` (processing→completed bumps `total_withdrawn`)
+- [ ] `WithdrawalController` тонкий
+- [ ] Throttle: `withdraw`
+
+### Шаг 11.7: ProvablyFair + LiveFeed + Steam Auth (PR #7)
+
+- [ ] Actions: `RotateClientSeedAction`; `AuthenticateViaSteamAction` разбить на `FindOrCreateUserAction` + `CaptureUtmAction` + `IssueSessionAction`
+- [ ] Data: `LoginCallbackData`
+- [ ] `ProvablyFairController`, `SteamAuthController`, `LiveFeedController` тонкие
+- [ ] Throttle: `seed`, `auth`, `feed`
+
+### Definition of Done (на каждом PR)
+
+- Все Actions/Data/Observers/Service созданы по спеке.
+- Контроллер ≤3 строки тела метода.
+- `vendor/bin/pint --dirty --format agent` → `pass`.
+- `php artisan test` → зелёный.
+- Throttle-middleware на всех указанных endpoints.
+- Smoke через браузер: happy-path работает.
+
+### Out of scope
+
+2FA для admin, login history, soft-delete restore UI, real payment/trade providers, реструктуризация моделей.
