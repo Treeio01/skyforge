@@ -18,6 +18,7 @@
         "moonshine/moonshine": "^4.9",
         "socialiteproviders/steam": "^4.3",
         "spatie/laravel-activitylog": "^4.12",
+        "spatie/laravel-data": "^4.22",
         "tightenco/ziggy": "^2.0"
     },
     "require-dev": {
