@@ -38,8 +38,12 @@ class UserFormPage extends FormPage
                 Switcher::make('Забанен', 'is_banned'),
                 Textarea::make('Причина бана', 'ban_reason'),
                 Switcher::make('Админ', 'is_admin'),
-                Number::make('Край казино (%)', 'house_edge_override')->step(0.01)->hint('Оставьте пустым для дефолта'),
-                Number::make('Модификатор шанса', 'chance_modifier')->step(0.001)->hint('Оставьте пустым для дефолта'),
+                Number::make('Край казино (%)', 'house_edge_override')
+                    ->step(0.01)
+                    ->hint('Пусто = дефолт из config. Стример: 0.00, VIP: -3.00, подозрительный: 8.00'),
+                Number::make('Модификатор шанса', 'chance_modifier')
+                    ->step(0.001)
+                    ->hint('1.000 = обычный, 1.100 = стример, 1.200 = VIP, 0.900 = подозрительный'),
             ]),
         ];
     }

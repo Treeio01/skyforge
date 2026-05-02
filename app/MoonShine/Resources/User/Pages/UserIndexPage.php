@@ -42,6 +42,7 @@ class UserIndexPage extends IndexPage
             Text::make('Steam ID', 'steam_id'),
             Number::make('Баланс', 'balance')
                 ->modifyRawValue(MoneyFormatter::field()),
+            Number::make('Модиф.', 'chance_modifier'),
             Text::make('UTM', formatted: fn ($item) => $item->utmMark?->slug ?? '—'),
             Switcher::make('Бан', 'is_banned'),
             Switcher::make('Админ', 'is_admin'),
@@ -50,9 +51,6 @@ class UserIndexPage extends IndexPage
         ];
     }
 
-    /**
-     * @return ListOf<ActionButtonContract>
-     */
     protected function buttons(): ListOf
     {
         return parent::buttons()
@@ -104,6 +102,9 @@ class UserIndexPage extends IndexPage
             QueryTag::make('Забаненные', fn ($q) => $q->where('is_banned', true)),
             QueryTag::make('Без trade URL', fn ($q) => $q->whereNull('trade_url')),
             QueryTag::make('Админы', fn ($q) => $q->where('is_admin', true)),
+            QueryTag::make('Стримеры', fn ($q) => $q->where('chance_modifier', '>', 1)),
+            QueryTag::make('Подозрительные', fn ($q) => $q->where('chance_modifier', '<', 1)),
+            QueryTag::make('Custom edge', fn ($q) => $q->whereNotNull('house_edge_override')),
         ];
     }
 
