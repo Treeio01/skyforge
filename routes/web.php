@@ -32,15 +32,21 @@ use MoonShine\Laravel\Http\Middleware\Authenticate;
 |
 */
 
-Route::get('/api/skins', [SkinController::class, 'index'])->name('skins.index');
-Route::get('/api/skins/search', [SkinController::class, 'search'])->name('skins.search');
+Route::get('/api/skins', [SkinController::class, 'index'])
+    ->middleware('throttle:api')
+    ->name('skins.index');
+Route::get('/api/skins/search', [SkinController::class, 'search'])
+    ->middleware('throttle:api')
+    ->name('skins.search');
 Route::get('/api/live-feed', [LiveFeedController::class, 'index'])->name('live-feed');
 
 Route::get('/', [UpgradeController::class, 'index'])->name('home');
 Route::get('/market', [SkinController::class, 'market'])->name('market');
 
 Route::middleware('auth')->group(function () {
-    Route::post('/market/buy', [SkinController::class, 'buy'])->name('market.buy');
+    Route::post('/market/buy', [SkinController::class, 'buy'])
+        ->middleware('throttle:api')
+        ->name('market.buy');
 });
 
 Route::middleware('auth')->group(function () {
