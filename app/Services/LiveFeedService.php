@@ -1,0 +1,38 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Services;
+
+use App\Models\Upgrade;
+
+class LiveFeedService
+{
+    private const FEED_LIMIT = 20;
+
+    /** @return array<int, array<string, mixed>> */
+    public function recent(): array
+    {
+        return Upgrade::query()
+            ->with(['user', 'targetSkin'])
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->limit(self::FEED_LIMIT)
+            ->get()
+            ->map(fn (Upgrade $u) => [
+                'id' => $u->id,
+                'username' => $u->user->username,
+                'avatar_url' => $u->user->avatar_url,
+                'target_skin_name' => $u->targetSkin->market_hash_name,
+                'target_skin_image' => $u->targetSkin->image_path
+                    ? asset('storage/'.$u->targetSkin->image_path)
+                    : null,
+                'rarity_color' => $u->targetSkin->rarity_color,
+                'chance' => $u->chance,
+                'result' => $u->result->value,
+                'is_fake' => $u->is_fake,
+                'created_at' => $u->created_at?->toISOString(),
+            ])
+            ->all();
+    }
+}

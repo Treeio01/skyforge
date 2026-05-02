@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\Auth\SteamAuthController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('guest')->group(function () {
+Route::middleware(['guest', 'throttle:auth'])->group(function () {
     Route::get('/auth/steam', [SteamAuthController::class, 'redirect'])->name('auth.steam');
     Route::get('/auth/steam/callback', [SteamAuthController::class, 'callback'])->name('auth.steam.callback');
 });

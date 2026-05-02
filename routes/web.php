@@ -38,7 +38,9 @@ Route::get('/api/skins', [SkinController::class, 'index'])
 Route::get('/api/skins/search', [SkinController::class, 'search'])
     ->middleware('throttle:api')
     ->name('skins.search');
-Route::get('/api/live-feed', [LiveFeedController::class, 'index'])->name('live-feed');
+Route::get('/api/live-feed', [LiveFeedController::class, 'index'])
+    ->middleware('throttle:feed')
+    ->name('live-feed');
 
 Route::get('/', [UpgradeController::class, 'index'])->name('home');
 Route::get('/market', [SkinController::class, 'market'])->name('market');
@@ -78,7 +80,9 @@ Route::middleware('auth')->group(function () {
         ->middleware([EnsureTradeUrlSet::class, 'throttle:withdraw']);
 
     Route::get('/provably-fair', [ProvablyFairController::class, 'index'])->name('provably-fair');
-    Route::post('/provably-fair/client-seed', [ProvablyFairController::class, 'updateClientSeed'])->name('provably-fair.client-seed');
+    Route::post('/provably-fair/client-seed', [ProvablyFairController::class, 'updateClientSeed'])
+        ->middleware('throttle:seed')
+        ->name('provably-fair.client-seed');
     Route::get('/provably-fair/verify/{upgrade}', [ProvablyFairController::class, 'verify'])->name('provably-fair.verify');
 });
 
