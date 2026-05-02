@@ -113,7 +113,7 @@ function StatCard({
         >
             <ItemBackgroundLines />
             <span
-                className="font-sf-display font-black text-center leading-[79%] absolute left-1/2 top-1/2 -translate-1/2 pointer-events-none select-none whitespace-nowrap"
+                className="font-sf-display font-black text-center leading-[79%] absolute left-1/2 top-1/2 -translate-1/2 pointer-events-none select-none flex flex-row 550:flex-col items-center whitespace-nowrap"
                 style={{
                     fontSize: '70px',
                     background: 'linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%)',
@@ -122,7 +122,9 @@ function StatCard({
                     backgroundClip: 'text',
                 }}
             >
-                {bigTextParts.join('')}
+                {bigTextParts.map((part, i) => (
+                    <span key={i}>{part}</span>
+                ))}
             </span>
             {upgrade?.target_skin_image && (
                 <img src={upgrade.target_skin_image} className="absolute left-1/2 top-1/2 -translate-1/2 w-full max-w-[224px] h-full max-h-[168px] object-contain z-10" alt="" />

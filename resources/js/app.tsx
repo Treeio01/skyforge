@@ -20,8 +20,10 @@ createInertiaApp({
     setup({ el, App, props }) {
         const root = createRoot(el);
 
-        const loader = document.getElementById('page-loader');
-        if (loader) loader.classList.add('hidden');
+        if (props.initialPage?.component !== 'Upgrade/Index') {
+            const loader = document.getElementById('page-loader');
+            if (loader) loader.classList.add('hidden');
+        }
 
         root.render(
             <ErrorBoundary>

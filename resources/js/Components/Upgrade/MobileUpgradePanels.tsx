@@ -7,13 +7,11 @@ import EmptySkinCard from './EmptySkinCard';
 import { PriceSort } from './UpgradeTargetToolbar';
 
 interface MobileUpgradePanelsProps {
-    // Inventory
     inventoryItems: SkinEntry[];
     inventorySkin: SkinEntry | null;
     selectedInventory: string | number | null;
     panelLocked: boolean;
     onSelectInventory: (id: string | number) => void;
-    // Target
     targetItems: SkinEntry[];
     targetSkin: SkinEntry | null;
     selectedTarget: string | number | null;
@@ -81,9 +79,7 @@ export default function MobileUpgradePanels({
 
     return (
         <>
-            {/* Селекторы скинов */}
-            <div className="flex z-[100] w-full mb-5 1024:hidden 1024:mb-0">
-                {/* Инвентарь */}
+            <div className="flex z-[100] w-full 1024:hidden">
                 <div className="flex flex-col flex-1 overflow-hidden rounded-t-[14px] bg-accent/90">
                     <div className="flex items-center gap-[5px] bg-accent px-3.5 py-[6.5px]">
                         <InventoryIcon />
@@ -97,7 +93,6 @@ export default function MobileUpgradePanels({
                     </div>
                 </div>
 
-                {/* Скин апгрейда */}
                 <div className="flex flex-col flex-1 overflow-hidden rounded-t-[14px] bg-accent/90">
                     <div className="flex items-center gap-[5px] bg-accent px-3.5 py-[6.5px]">
                         <UpgradeTargetIcon />
@@ -112,7 +107,6 @@ export default function MobileUpgradePanels({
                 </div>
             </div>
 
-            {/* Штора инвентаря */}
             <BottomSheet
                 visible={sheet === 'inventory'}
                 onClose={() => setSheet(null)}
@@ -132,7 +126,6 @@ export default function MobileUpgradePanels({
                 </div>
             </BottomSheet>
 
-            {/* Штора скинов апгрейда */}
             <BottomSheet
                 visible={sheet === 'target'}
                 onClose={() => setSheet(null)}
@@ -175,7 +168,6 @@ export default function MobileUpgradePanels({
                 </div>
             </BottomSheet>
 
-            {/* Модалка фильтров */}
             {filtersOpen && (
                 <div
                     className="fixed inset-0 z-[600] flex items-end 1024:hidden"
@@ -200,7 +192,6 @@ export default function MobileUpgradePanels({
                             </button>
                         </div>
 
-                        {/* Поиск */}
                         <div>
                             <label className="text-white/40 font-sf-display text-[11px] mb-1.5 block">Поиск</label>
                             <div className="flex items-center gap-2 px-3 py-2.5 rounded-[10px] bg-white/5 border border-white/8">
@@ -215,7 +206,6 @@ export default function MobileUpgradePanels({
                             </div>
                         </div>
 
-                        {/* Мин. цена */}
                         <div>
                             <label className="text-white/40 font-sf-display text-[11px] mb-1.5 block">Минимальная цена</label>
                             <div className="flex items-center gap-2 px-3 py-2.5 rounded-[10px] bg-white/5 border border-white/8">
@@ -231,7 +221,6 @@ export default function MobileUpgradePanels({
                             </div>
                         </div>
 
-                        {/* Сортировка */}
                         <div>
                             <label className="text-white/40 font-sf-display text-[11px] mb-1.5 block">Сортировка по цене</label>
                             <div className="flex gap-2">

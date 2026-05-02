@@ -1,27 +1,35 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface VideoPreloaderProps {
     srcs: string[];
+    onAllLoaded?: () => void;
 }
 
-export default function VideoPreloader({ srcs }: VideoPreloaderProps) {
+export default function VideoPreloader({ srcs, onAllLoaded }: VideoPreloaderProps) {
+    const [loadedCount, setLoadedCount] = useState(0);
+    const firedRef = useRef(false);
+    const total = srcs.length;
+
     useEffect(() => {
-        const nodes = document.querySelectorAll<HTMLVideoElement>(
-            '[data-upgrade-preload]',
-        );
-        nodes.forEach((v) => v.load());
-    }, []);
+        if (!firedRef.current && total > 0 && loadedCount >= total) {
+            firedRef.current = true;
+            onAllLoaded?.();
+        }
+    }, [loadedCount, total, onAllLoaded]);
+
+    const markLoaded = () => setLoadedCount((c) => c + 1);
 
     return (
         <div aria-hidden className="hidden">
             {srcs.map((src) => (
                 <video
                     key={src}
-                    data-upgrade-preload
                     src={src}
                     preload="auto"
                     muted
                     playsInline
+                    onCanPlayThrough={markLoaded}
+                    onError={markLoaded}
                 />
             ))}
         </div>

@@ -6,7 +6,6 @@ import UpgradeVideo from "./UpgradeVideo";
 import UpgradeInventoryPanel from "./UpgradeInventoryPanel";
 import UpgradeTargetPanel from "./UpgradeTargetPanel";
 import UpgradeMultiplierBar from "./UpgradeMultiplierBar";
-import UpgradeLoginModal from "./UpgradeLoginModal";
 import MobileUpgradePanels from "./MobileUpgradePanels";
 import { useUpgrade } from "./useUpgrade";
 
@@ -36,12 +35,6 @@ export default function UpgradeBlock({ inventory }: UpgradeBlockProps) {
         stage,
         outcome,
         resultSkin,
-        modalVisible,
-        adultChecked,
-        setAdultChecked,
-        termsChecked,
-        setTermsChecked,
-        canLogin,
         isGuest,
         inventoryItems,
         inventorySkin,
@@ -81,15 +74,7 @@ export default function UpgradeBlock({ inventory }: UpgradeBlockProps) {
 
     return (
         <>
-            <UpgradeLoginModal
-                visible={modalVisible && isGuest}
-                adultChecked={adultChecked}
-                termsChecked={termsChecked}
-                canLogin={canLogin}
-                setAdultChecked={setAdultChecked}
-                setTermsChecked={setTermsChecked}
-            />
-            <div className="pt-[6px] px-[6px] pb-[6px] flex flex-col">
+            <div className="pt-[6px] px-[6px] pb-0 1024:pb-[6px] flex flex-col">
                 <div className="flex flex-col justify-between w-full rounded-t-[24px] bg-[#080B10] relative overflow-hidden min-h-[calc(100svh-72px)] 1024:min-h-0 1024:h-[calc(100dvh-12px)]">
                     <UpgradeVideo
                         {...videoProps}

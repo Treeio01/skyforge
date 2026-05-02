@@ -81,15 +81,5 @@
         </div>
 
         @inertia
-
-        <script>
-            // Hide loader after app mounts
-            document.addEventListener('DOMContentLoaded', function() {
-                setTimeout(function() {
-                    var loader = document.getElementById('page-loader');
-                    if (loader) loader.classList.add('hidden');
-                }, 300);
-            });
-        </script>
     </body>
 </html>

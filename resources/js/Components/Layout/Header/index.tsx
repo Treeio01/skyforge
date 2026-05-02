@@ -15,7 +15,7 @@ function Logo() {
         <Link
             href="/"
             prefetch="hover"
-            className="flex py-[6px] px-[8px] rounded-[10px] shrink-0 transition-opacity duration-150 hover:opacity-80 1024:hidden 1340:flex 1440:hidden"
+            className="flex py-[6px] px-[8px] rounded-[10px] shrink-0 transition-opacity duration-150 hover:opacity-80 1340:hidden"
         >
             <img src="/assets/img/logo.png" className="max-w-[56px]" alt="" />
         </Link>

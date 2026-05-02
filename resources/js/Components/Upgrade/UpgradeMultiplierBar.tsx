@@ -19,7 +19,7 @@ export default function UpgradeMultiplierBar({
                         key={m}
                         type="button"
                         onClick={() => onMultiplierChange(m)}
-                        className={`p-4 flex items-center justify-center rounded-[8px] cursor-pointer ${active ? 'bg-white/20' : 'bg-white/6'}`}
+                        className={`w-12 h-12 flex items-center justify-center rounded-[8px] cursor-pointer ${active ? 'bg-white/20' : 'bg-white/6'}`}
                     >
                         <span className={`font-gotham font-medium text-[12px] leading-[104%] ${active ? 'text-white' : 'text-white/29'}`}>x{m}</span>
                     </button>

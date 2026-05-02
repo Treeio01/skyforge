@@ -66,14 +66,6 @@ export interface UseUpgradeReturn {
     outcome: DefuseOutcome | null;
     resultSkin: SkinEntry | null;
 
-    // Login modal
-    modalVisible: boolean;
-    setModalVisible: (v: boolean) => void;
-    adultChecked: boolean;
-    setAdultChecked: (v: boolean) => void;
-    termsChecked: boolean;
-    setTermsChecked: (v: boolean) => void;
-    canLogin: boolean;
     isGuest: boolean;
 
     // Derived
@@ -121,29 +113,25 @@ export function useUpgrade({ inventory }: UseUpgradeProps): UseUpgradeReturn {
     const [outcome, setOutcome] = useState<DefuseOutcome | null>(null);
     const [resultSkin, setResultSkin] = useState<SkinEntry | null>(null);
 
-    // ─── Login modal ────────────────────────────────────────
-    const [modalVisible, setModalVisible] = useState(false);
-    const [adultChecked, setAdultChecked] = useState(false);
-    const [termsChecked, setTermsChecked] = useState(false);
-    const canLogin = adultChecked && termsChecked;
-
-    useEffect(() => {
-        if (!isGuest) return;
-        const show = () => setModalVisible(true);
-        window.addEventListener('show-login-modal', show);
-        return () => window.removeEventListener('show-login-modal', show);
-    }, [isGuest]);
-
     const timersRef = useRef<number[]>([]);
     const clearTimers = () => {
         timersRef.current.forEach((t) => window.clearTimeout(t));
         timersRef.current = [];
     };
 
+    // ─── Inventory snapshot (frozen during animation) ──────────
+    // Inertia replaces `inventory` immediately after the upgrade request,
+    // which would let the user see the won/lost item before the animation
+    // finishes. Hold onto the previous snapshot until stage returns to "idle".
+    const [stableInventory, setStableInventory] = useState(inventory);
+    useEffect(() => {
+        if (stage === "idle") setStableInventory(inventory);
+    }, [inventory, stage]);
+
     // ─── Derived ─────────────────────────────────────────────
     const inventoryItems = useMemo(
-        () => inventory.map(inventoryItemToEntry),
-        [inventory],
+        () => stableInventory.map(inventoryItemToEntry),
+        [stableInventory],
     );
 
     const inventorySkin = useMemo(
@@ -216,7 +204,6 @@ export function useUpgrade({ inventory }: UseUpgradeProps): UseUpgradeReturn {
 
     const handleMultiplierChange = useCallback(
         async (m: QuickMultiplier) => {
-            setMultiplier(m);
             setActiveQuick(m);
             if (!inventorySkin) return;
 
@@ -225,19 +212,35 @@ export function useUpgrade({ inventory }: UseUpgradeProps): UseUpgradeReturn {
             const minKopecks = invKop + 1;
 
             try {
-                const res = await axios.get('/api/skins', {
-                    params: {
-                        per_page: 5,
-                        sort: 'price',
-                        direction: 'asc',
-                        min_price: Math.round(idealKopecks * 0.8),
-                        max_price: Math.round(idealKopecks * 1.5),
-                    },
-                });
-                let skins = res.data?.data;
+                // Probe both sides of the ideal price so dense pricing on one
+                // side can't starve the other side and skew the pick away from x{m}.
+                const [aboveRes, belowRes] = await Promise.all([
+                    axios.get('/api/skins', {
+                        params: {
+                            per_page: 10,
+                            sort: 'price',
+                            direction: 'asc',
+                            min_price: Math.round(idealKopecks),
+                            max_price: Math.round(idealKopecks * 1.5),
+                        },
+                    }),
+                    axios.get('/api/skins', {
+                        params: {
+                            per_page: 10,
+                            sort: 'price',
+                            direction: 'desc',
+                            min_price: Math.max(minKopecks, Math.round(idealKopecks * 0.5)),
+                            max_price: Math.max(minKopecks, Math.round(idealKopecks) - 1),
+                        },
+                    }),
+                ]);
 
-                // Если в диапазоне пусто — расширяем
-                if (!skins?.length) {
+                let skins = [
+                    ...(aboveRes.data?.data ?? []),
+                    ...(belowRes.data?.data ?? []),
+                ];
+
+                if (!skins.length) {
                     const fallback = await axios.get('/api/skins', {
                         params: {
                             per_page: 1,
@@ -246,11 +249,10 @@ export function useUpgrade({ inventory }: UseUpgradeProps): UseUpgradeReturn {
                             min_price: minKopecks,
                         },
                     });
-                    skins = fallback.data?.data;
+                    skins = fallback.data?.data ?? [];
                 }
 
-                if (skins?.length) {
-                    // Берём ближайший к ideal
+                if (skins.length) {
                     const sorted = [...skins].sort(
                         (a, b) => Math.abs(a.price - idealKopecks) - Math.abs(b.price - idealKopecks),
                     );
@@ -393,14 +395,6 @@ export function useUpgrade({ inventory }: UseUpgradeProps): UseUpgradeReturn {
         outcome,
         resultSkin,
 
-        // Login modal
-        modalVisible,
-        setModalVisible,
-        adultChecked,
-        setAdultChecked,
-        termsChecked,
-        setTermsChecked,
-        canLogin,
         isGuest,
 
         // Derived
