@@ -47,6 +47,7 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth' => [
                 'user' => $user ? (new UserResource($user))->resolve($request) : null,
+                'loginUrl' => $this->buildLoginUrl($request),
             ],
             'flash' => [
                 'error' => $request->session()->get('error'),
@@ -75,5 +76,21 @@ class HandleInertiaRequests extends Middleware
                 'cooldownSeconds' => (int) Setting::get('upgrade_cooldown', 2),
             ],
         ];
+    }
+
+    /**
+     * When the auth bridge is enabled, the login button points at the auth
+     * domain with the current page URL as the return target. Otherwise the
+     * legacy direct Steam route is used (for local dev / fallback).
+     */
+    private function buildLoginUrl(Request $request): string
+    {
+        if (! (bool) config('auth_bridge.enabled')) {
+            return route('auth.steam');
+        }
+
+        $authDomain = (string) config('auth_bridge.auth_domain');
+
+        return 'https://'.$authDomain.'/login?return='.urlencode($request->fullUrl());
     }
 }

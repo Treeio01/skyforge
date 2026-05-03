@@ -135,7 +135,10 @@ function StatCard({
                 <span className="text-white font-sf-display font-medium text-[13px] 1024:text-[17px] leading-[110%] whitespace-nowrap">{weapon}</span>
                 <span className="text-white font-gotham text-[13px] 1024:text-[16px] font-extralight leading-[110%] text-center whitespace-nowrap truncate max-w-full">{name}</span>
             </div>
-            <span className="text-white font-sf-display text-[13px] 1024:text-[15px] leading-[120%] relative z-10 mt-auto">{label}</span>
+            <span className="text-white font-sf-display text-[13px] 1024:text-[15px] leading-[120%] relative z-10 mt-auto">
+                {label}
+                {bigText !== '—' && <span className="text-white/50"> — {bigText}</span>}
+            </span>
         </div>
     );
 }

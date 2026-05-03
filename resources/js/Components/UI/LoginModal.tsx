@@ -5,7 +5,9 @@ import { PageProps } from '@/types';
 
 export default function LoginModal() {
     const { t } = useTranslation();
-    const isGuest = !usePage<PageProps>().props.auth.user;
+    const { auth } = usePage<PageProps>().props;
+    const isGuest = !auth.user;
+    const loginUrl = auth.loginUrl ?? '/auth/steam';
     const [visible, setVisible] = useState(false);
     const [adultChecked, setAdultChecked] = useState(false);
     const [termsChecked, setTermsChecked] = useState(false);
@@ -69,7 +71,7 @@ export default function LoginModal() {
                 </div>
 
                 <a
-                    href={canLogin ? '/auth/steam' : undefined}
+                    href={canLogin ? loginUrl : undefined}
                     onClick={(e) => { if (!canLogin) e.preventDefault(); }}
                     style={{
                         background: 'radial-gradient(80.57% 100% at 50% 100%, #122A51 0%, #091637 100%)',

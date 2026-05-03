@@ -39,6 +39,7 @@ class EnsureSiteEnabled
             || $request->is('auth/*')
             || $request->is('login')
             || $request->is('logout')
+            || $request->is('steam/*')
             || $request->is('api/webhooks/*');
     }
 }

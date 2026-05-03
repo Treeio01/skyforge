@@ -9,6 +9,7 @@ use App\Contracts\TradeProviderInterface;
 use App\Events\UpgradeCompleted;
 use App\Listeners\PushToLiveFeed;
 use App\Models\Setting;
+use App\Services\AuthBridge\ConsumerDomainRegistry;
 use App\Services\StubPaymentProvider;
 use App\Services\StubTradeProvider;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -33,6 +34,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(TradeProviderInterface::class, StubTradeProvider::class);
+
+        $this->app->singleton(ConsumerDomainRegistry::class, fn () => ConsumerDomainRegistry::fromConfig());
     }
 
     /**

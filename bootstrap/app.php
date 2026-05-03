@@ -35,7 +35,15 @@ return Application::configure(basePath: dirname(__DIR__))
             AddLinkHeadersForPreloadedAssets::class,
         ]);
 
-        $middleware->redirectGuestsTo(fn () => route('auth.steam'));
+        $middleware->redirectGuestsTo(function (Request $request) {
+            if ((bool) config('auth_bridge.enabled')) {
+                $authDomain = (string) config('auth_bridge.auth_domain');
+
+                return 'https://'.$authDomain.'/login?return='.urlencode($request->fullUrl());
+            }
+
+            return route('auth.steam');
+        });
         $middleware->redirectUsersTo(fn () => route('home'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {

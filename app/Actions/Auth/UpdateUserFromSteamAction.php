@@ -11,9 +11,18 @@ class UpdateUserFromSteamAction
 {
     public function execute(User $user, SocialiteUser $steamUser): User
     {
+        return $this->executeFromPrimitives(
+            $user,
+            (string) $steamUser->getNickname(),
+            (string) $steamUser->getAvatar(),
+        );
+    }
+
+    public function executeFromPrimitives(User $user, string $username, string $avatarUrl): User
+    {
         $user->update([
-            'username' => $steamUser->getNickname(),
-            'avatar_url' => $steamUser->getAvatar(),
+            'username' => $username,
+            'avatar_url' => $avatarUrl,
             'last_active_at' => now(),
         ]);
 

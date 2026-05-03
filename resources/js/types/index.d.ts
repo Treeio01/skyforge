@@ -74,7 +74,7 @@ export interface UpgradeSettings {
 }
 
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
-    auth: { user: User | null };
+    auth: { user: User | null; loginUrl: string };
     flash: Flash;
     stats?: SiteStats;
     socials?: Record<string, string>;

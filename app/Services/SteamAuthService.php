@@ -25,16 +25,31 @@ class SteamAuthService
 
     public function authenticate(SocialiteUser $steamUser): User
     {
-        $existing = $this->findUser->execute($steamUser->getId());
+        return $this->authenticateFromPrimitives(
+            steamId: $steamUser->getId(),
+            username: (string) $steamUser->getNickname(),
+            avatarUrl: (string) $steamUser->getAvatar(),
+        );
+    }
+
+    /**
+     * Bridge entrypoint: the auth domain has already verified the user
+     * with Steam and packed the result into a signed token. Consumer
+     * domain receives only primitives, no SocialiteUser available.
+     */
+    public function authenticateFromPrimitives(string $steamId, string $username, string $avatarUrl): User
+    {
+        $existing = $this->findUser->execute($steamId);
 
         if ($existing !== null) {
-            return $this->updateUser->execute($existing, $steamUser);
+            return $this->updateUser->executeFromPrimitives($existing, $username, $avatarUrl);
         }
 
-        return DB::transaction(function () use ($steamUser) {
-            $user = $this->createUser->execute(
-                $steamUser->getId(),
-                $steamUser,
+        return DB::transaction(function () use ($steamId, $username, $avatarUrl) {
+            $user = $this->createUser->executeFromPrimitives(
+                $steamId,
+                $username,
+                $avatarUrl,
                 $this->pullAttribution->execute(),
             );
 
