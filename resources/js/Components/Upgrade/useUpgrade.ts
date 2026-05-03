@@ -28,7 +28,9 @@ export const MULTIPLIERS: QuickMultiplier[] = [2, 3, 5, 10];
 
 const RESULT_DISPLAY_MS = 5000;
 
-/** When inertia flash drops, infer outcome from inventory (bet skin gone & target skin present ≈ win). */
+/** Fallback when inertia flash lacks upgrade_roll — never infer "win": duplicate target skin makes that unsafe. */
+const PLAYING_TWO_SAFETY_TIMEOUT_MS = 45_000;
+
 function inferUpgradeRollFromInventory(
     nextInventory: Array<{ id: number; skin: Skin }>,
     pendingBetUserSkinId: number | null,
@@ -42,11 +44,15 @@ function inferUpgradeRollFromInventory(
         return null;
     }
     if (pendingTargetSkinId === null) {
-        return null;
+        return "lose";
     }
     const ownsTargetSkin = nextInventory.some((row) => row.skin?.id === pendingTargetSkinId);
+    // Win would add target skin OR user may already own a copy → ambiguous; wins must come from server flash.
+    if (ownsTargetSkin) {
+        return null;
+    }
 
-    return ownsTargetSkin ? "win" : "lose";
+    return "lose";
 }
 
 function toggleSingle(prev: SkinId | null, id: SkinId): SkinId | null {
@@ -459,14 +465,13 @@ export function useUpgrade({ inventory }: UseUpgradeProps): UseUpgradeReturn {
         });
     }, []);
 
-    // playing_two → result (по таймеру DefuseOverlay).
+    // playing_two → result: основной переход через onEnded у клипа (UpgradeVideo).
+    // Короткий таймер здесь давал проигрышной ветке 3с и мог обходить нужный кадр/клип; оставляем только safety.
     useEffect(() => {
         if (stage !== "playing_two" || !outcome) return;
-        const defuseMs =
-            outcome === "success" ? 5000 : 3000;
         const t = window.setTimeout(() => {
-            setStage("result");
-        }, defuseMs);
+            setStage((s) => (s === "playing_two" ? "result" : s));
+        }, PLAYING_TWO_SAFETY_TIMEOUT_MS);
         timersRef.current.push(t);
         return () => window.clearTimeout(t);
     }, [stage, outcome]);
