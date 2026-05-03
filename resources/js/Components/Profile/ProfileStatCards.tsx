@@ -72,16 +72,18 @@ export default function ProfileStatCards({ recentUpgrades }: ProfileStatCardsPro
 }
 
 function splitPriceKopecks(kopecks: number): string[] {
-    const rubles = kopecks / 100;
-    const intPart = Math.floor(rubles);
-    const decPart = Math.round((rubles - intPart) * 10) / 10;
-    const groups = intPart
+    const rubWhole = Math.floor(kopecks / 100);
+    const kop = kopecks % 100;
+    const groups = rubWhole
         .toString()
         .replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
         .split(' ');
-    if (decPart > 0) {
-        return [...groups, ',' + decPart.toString().split('.')[1] + '₽'];
+    if (kop > 0) {
+        const frac = String(kop).padStart(2, '0');
+
+        return [...groups, `,${frac}₽`];
     }
+
     return [...groups, '₽'];
 }
 
