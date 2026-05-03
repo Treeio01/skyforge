@@ -24,7 +24,13 @@ class UserController extends Controller
 {
     public function show(Request $request, UserProfileService $service): Response
     {
-        return Inertia::render('Profile/Show', $service->profileData($request->user(), $request));
+        $user = $request->user();
+
+        return Inertia::render('Profile/Show', [
+            'profile' => $service->profilePayload($user, $request),
+            'inventory' => Inertia::defer(fn () => $service->inventoryFor($user, $request), 'profile'),
+            'recentUpgrades' => Inertia::defer(fn () => $service->recentUpgradesFor($user), 'profile'),
+        ]);
     }
 
     public function updateTradeUrl(UpdateTradeUrlData $data, UpdateTradeUrlAction $action): RedirectResponse

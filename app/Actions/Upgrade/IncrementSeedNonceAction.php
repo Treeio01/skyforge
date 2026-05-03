@@ -12,7 +12,7 @@ class IncrementSeedNonceAction
 {
     public function execute(User $user): ProvablyFairSeed
     {
-        $seedPair = $user->activeSeedPair ?? throw new DomainException('Нет активной пары сидов. Обновите страницу.');
+        $seedPair = $user->activeSeedPair ?? throw new DomainException('upgrade.errors.no_active_seed');
         $seedPair->increment('nonce');
 
         return $seedPair->refresh();

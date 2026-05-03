@@ -81,7 +81,16 @@
         "result_win_label": "ПОБЕДА",
         "result_lose_label": "ПРОИГРЫШ",
         "result_win_description": "Поздравляем! Ваш апгрейд удался!",
-        "result_lose_description": "Ничего, в другой раз повезёт! Наверное..."
+        "result_lose_description": "Ничего, в другой раз повезёт! Наверное...",
+        "errors": {
+            "bet_must_be_positive": "Сумма ставки должна быть больше нуля.",
+            "bet_below_minimum": "Сумма ставки меньше минимальной.",
+            "bet_above_maximum": "Сумма ставки больше максимальной.",
+            "bet_must_be_below_target": "Ставка должна быть меньше цены цели.",
+            "skins_unavailable": "Некоторые скины недоступны для апгрейда.",
+            "no_active_seed": "Нет активной пары сидов. Обновите страницу.",
+            "insufficient_balance": "Недостаточно средств."
+        }
     },
     "feed": {
         "load_error": "Не удалось загрузить ленту апгрейдов"

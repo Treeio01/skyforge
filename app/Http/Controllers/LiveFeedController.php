@@ -11,6 +11,8 @@ class LiveFeedController extends Controller
 {
     public function index(LiveFeedService $service): JsonResponse
     {
-        return response()->json(['data' => $service->recent()]);
+        return response()
+            ->json(['data' => $service->recent()])
+            ->header('Cache-Control', 'public, max-age=10');
     }
 }

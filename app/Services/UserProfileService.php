@@ -16,12 +16,18 @@ use Illuminate\Http\Request;
 class UserProfileService
 {
     /** @return array<string, mixed> */
+    public function profilePayload(User $user, Request $request): array
+    {
+        return (new UserProfileResource($user))->resolve($request);
+    }
+
+    /** @return array<string, mixed> */
     public function profileData(User $user, Request $request): array
     {
         return [
-            'profile' => (new UserProfileResource($user))->resolve($request),
+            'profile' => $this->profilePayload($user, $request),
             'inventory' => $this->mapInventory($user, $request),
-            'recentUpgrades' => $this->mapRecentUpgrades($user),
+            'recentUpgrades' => $this->recentUpgradesFor($user),
         ];
     }
 
@@ -51,6 +57,12 @@ class UserProfileService
     public function inventoryFor(User $user, Request $request): array
     {
         return $this->mapInventory($user, $request);
+    }
+
+    /** @return array<int, array<string, mixed>> */
+    public function recentUpgradesFor(User $user): array
+    {
+        return $this->mapRecentUpgrades($user);
     }
 
     /** @return array<int, array<string, mixed>> */

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -12,6 +13,29 @@ use Spatie\Activitylog\Traits\LogsActivity;
 class Setting extends Model
 {
     use LogsActivity;
+
+    private const FRONTEND_BUNDLE_CACHE_KEY = 'settings.bundle.frontend';
+
+    /**
+     * Keys read together in HandleInertiaRequests (single cache entry / one DB round-trip).
+     *
+     * @var list<string>
+     */
+    public const FRONTEND_BUNDLE_KEYS = [
+        'online.enabled',
+        'social_vk',
+        'social_telegram',
+        'social_discord',
+        'social_tiktok',
+        'social_youtube',
+        'social_twitch',
+        'house_edge',
+        'min_upgrade_chance',
+        'max_upgrade_chance',
+        'min_bet_amount',
+        'max_bet_amount',
+        'upgrade_cooldown',
+    ];
 
     public $timestamps = false;
 
@@ -46,6 +70,30 @@ class Setting extends Model
         return $value ?? $default;
     }
 
+    /**
+     * Cached snapshot of public UI settings touched on every Inertia request.
+     *
+     * @return array<string, mixed>
+     */
+    public static function frontendBundle(): array
+    {
+        return Cache::remember(self::FRONTEND_BUNDLE_CACHE_KEY, 60, function (): array {
+            $keys = self::FRONTEND_BUNDLE_KEYS;
+
+            /** @var Collection<string, Setting> $rows */
+            $rows = static::query()->whereIn('key', $keys)->get()->keyBy('key');
+
+            $out = [];
+
+            foreach ($keys as $key) {
+                $row = $rows->get($key);
+                $out[$key] = $row instanceof self ? self::castValue($row->value, $row->type) : null;
+            }
+
+            return $out;
+        });
+    }
+
     public static function set(string $key, mixed $value, ?string $type = null): void
     {
         $attrs = ['value' => static::stringify($value), 'updated_at' => now()];
@@ -57,6 +105,10 @@ class Setting extends Model
         static::updateOrCreate(['key' => $key], $attrs);
 
         Cache::forget("settings.{$key}");
+
+        if (in_array($key, self::FRONTEND_BUNDLE_KEYS, true)) {
+            Cache::forget(self::FRONTEND_BUNDLE_CACHE_KEY);
+        }
     }
 
     private static function stringify(mixed $value): string

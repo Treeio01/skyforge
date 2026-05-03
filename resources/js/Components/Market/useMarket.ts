@@ -66,7 +66,7 @@ export function useMarket(): UseMarketReturn {
         direction,
         minPrice,
         maxPrice,
-        perPage: 150,
+        perPage: 72,
         inventoryPrice: null,
     });
 

@@ -32,13 +32,19 @@ class UpgradeController extends Controller
         try {
             $result = $service->execute(request()->user(), $data);
         } catch (DomainException $e) {
-            return back()->with('error', $e->getMessage());
+            Inertia::flash('error', $e->getMessage());
+
+            return back();
         } catch (InsufficientBalanceException) {
-            return back()->with('error', 'Недостаточно средств.');
+            Inertia::flash('error', 'upgrade.errors.insufficient_balance');
+
+            return back();
         }
 
         $win = $result->upgrade->result === UpgradeResult::Win;
 
-        return back()->with($win ? 'success' : 'error', $win ? 'Вы выиграли!' : 'Вы проиграли.');
+        Inertia::flash('upgrade_roll', $win ? 'win' : 'lose');
+
+        return back();
     }
 }

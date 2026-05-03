@@ -1,6 +1,7 @@
 import { apiSkinToEntry, inventoryItemToEntry } from "@/utils/skinHelpers";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { useTargetSkins } from "@/hooks/useTargetSkins";
+import type { Page } from "@inertiajs/core";
 import { router, usePage } from "@inertiajs/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
@@ -17,6 +18,7 @@ import {
     DEFAULT_UPGRADE_SETTINGS,
 } from "./upgradeCalculations";
 import { PageProps, Skin } from "@/types";
+import { mergedFlashPayload } from "@/utils/mergeInertiaFlash";
 
 type SkinId = string | number;
 export type Stage = "idle" | "closing" | "playing" | "playing_two" | "result";
@@ -25,6 +27,27 @@ export type { QuickMultiplier };
 export const MULTIPLIERS: QuickMultiplier[] = [2, 3, 5, 10];
 
 const RESULT_DISPLAY_MS = 5000;
+
+/** When inertia flash drops, infer outcome from inventory (bet skin gone & target skin present ≈ win). */
+function inferUpgradeRollFromInventory(
+    nextInventory: Array<{ id: number; skin: Skin }>,
+    pendingBetUserSkinId: number | null,
+    pendingTargetSkinId: number | null,
+): "win" | "lose" | null {
+    if (pendingBetUserSkinId === null) {
+        return null;
+    }
+    const stillHasBet = nextInventory.some((row) => row.id === pendingBetUserSkinId);
+    if (stillHasBet) {
+        return null;
+    }
+    if (pendingTargetSkinId === null) {
+        return null;
+    }
+    const ownsTargetSkin = nextInventory.some((row) => row.skin?.id === pendingTargetSkinId);
+
+    return ownsTargetSkin ? "win" : "lose";
+}
 
 function toggleSingle(prev: SkinId | null, id: SkinId): SkinId | null {
     return prev === id ? null : id;
@@ -139,6 +162,8 @@ export function useUpgrade({ inventory }: UseUpgradeProps): UseUpgradeReturn {
     // pop into the panel before the animation plays. submittingRef freezes
     // the snapshot from the click moment until handleReset() runs.
     const submittingRef = useRef(false);
+    const pendingBetUserSkinRef = useRef<number | null>(null);
+    const pendingTargetSkinRef = useRef<number | null>(null);
     const [stableInventory, setStableInventory] = useState(inventory);
     useEffect(() => {
         if (stage === "idle" && !submittingRef.current) setStableInventory(inventory);
@@ -329,6 +354,8 @@ export function useUpgrade({ inventory }: UseUpgradeProps): UseUpgradeReturn {
     const handleReset = useCallback(() => {
         clearTimers();
         submittingRef.current = false;
+        pendingBetUserSkinRef.current = null;
+        pendingTargetSkinRef.current = null;
         setStage("idle");
         setOutcome(null);
         setResultSkin(null);
@@ -343,6 +370,8 @@ export function useUpgrade({ inventory }: UseUpgradeProps): UseUpgradeReturn {
 
         setResultSkin(targetSkin);
         submittingRef.current = true;
+        pendingBetUserSkinRef.current = inventorySkin.backendUserSkinId ?? null;
+        pendingTargetSkinRef.current = targetSkin.backendSkinId ?? null;
 
         router.post(
             "/upgrade",
@@ -356,24 +385,49 @@ export function useUpgrade({ inventory }: UseUpgradeProps): UseUpgradeReturn {
             {
                 preserveState: true,
                 preserveScroll: true,
-                onSuccess: (page) => {
-                    const flash = (page.props as PageProps).flash;
-                    // Server returned a domain error (not a game loss) — bail
-                    // out without animating. ToastProvider shows the error
-                    // toast based on flash.error automatically.
-                    if (flash?.error && !flash?.success) {
+                onSuccess: (page: Page) => {
+                    const merged = mergedFlashPayload(page);
+                    const nextInventory =
+                        (page.props as PageProps & { inventory?: Array<{ id: number; skin: Skin }> })
+                            .inventory ?? [];
+
+                    let roll = merged.upgrade_roll;
+                    if (!(roll === "win" || roll === "lose")) {
+                        roll = inferUpgradeRollFromInventory(
+                            nextInventory,
+                            pendingBetUserSkinRef.current,
+                            pendingTargetSkinRef.current,
+                        );
+                    }
+
+                    if (roll === "win" || roll === "lose") {
+                        pendingBetUserSkinRef.current = null;
+                        pendingTargetSkinRef.current = null;
+                        setOutcome(roll === "win" ? "success" : "fail");
+                        setStage("closing");
+                        return;
+                    }
+
+                    if (merged.error && !merged.success) {
+                        pendingBetUserSkinRef.current = null;
+                        pendingTargetSkinRef.current = null;
                         submittingRef.current = false;
                         setStage("idle");
                         setResultSkin(null);
                         return;
                     }
-                    const isWin = !!flash?.success;
+
+                    pendingBetUserSkinRef.current = null;
+                    pendingTargetSkinRef.current = null;
+                    const isWin = !!merged.success;
                     setOutcome(isWin ? "success" : "fail");
                     setStage("closing");
                 },
                 onError: (errors) => {
                     console.error('[UPGRADE] onError:', errors);
                     submittingRef.current = false;
+                    pendingBetUserSkinRef.current = null;
+                    pendingTargetSkinRef.current = null;
                     setStage("idle");
                     setResultSkin(null);
                 },

@@ -38,3 +38,17 @@ export const ALL_UPGRADE_VIDEO_SRCS: string[] = Array.from(
         ),
     ),
 );
+
+/**
+ * Distinct idle clips only — enough to show the upgrade screen; other states
+ * prefetch in the background after this batch finishes.
+ */
+export const UPGRADE_VIDEO_PRELOAD_PRIORITY: readonly string[] = Array.from(
+    new Set([UPGRADE_VIDEOS.idle.pc, UPGRADE_VIDEOS.idle.md]),
+);
+
+export function upgradeVideoBackgroundSrcs(): string[] {
+    const priority = new Set(UPGRADE_VIDEO_PRELOAD_PRIORITY);
+
+    return ALL_UPGRADE_VIDEO_SRCS.filter((src) => ! priority.has(src));
+}

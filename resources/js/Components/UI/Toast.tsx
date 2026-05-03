@@ -1,8 +1,11 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { createContext, useContext, useState, useCallback, useEffect, useRef, ReactNode } from 'react';
 import { router } from '@inertiajs/react';
+import type { Page } from '@inertiajs/core';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
+import { Flash } from '@/types';
+import { mergedFlashPayload } from '@/utils/mergeInertiaFlash';
 
 type ToastType = 'success' | 'error' | 'info';
 
@@ -22,6 +25,32 @@ export const useToast = () => useContext(ToastContext);
 
 let nextId = 0;
 
+function translatePossibleKey(message: string): string {
+    if (!message) {
+        return '';
+    }
+
+    return i18n.exists(message) ? String(i18n.t(message)) : message;
+}
+
+/** Home uses its own overlays; outcome-only flashes are consumed by the upgrade overlay. */
+function shouldToastFlashPayload(url: string, flash: Flash): boolean {
+    if (url === '/' || url.startsWith('/?')) {
+        return false;
+    }
+
+    const outcomeOnly =
+        (flash.upgrade_roll === 'win' || flash.upgrade_roll === 'lose')
+        && !flash.success
+        && !flash.error;
+
+    if (outcomeOnly) {
+        return false;
+    }
+
+    return !!(flash.success || flash.error);
+}
+
 export function ToastProvider({ children }: { children: ReactNode }) {
     const [toasts, setToasts] = useState<Toast[]>([]);
     const addToastRef = useRef<(type: ToastType, message: string) => void>();
@@ -37,22 +66,40 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         setToasts((prev) => prev.filter((t) => t.id !== id));
     }, []);
 
+    const toastFlashDedupeSigRef = useRef('');
+
     useEffect(() => {
+        const emitFlashToastsFromPage = (page: Page) => {
+            const flash = mergedFlashPayload(page);
+            if (!shouldToastFlashPayload(page.url, flash)) {
+                return;
+            }
+
+            const sig = `${page.url}::${flash.error ?? ''}::${flash.success ?? ''}::${flash.upgrade_roll ?? ''}`;
+            if (sig === toastFlashDedupeSigRef.current) {
+                return;
+            }
+            toastFlashDedupeSigRef.current = sig;
+
+            if (flash.success) {
+                addToastRef.current?.('success', translatePossibleKey(String(flash.success)));
+            }
+
+            if (flash.error) {
+                addToastRef.current?.('error', translatePossibleKey(String(flash.error)));
+            }
+        };
+
+        const removeStart = router.on('start', () => {
+            toastFlashDedupeSigRef.current = '';
+        });
+
+        const removeNavigate = router.on('navigate', (event) => {
+            emitFlashToastsFromPage(event.detail.page);
+        });
+
         const removeSuccess = router.on('success', (event) => {
-            const page = event.detail.page;
-            const url = page.url;
-
-            // Апгрейд показывает результат через свой UpgradeResult overlay
-            if (url === '/' || url.startsWith('/?')) return;
-
-            const flash = page.props?.flash as { success?: string; error?: string } | undefined;
-
-            if (flash?.success) {
-                addToastRef.current?.('success', flash.success);
-            }
-            if (flash?.error) {
-                addToastRef.current?.('error', flash.error);
-            }
+            emitFlashToastsFromPage(event.detail.page);
         });
 
         const removeError = router.on('error', (event) => {
@@ -60,7 +107,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             if (errors && typeof errors === 'object') {
                 Object.values(errors).forEach((msg) => {
                     if (typeof msg === 'string') {
-                        addToastRef.current?.('error', msg);
+                        addToastRef.current?.('error', translatePossibleKey(msg));
                     }
                 });
             }
@@ -74,6 +121,8 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         });
 
         return () => {
+            removeStart();
+            removeNavigate();
             removeSuccess();
             removeError();
             removeInvalid();

@@ -55,6 +55,7 @@ export interface FeedItem {
 export interface Flash {
     error: string | null;
     success: string | null;
+    upgrade_roll?: 'win' | 'lose' | null;
 }
 
 export interface SiteStats {

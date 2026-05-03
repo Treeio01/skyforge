@@ -5,13 +5,35 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\Upgrade;
+use Illuminate\Support\Facades\Cache;
 
 class LiveFeedService
 {
     private const FEED_LIMIT = 20;
 
+    private const CACHE_KEY = 'live_feed.recent_payload';
+
+    private const CACHE_TTL_SECONDS = 10;
+
+    /**
+     * Drop cached JSON so the next HTTP hit sees fresh rows (WebSocket still
+     * pushes live updates to connected clients).
+     */
+    public function forgetRecentCache(): void
+    {
+        Cache::forget(self::CACHE_KEY);
+    }
+
     /** @return array<int, array<string, mixed>> */
     public function recent(): array
+    {
+        return Cache::remember(self::CACHE_KEY, self::CACHE_TTL_SECONDS, function (): array {
+            return $this->loadRecentFromDatabase();
+        });
+    }
+
+    /** @return array<int, array<string, mixed>> */
+    private function loadRecentFromDatabase(): array
     {
         return Upgrade::query()
             ->with(['user', 'targetSkin'])

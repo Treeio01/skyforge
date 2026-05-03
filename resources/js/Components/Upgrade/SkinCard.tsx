@@ -114,6 +114,8 @@ const SkinCard = memo(function SkinCard({
                 src={image}
                 className="absolute left-1/2 top-1/2 -translate-1/2 w-full h-full max-w-[120px] max-h-[90px] object-contain z-10"
                 alt=""
+                loading="lazy"
+                decoding="async"
             />
             <span className="text-white font-sf-display text-sm leading-[104%] relative z-10">
                 {price}

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { usePage } from '@inertiajs/react';
 import type { PageProps } from '@/types';
+import { ensureEcho } from '@/realtime/ensureEcho';
 
 const ANIMATION_MS = 600;
 
@@ -13,6 +14,7 @@ export function useOnlineCount(): number {
     const realCount = stats?.online_real ?? 0;
     const enabled = stats?.online_enabled ?? false;
     const fakeInitial = stats?.online_fake_initial ?? 0;
+
     const initial = realCount + (enabled ? fakeInitial : 0);
 
     const [display, setDisplay] = useState(initial);
@@ -20,39 +22,81 @@ export function useOnlineCount(): number {
     const targetRef = useRef(initial);
     const animationStartRef = useRef<number | null>(null);
     const rafRef = useRef<number | null>(null);
+    const realCountRef = useRef(realCount);
+    const displayRef = useRef(display);
 
     useEffect(() => {
-        if (!enabled || typeof window === 'undefined' || !window.Echo) {
-            return;
+        realCountRef.current = realCount;
+    }, [realCount]);
+
+    useEffect(() => {
+        displayRef.current = display;
+    }, [display]);
+
+    useEffect(() => {
+        const nextInitial = realCount + (enabled ? fakeInitial : 0);
+
+        setDisplay(nextInitial);
+        fromRef.current = nextInitial;
+        targetRef.current = nextInitial;
+    }, [fakeInitial, realCount, enabled]);
+
+    useEffect(() => {
+        if (!enabled || typeof window === 'undefined') {
+            return undefined;
         }
 
-        function tick() {
-            const now = performance.now();
-            const elapsed = animationStartRef.current ? now - animationStartRef.current : 0;
-            const progress = Math.min(1, elapsed / ANIMATION_MS);
-            const eased = easeOutQuad(progress);
-            const value = Math.round(fromRef.current + (targetRef.current - fromRef.current) * eased);
-            setDisplay(value);
-            if (progress < 1) {
-                rafRef.current = requestAnimationFrame(tick);
+        let cancelled = false;
+
+        let stopListening: (() => void) | undefined;
+
+        void ensureEcho().then((echo) => {
+            if (cancelled || !echo) {
+                return;
             }
-        }
 
-        const channel = window.Echo.channel('stats');
-        channel.listen('.online.updated', ({ fake }: { fake: number }) => {
-            const next = realCount + fake;
-            fromRef.current = display;
-            targetRef.current = next;
-            animationStartRef.current = performance.now();
-            if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
-            rafRef.current = requestAnimationFrame(tick);
+            function tick() {
+                const now = performance.now();
+                const elapsed = animationStartRef.current ? now - animationStartRef.current : 0;
+                const progress = Math.min(1, elapsed / ANIMATION_MS);
+                const eased = easeOutQuad(progress);
+                const value = Math.round(
+                    fromRef.current + (targetRef.current - fromRef.current) * eased,
+                );
+                setDisplay(value);
+
+                if (progress < 1) {
+                    rafRef.current = requestAnimationFrame(tick);
+                }
+            }
+
+            const channel = echo.channel('stats');
+
+            channel.listen('.online.updated', ({ fake }: { fake: number }) => {
+                const next = realCountRef.current + fake;
+                fromRef.current = displayRef.current;
+                targetRef.current = next;
+                animationStartRef.current = performance.now();
+
+                if (rafRef.current !== null) {
+                    cancelAnimationFrame(rafRef.current);
+                }
+
+                rafRef.current = requestAnimationFrame(tick);
+            });
+
+            stopListening = () => channel.stopListening('.online.updated');
         });
 
         return () => {
-            if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
-            window.Echo?.leaveChannel('stats');
+            cancelled = true;
+            stopListening?.();
+
+            if (rafRef.current !== null) {
+                cancelAnimationFrame(rafRef.current);
+            }
         };
-    }, [realCount, enabled]);
+    }, [enabled]);
 
     return display;
 }

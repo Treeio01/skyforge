@@ -24,7 +24,7 @@ class SkinCatalogService
         $this->applyPriceFilters($query, $data->min_price, $data->max_price);
         $this->applySort($query, $data->sort, $data->direction);
 
-        $perPage = $data->per_page instanceof Optional ? 150 : $data->per_page;
+        $perPage = $data->per_page instanceof Optional ? 72 : $data->per_page;
 
         return $query->paginate($perPage)->withQueryString();
     }

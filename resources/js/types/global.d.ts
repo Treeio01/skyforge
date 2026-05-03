@@ -2,12 +2,13 @@ import { PageProps as InertiaPageProps } from '@inertiajs/core';
 import { AxiosInstance } from 'axios';
 import { route as ziggyRoute } from 'ziggy-js';
 import { PageProps as AppPageProps } from './';
+import type Echo from 'laravel-echo';
 
 declare global {
     interface Window {
         axios: AxiosInstance;
-        Pusher: any;
-        Echo: import('laravel-echo').default;
+        Pusher?: unknown;
+        Echo?: Echo;
     }
 
     /* eslint-disable no-var */

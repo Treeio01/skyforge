@@ -27,7 +27,7 @@ class LockBetSkinsAction
             ->get();
 
         if ($skins->count() !== count($userSkinIds)) {
-            throw new DomainException('Некоторые скины недоступны для апгрейда.');
+            throw new DomainException('upgrade.errors.skins_unavailable');
         }
 
         return $skins;

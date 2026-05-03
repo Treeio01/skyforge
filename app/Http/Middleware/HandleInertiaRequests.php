@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Services\UpgradeStatsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Inertia\Inertia;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -38,10 +39,27 @@ class HandleInertiaRequests extends Middleware
     {
         $user = $request->user();
 
-        // Обновляем last_active_at раз в минуту
         if ($user && (! $user->last_active_at || $user->last_active_at->diffInMinutes(now()) >= 1)) {
-            $user->update(['last_active_at' => now()]);
+            $userId = $user->getKey();
+
+            app()->terminating(function () use ($userId): void {
+                $fresh = User::query()->find($userId);
+
+                if ($fresh === null) {
+                    return;
+                }
+
+                $last = $fresh->last_active_at;
+
+                if (! $last || $last->diffInMinutes(now()) >= 1) {
+                    $fresh->update(['last_active_at' => now()]);
+                }
+            });
         }
+
+        $frontend = Setting::frontendBundle();
+
+        $inertiaFlash = Inertia::getFlashed($request);
 
         return [
             ...parent::share($request),
@@ -50,30 +68,31 @@ class HandleInertiaRequests extends Middleware
                 'loginUrl' => $this->buildLoginUrl($request),
             ],
             'flash' => [
-                'error' => $request->session()->get('error'),
-                'success' => $request->session()->get('success'),
+                'error' => $inertiaFlash['error'] ?? $request->session()->get('error'),
+                'success' => $inertiaFlash['success'] ?? $request->session()->get('success'),
+                'upgrade_roll' => $inertiaFlash['upgrade_roll'] ?? null,
             ],
             'stats' => Cache::remember('site_stats', 30, fn () => [
                 'online_real' => User::where('last_active_at', '>=', now()->subMinutes(5))->count(),
                 'online_fake_initial' => Cache::get('online.fake_state')['value'] ?? 0,
-                'online_enabled' => (bool) Setting::get('online.enabled', false),
+                'online_enabled' => (bool) ($frontend['online.enabled'] ?? false),
                 'total_upgrades' => app(UpgradeStatsService::class)->total(),
             ]),
             'socials' => [
-                'vk' => Setting::get('social_vk', ''),
-                'telegram' => Setting::get('social_telegram', ''),
-                'discord' => Setting::get('social_discord', ''),
-                'tiktok' => Setting::get('social_tiktok', ''),
-                'youtube' => Setting::get('social_youtube', ''),
-                'twitch' => Setting::get('social_twitch', ''),
+                'vk' => (string) ($frontend['social_vk'] ?? ''),
+                'telegram' => (string) ($frontend['social_telegram'] ?? ''),
+                'discord' => (string) ($frontend['social_discord'] ?? ''),
+                'tiktok' => (string) ($frontend['social_tiktok'] ?? ''),
+                'youtube' => (string) ($frontend['social_youtube'] ?? ''),
+                'twitch' => (string) ($frontend['social_twitch'] ?? ''),
             ],
             'upgradeSettings' => [
-                'houseEdge' => (float) Setting::get('house_edge', 5.00),
-                'minChance' => (float) Setting::get('min_upgrade_chance', 1.00),
-                'maxChance' => (float) Setting::get('max_upgrade_chance', 95.00),
-                'minBetAmount' => (int) Setting::get('min_bet_amount', 100),
-                'maxBetAmount' => (int) Setting::get('max_bet_amount', 5_000_000),
-                'cooldownSeconds' => (int) Setting::get('upgrade_cooldown', 2),
+                'houseEdge' => (float) ($frontend['house_edge'] ?? 5.00),
+                'minChance' => (float) ($frontend['min_upgrade_chance'] ?? 1.00),
+                'maxChance' => (float) ($frontend['max_upgrade_chance'] ?? 95.00),
+                'minBetAmount' => (int) ($frontend['min_bet_amount'] ?? 100),
+                'maxBetAmount' => (int) ($frontend['max_bet_amount'] ?? 5_000_000),
+                'cooldownSeconds' => (int) ($frontend['upgrade_cooldown'] ?? 2),
             ],
         ];
     }

@@ -1,6 +1,7 @@
 import { usePage } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
 import type { PageProps } from '@/types';
+import { ensureEcho } from '@/realtime/ensureEcho';
 
 const ANIMATION_MS = 600;
 
@@ -31,43 +32,59 @@ export function useUpgradeCount(): number {
     }, [display]);
 
     useEffect(() => {
-        if (typeof window === 'undefined' || !window.Echo) {
-            return;
+        if (typeof window === 'undefined') {
+            return undefined;
         }
 
-        function tick() {
-            const now = performance.now();
-            const elapsed = animationStartRef.current ? now - animationStartRef.current : 0;
-            const progress = Math.min(1, elapsed / ANIMATION_MS);
-            const eased = easeOutQuad(progress);
-            const value = Math.round(fromRef.current + (targetRef.current - fromRef.current) * eased);
+        let cancelled = false;
 
-            setDisplay(value);
+        let stopListening: (() => void) | undefined;
 
-            if (progress < 1) {
+        void ensureEcho().then((echo) => {
+            if (cancelled || !echo) {
+                return;
+            }
+
+            function tick() {
+                const now = performance.now();
+                const elapsed = animationStartRef.current ? now - animationStartRef.current : 0;
+                const progress = Math.min(1, elapsed / ANIMATION_MS);
+                const eased = easeOutQuad(progress);
+                const value = Math.round(
+                    fromRef.current + (targetRef.current - fromRef.current) * eased,
+                );
+
+                setDisplay(value);
+
+                if (progress < 1) {
+                    rafRef.current = requestAnimationFrame(tick);
+                }
+            }
+
+            const channel = echo.channel('stats');
+
+            channel.listen('.upgrades.updated', ({ total_upgrades }: { total_upgrades: number }) => {
+                fromRef.current = displayRef.current;
+                targetRef.current = total_upgrades;
+                animationStartRef.current = performance.now();
+
+                if (rafRef.current !== null) {
+                    cancelAnimationFrame(rafRef.current);
+                }
+
                 rafRef.current = requestAnimationFrame(tick);
-            }
-        }
+            });
 
-        const channel = window.Echo.channel('stats');
-        channel.listen('.upgrades.updated', ({ total_upgrades }: { total_upgrades: number }) => {
-            fromRef.current = displayRef.current;
-            targetRef.current = total_upgrades;
-            animationStartRef.current = performance.now();
-
-            if (rafRef.current !== null) {
-                cancelAnimationFrame(rafRef.current);
-            }
-
-            rafRef.current = requestAnimationFrame(tick);
+            stopListening = () => channel.stopListening('.upgrades.updated');
         });
 
         return () => {
+            cancelled = true;
+            stopListening?.();
+
             if (rafRef.current !== null) {
                 cancelAnimationFrame(rafRef.current);
             }
-
-            channel.stopListening('.upgrades.updated');
         };
     }, []);
 

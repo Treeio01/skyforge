@@ -81,7 +81,16 @@
         "result_win_label": "WIN",
         "result_lose_label": "LOSS",
         "result_win_description": "Congrats! Your upgrade worked out!",
-        "result_lose_description": "Maybe next time. Probably..."
+        "result_lose_description": "Maybe next time. Probably...",
+        "errors": {
+            "bet_must_be_positive": "The bet amount must be greater than zero.",
+            "bet_below_minimum": "The bet amount is below the minimum.",
+            "bet_above_maximum": "The bet amount is above the maximum.",
+            "bet_must_be_below_target": "The bet must be lower than the target price.",
+            "skins_unavailable": "Some skins are not available for upgrade.",
+            "no_active_seed": "No active seed pair. Refresh the page.",
+            "insufficient_balance": "Insufficient balance."
+        }
     },
     "feed": {
         "load_error": "Failed to load the upgrade feed"
